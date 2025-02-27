@@ -5,16 +5,17 @@ const { User, Goal } = require('./model/mongoSchemas.js');
 
 const express = require('express');
 
+// Import .env
+require('dotenv').config()
+
 // Create an express application and define its uses
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 // Configure database
-// const db = process.env.MONGOOSE_KEY;
 mongoose.set('strictQuery', true);
-
-const db = 'mongodb+srv://oycell:sYpRuiLXIQcJiziB@testcluster.mimnp.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster'
+const db = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@testcluster.mimnp.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster`;
 
 // Connect to MongoDB
 mongoose.connect(db, { dbName: 'DoneTogether' });
