@@ -21,8 +21,9 @@ function NavBar() {
         <div className="navbar-container">
             {isAuthenticated && (
                 <>
-                    <img src={user.picture} alt={user.name} width={'auto'} height={'100%'} />
-                    <h2>{user.name}</h2>
+                    <img src={user.picture} alt={user.username} width={'auto'} height={'100%'} />
+                    <h2>{ }</h2>
+                    <p>{user.sub.replace('auth0|', '')}</p>
                 </>
             ) || (
                     <p>Not Logged In.</p>

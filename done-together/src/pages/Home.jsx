@@ -21,6 +21,8 @@ function Home() {
                 <LoginButton />
                 <br />
                 <LogoutButton />
+                <br />
+                <Link to="server-testing">To Server Testing</Link>
             </div>
         </>
     );
