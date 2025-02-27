@@ -32,8 +32,6 @@ function ServerTesting() {
         axios.post('http://localhost:8000/createUser/', {
             userID: newUserID,
             username: newUsername
-        }).then(function (res) {
-            console.log(res)
         }).catch(function (err) {
             console.log(err);
         });

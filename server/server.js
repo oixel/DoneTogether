@@ -40,17 +40,26 @@ app.get('/checkUser/:query', async (req, res) => {
     }
 });
 
+// Creates a user on creation request
 app.post('/createUser', async (req, res) => {
-    const newUserData = new User({
-        userID: req.body.userID,
-        username: req.body.username
-    });
+    const document = await User.findOne({ userID: req.body.userID }) || await User.findOne({ username: req.body.username });
 
-    try {
-        await newUserData.save();
-        res.send("New user has been created.");
-    } catch (err) {
-        console.log(err);
+    // Cast a truthy/falsy value to true/false (EX: 0 will become false [boolean type])
+    const exists = !!document;
+
+    // Only allow a new user to be created if the ID and username are unique
+    if (!exists) {
+        const newUserData = new User({
+            userID: req.body.userID,
+            username: req.body.username
+        });
+
+        try {
+            await newUserData.save();
+            res.send("New user has been created.");
+        } catch (err) {
+            console.log(err);
+        }
     }
 });
 
