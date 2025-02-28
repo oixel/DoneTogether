@@ -8,7 +8,6 @@
 * {
   margin: 0;
   padding: 0;
-  word-wrap: 'break-word';
   user-select: none;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -21,7 +20,7 @@
 .welcome-container {
   width: 100vw;
   height: 100vh;
-  position: absolute;
+  position: relative;
   background: #F1F0E8;
   overflow: hidden;
 }
@@ -30,9 +29,45 @@
   width: 100vw;
   height: 100vh;
   position: absolute;
-  background: #c4b0cb;
+  background: #F1F0E8;
   top: 100vh;
   overflow: hidden;
+}
+
+.navbar {
+  display: flex; 
+  justify-content: flex-end; 
+  align-items: center; 
+  padding: 0 20px; 
+}
+
+.nav-button {
+  width: 8vw;
+  height: 2vw;
+  margin-left: 10px;
+  margin-top: 25px;
+  background: rgba(99, 107, 47, 0.57);
+  border-radius: 30px;
+  color: black;
+  font-size: 1.2vw;
+  font-family: 'Montserrat', serif;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;  
+  align-items: center; 
+}
+
+.logo {
+  width: 350px;
+  height: 143px;
+  position: absolute;
+  color: #636B2F;
+  font-size: 50px;
+  font-family: 'Rubik Doodle Shadow', sans-serif;
+  font-weight: 400;
+  word-wrap: break-word;
+  left: 23px;
+  top: 4px;
 }
 
 .done-together {
@@ -41,10 +76,11 @@
   left: 50%;
   transform: translateX(-50%);
   color: #636B2F;
-  font-size: 120px;
+  font-size: 9vw;
   font-family: 'Rubik Doodle Shadow', sans-serif;
   font-weight: 400;
   word-wrap: break-word; 
+  display: flex;
 }
 
 .success-text {
@@ -53,10 +89,9 @@
   transform: translateX(-50%);
   top: 45%;
   color: #7A7B75;
-  font-size: 40px;
+  font-size: 2.5vw;
   font-family: 'Montserrat', serif;
   font-weight: 400;
-  word-wrap: break-word;
   
   display: flex;
   justify-content: center;  
@@ -81,6 +116,7 @@
   align-items: center;      
 }
 
+
 .goals, .compete, .collaborate {
   width: 50%;
   height: 50%;
@@ -88,79 +124,25 @@
   color: #636B2F;
   font-family: 'Rubik Scribble';
   font-weight: bold;
-  font-size: 80px;
+  font-size: 70px;
 }
 
 .goals {
   left: 15%;
-  top: 35%;
+  top: -1%;
 }
-
-.section-text-1 {
-  left: 15%;
-  top: 39%;
-}
-
 .collaborate {
-  left: 75%;
-  top: 75%;
+  left: 55%;
+  top: 30%;
 }
-
 .compete {
-  left: 25%px;
-  top: 1999px;
+  left: 15%;
+  top: 62%;
 }
 
-.about-us {
-  width: 1034px;
-  height: 156px;
-  position: absolute;
-  color: #636B2F;
-  font-size: 128px;
-  font-family: 'Rubik Doodle Shadow', sans-serif;
-  font-weight: 400;
-  left: 175px;
-  top: 2512px;
-}
-
-.logo {
-  width: 350px;
-  height: 143px;
-  position: absolute;
-  color: #636B2F;
-  font-size: 50px;
-  font-family: 'Rubik Doodle Shadow', sans-serif;
-  font-weight: 400;
-  word-wrap: break-word;
-  left: 23px;
-  top: 4px;
-}
-
-.navbar {
-  display: flex; 
-  justify-content: flex-end; 
-  align-items: center; 
-  padding: 0 20px; 
-}
-
-.nav-button {
-  width: 125px;
-  height: 40px;
-  margin-left: 10px;
-  margin-top: 25px;
-  background: rgba(99, 107, 47, 0.57);
-  border-radius: 30px;
-  color: black;
-  font-size: 20px;
-  font-family: 'Montserrat', serif;
-  font-weight: 400;
-  display: flex;
-  justify-content: center;  
-  align-items: center; 
-}
 
 .section-text {
-  width: 25%;
+  width: 30%;
   position: absolute;
   color: #7A7B75;
   font-size: 25px;
@@ -170,26 +152,52 @@
 
 }
 
-.section-text-2 {
-  left: 176px;
-  top: 2105px;
+.goals-text {
+  left: 15%;
+  top: 12%;
 }
 
-.section-text-3 {
-  left: 1107px;
-  top: 1698px;
+.compete-text {
+  left: 15%;
+  top: 74%;
+}
+
+.collaborate-text {
+  left: 55%;
+  top: 40%;
 }
 
 
-/* HOME PAGE ICONS */
+
+/* HOME PAGE DRAWINGS */
  .home-page-arrow{
-  width: 60%;
-  height: 60%;
+  width: 35vw;
+  height: 35vw;
   position: absolute;
   top: 35%;
-  left: -10%;
+  left: 2%;
+ }
+
+ .left-petal{
+  width: 11vw;
+  height: 11vw;
+  position: absolute;
+  top: 15%;
+  left: 7%;
  }
   
+
+ /*.about-us {
+  width: 1034px;
+  height: 156px;
+  position: absolute;
+  color: #636B2F;
+  font-size: 128px;
+  font-family: 'Rubik Doodle Shadow', sans-serif;
+  font-weight: 400;
+  left: 175px;
+  top: 2512px;
+}*/
   
   
   
