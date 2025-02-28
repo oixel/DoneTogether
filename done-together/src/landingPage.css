@@ -18,16 +18,26 @@
   I had to change some things with positioning 
   and with other consolidation of components */
 
-.container {
+.welcome-container {
   width: 100vw;
-  height: 300vh;
+  height: 100vh;
   position: absolute;
   background: #F1F0E8;
+  overflow: hidden;
+}
+
+.blurbs-container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background: #c4b0cb;
+  top: 100vh;
+  overflow: hidden;
 }
 
 .done-together {
   position: absolute;
-  top: 10%;
+  top: 25%;
   left: 50%;
   transform: translateX(-50%);
   color: #636B2F;
@@ -41,7 +51,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 17%;
+  top: 45%;
   color: #7A7B75;
   font-size: 40px;
   font-family: 'Montserrat', serif;
@@ -55,13 +65,13 @@
 
 .button {
   width: 25%;
-  height: 3%;
+  height: 7%;
   position: absolute;
   background: #636B2F;
   border-radius: 20px;
   left: 50%;
   transform: translateX(-50%);
-  top: 21%;
+  top: 55%;
   color: white;
   font-size: 30px;
   font-family: 'Montserrat';
@@ -160,7 +170,6 @@
 
 }
 
-
 .section-text-2 {
   left: 176px;
   top: 2105px;
@@ -174,16 +183,11 @@
 
 /* HOME PAGE ICONS */
  .home-page-arrow{
-  width: 25%;
-  height: 25%;
+  width: 60%;
+  height: 60%;
   position: absolute;
-  top: 11%;
-  left: 7%;
-  padding-top: 4.34px;
-  padding-right: 3.9px;
-  padding-bottom: 4.79px;
-  padding-left: 3.83px;
-  
+  top: 35%;
+  left: -10%;
  }
   
   
