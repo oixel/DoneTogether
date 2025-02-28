@@ -17,55 +17,88 @@
   /* FIGMA TO REACT FROM HERE: The inherent Figma Code did not work, 
   I had to change some things with positioning 
   and with other consolidation of components */
-  
+
 .container {
   width: 100vw;
-  height: 400vh;
+  height: 300vh;
   position: absolute;
   background: #F1F0E8;
 }
 
 .done-together {
   position: absolute;
-  top: 375px;
+  top: 10%;
   left: 50%;
   transform: translateX(-50%);
   color: #636B2F;
-  font-size: 150px;
+  font-size: 120px;
   font-family: 'Rubik Doodle Shadow', sans-serif;
   font-weight: 400;
-  word-wrap: break-word;
+  word-wrap: break-word; 
+}
 
+.success-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 17%;
+  color: #7A7B75;
+  font-size: 40px;
+  font-family: 'Montserrat', serif;
+  font-weight: 400;
+  word-wrap: break-word;
+  
   display: flex;
   justify-content: center;  
-  align-items: center;  
+  align-items: center; 
+}
+
+.button {
+  width: 25%;
+  height: 3%;
+  position: absolute;
+  background: #636B2F;
+  border-radius: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 21%;
+  color: white;
+  font-size: 30px;
+  font-family: 'Montserrat';
+  font-weight: 400;
+  display: flex;
+  justify-content: center;  
+  align-items: center;      
 }
 
 .goals, .compete, .collaborate {
-  width: 674px;
-  height: 149px;
+  width: 50%;
+  height: 50%;
   position: absolute;
   color: #636B2F;
   font-family: 'Rubik Scribble';
   font-weight: bold;
+  font-size: 80px;
 }
 
 .goals {
-  font-size: 90px;
-  left: 175px;
-  top: 1103px;
+  left: 15%;
+  top: 35%;
 }
 
-.compete {
-  font-size: 80px;
-  left: 175px;
-  top: 1999px;
+.section-text-1 {
+  left: 15%;
+  top: 39%;
 }
 
 .collaborate {
-  font-size: 80px;
-  left: 1212px;
-  top: 1586px;
+  left: 75%;
+  top: 75%;
+}
+
+.compete {
+  left: 25%px;
+  top: 1999px;
 }
 
 .about-us {
@@ -85,108 +118,48 @@
   height: 143px;
   position: absolute;
   color: #636B2F;
-  font-size: 100px;
+  font-size: 50px;
   font-family: 'Rubik Doodle Shadow', sans-serif;
   font-weight: 400;
   word-wrap: break-word;
-  left: 32px;
+  left: 23px;
   top: 4px;
 }
 
-.home-page-arrow-svg {
-  position: absolute;
-
-}
-
-.button {
-  width: 363px;
-  height: 75px;
-  position: absolute;
-  background: #636B2F;
-  border-radius: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 661px;
-  color: white;
-  font-size: 34px;
-  font-family: 'Adamina', serif;
-  font-weight: 400;
-  text-shadow: 
-    2px 2px 0px black,   /* Bottom-right shadow (black) */
-    -2px -2px 0px black, /* Top-left shadow (black) */
-    2px -2px 0px black,  /* Top-right shadow (black) */
-    -2px 2px 0px black;  /* Bottom-left shadow (black) */
-
-  
-  display: flex;
-  justify-content: center;  
-  align-items: center;      
+.navbar {
+  display: flex; 
+  justify-content: flex-end; 
+  align-items: center; 
+  padding: 0 20px; 
 }
 
 .nav-button {
-  width: 156px;
-  height: 51px;
-  position: absolute;
+  width: 125px;
+  height: 40px;
+  margin-left: 10px;
+  margin-top: 25px;
   background: rgba(99, 107, 47, 0.57);
-  border-radius: 20px;
-  position: absolute;
+  border-radius: 30px;
   color: black;
   font-size: 20px;
-  font-family: 'Adamina', serif;
+  font-family: 'Montserrat', serif;
   font-weight: 400;
-
-  display: flex;
-  justify-content: center;  
-  align-items: center; 
-}
-
-.nav-about-us {
-  left: 1539px;
-  top: 40px;
-}
-
-.nav-log-in {
-  left: 1361px;
-  top: 40px;
-}
-
-.nav-sign-up {
-  left: 1710px;
-  top: 40px;
-}
-
-.success-text {
-  width: 808px;
-  height: 84px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 560px;
-  color: #7A7B75;
-  font-size: 40px;
-  font-family: 'Adamina', serif;
-  font-weight: 400;
-  word-wrap: break-word;
-  
   display: flex;
   justify-content: center;  
   align-items: center; 
 }
 
 .section-text {
-  width: 808px;
+  width: 25%;
   position: absolute;
   color: #7A7B75;
-  font-size: 40px;
+  font-size: 25px;
   font-family: 'Adamina', serif;
   font-weight: 400;
   word-wrap: break-word;
+
 }
 
-.section-text-1 {
-  left: 176px;
-  top: 1211px;
-}
 
 .section-text-2 {
   left: 176px;
@@ -198,6 +171,20 @@
   top: 1698px;
 }
 
+
+/* HOME PAGE ICONS */
+ .home-page-arrow{
+  width: 25%;
+  height: 25%;
+  position: absolute;
+  top: 11%;
+  left: 7%;
+  padding-top: 4.34px;
+  padding-right: 3.9px;
+  padding-bottom: 4.79px;
+  padding-left: 3.83px;
+  
+ }
   
   
   
