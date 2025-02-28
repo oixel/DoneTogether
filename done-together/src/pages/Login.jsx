@@ -11,7 +11,7 @@ function Login() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        console.log("Submitted!");
+        console.log("Submitted haha!");
     }
 
     return (
