@@ -15,13 +15,10 @@ function Home() {
             <NavBar />
             <div className="home-container">
                 <p>This is the home page...</p>
-
-                <Link to="profile">View Profile</Link>
                 <br />
                 <LoginButton />
-                <br />
                 <LogoutButton />
-                <br />
+                <br /> <br />
                 <Link to="server-testing">To Server Testing</Link>
             </div>
         </>

@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 
 // Define and export the user schema for Mongo DB
 const userSchema = new mongoose.Schema({
-    userID: { type: String, required: true },
-    username: { type: String, required: true },
-    // profilePictureURL: { type: String, required: true }
+    email: { type: String, required: true },
+    auth0_id: { type: String, required: true },
+    created_at: { type: Date, required: true },
+    last_login: { type: Date, required: true },
+    username: { type: String, required: true }
 });
 
 const User = mongoose.model('User', userSchema);

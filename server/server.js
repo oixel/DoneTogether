@@ -15,19 +15,21 @@ app.use(cors());
 
 // Configure database
 mongoose.set('strictQuery', true);
-const db = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@testcluster.mimnp.mongodb.net/?retryWrites=true&w=majority&appName=TestCluster`;
+const db = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.mem1m.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Connect to MongoDB
-mongoose.connect(db, { dbName: 'DoneTogether' });
+mongoose.connect(db, { dbName: 'app_db' });
 
 //
 app.use(express.urlencoded({ extended: false }));
-app.get('/checkUser/:query', async (req, res) => {
+
+// Whenever GET is called, check the query for both userID and username
+app.get('/getUser/:query', async (req, res) => {
     const { query } = req.params;
 
     try {
-        // Attempt to find a user with given username or ID in database
-        const document = await User.findOne({ userID: query }) || await User.findOne({ username: query });
+        // Attempt to find a user with given ID or username in database
+        const document = await User.findOne({ auth0_id: query }) || await User.findOne({ username: query });
 
         // Cast a truthy/falsy value to true/false (EX: 0 will become false [boolean type])
         const exists = !!document;
@@ -40,33 +42,12 @@ app.get('/checkUser/:query', async (req, res) => {
     }
 });
 
-// Creates a user on creation request
-app.post('/createUser', async (req, res) => {
-    const document = await User.findOne({ userID: req.body.userID }) || await User.findOne({ username: req.body.username });
-
-    // Cast a truthy/falsy value to true/false (EX: 0 will become false [boolean type])
-    const exists = !!document;
-
-    // Only allow a new user to be created if the ID and username are unique
-    if (!exists) {
-        const newUserData = new User({
-            userID: req.body.userID,
-            username: req.body.username
-        });
-
-        try {
-            await newUserData.save();
-            res.send("New user has been created.");
-        } catch (err) {
-            console.log(err);
-        }
-    }
-});
-
 // If port is specified in .env, use it; otherwise, default to 8000
 const port = process.env.PORT || 8000;
 
 // 
 app.listen(port, () => {
     console.log(`Server running on port ${port}.`);
+
+    User.insertOne({ email: 'test', auth0_id: 'test', created_at: Date(), last_login: Date(), username: 'test' });
 });

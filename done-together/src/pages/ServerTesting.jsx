@@ -6,12 +6,10 @@ import axios from 'axios';
 function ServerTesting() {
     const [userInfo, setUserInfo] = useState('No data found.');
 
-    const [newUserID, setNewUserID] = useState('');
-    const [newUsername, setNewUsername] = useState('');
-
+    // Query for (checking both user ID and username)
     async function checkUser(query) {
         const res = await axios.get(
-            `http://localhost:8000/checkUser/${query}`
+            `http://localhost:8000/getUser/${query}`
         );
 
         return res.data.document;
@@ -22,19 +20,10 @@ function ServerTesting() {
         const user = (query) ? await checkUser(query) : false;
 
         if (user) {
-            setUserInfo(`Username: ${user.username} :: User ID: ${user.userID}`);
+            setUserInfo(`Username: ${user.username} :: User ID: ${user.auth0_id}`);
         } else {
             setUserInfo('No data found.')
         }
-    }
-
-    async function createUser() {
-        axios.post('http://localhost:8000/createUser/', {
-            userID: newUserID,
-            username: newUsername
-        }).catch(function (err) {
-            console.log(err);
-        });
     }
 
     return (
@@ -46,17 +35,6 @@ function ServerTesting() {
             <br />
             <label htmlFor='query'>User ID/Username: </label>
             <input type='text' name='query' onInput={(e) => updateUserInfo(e.target.value)} />
-            <br /> <br />
-            <div>
-                <h2>Create User:</h2>
-                <br />
-                <label htmlFor='userID'>User ID: </label>
-                <input type='text' name='userID' style={{ marginRight: 10 }} onChange={(e) => setNewUserID(e.target.value)} />
-                <label htmlFor='username'>Username: </label>
-                <input type='text' name='username' onChange={(e) => setNewUsername(e.target.value)} />
-                <br /> <br />
-                <button onClick={() => createUser()}>Create User</button>
-            </div>
         </>
     );
 }
