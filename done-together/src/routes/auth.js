@@ -8,4 +8,6 @@ router.get('/login', function (req, res, next) {
     res.render('login');
 });
 
+// On request for sign up// login, create a route that goes to auth0 here
+
 module.exports = router;

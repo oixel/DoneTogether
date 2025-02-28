@@ -1,0 +1,204 @@
+/* Load the Font - Montserrat for now*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik+Doodle+Shadow&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik+Doodle+Shadow&family=Rubik+Scribble&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Adamina&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik+Doodle+Shadow&family=Rubik+Scribble&display=swap');
+
+
+* {
+  margin: 0;
+  padding: 0;
+  word-wrap: 'break-word';
+  user-select: none;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+  /* FIGMA TO REACT FROM HERE: The inherent Figma Code did not work, 
+  I had to change some things with positioning 
+  and with other consolidation of components */
+  
+.container {
+  width: 100vw;
+  height: 400vh;
+  position: absolute;
+  background: #F1F0E8;
+}
+
+.done-together {
+  position: absolute;
+  top: 375px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #636B2F;
+  font-size: 150px;
+  font-family: 'Rubik Doodle Shadow', sans-serif;
+  font-weight: 400;
+  word-wrap: break-word;
+
+  display: flex;
+  justify-content: center;  
+  align-items: center;  
+}
+
+.goals, .compete, .collaborate {
+  width: 674px;
+  height: 149px;
+  position: absolute;
+  color: #636B2F;
+  font-family: 'Rubik Scribble';
+  font-weight: bold;
+}
+
+.goals {
+  font-size: 90px;
+  left: 175px;
+  top: 1103px;
+}
+
+.compete {
+  font-size: 80px;
+  left: 175px;
+  top: 1999px;
+}
+
+.collaborate {
+  font-size: 80px;
+  left: 1212px;
+  top: 1586px;
+}
+
+.about-us {
+  width: 1034px;
+  height: 156px;
+  position: absolute;
+  color: #636B2F;
+  font-size: 128px;
+  font-family: 'Rubik Doodle Shadow', sans-serif;
+  font-weight: 400;
+  left: 175px;
+  top: 2512px;
+}
+
+.logo {
+  width: 350px;
+  height: 143px;
+  position: absolute;
+  color: #636B2F;
+  font-size: 100px;
+  font-family: 'Rubik Doodle Shadow', sans-serif;
+  font-weight: 400;
+  word-wrap: break-word;
+  left: 32px;
+  top: 4px;
+}
+
+.home-page-arrow-svg {
+  position: absolute;
+
+}
+
+.button {
+  width: 363px;
+  height: 75px;
+  position: absolute;
+  background: #636B2F;
+  border-radius: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 661px;
+  color: white;
+  font-size: 34px;
+  font-family: 'Adamina', serif;
+  font-weight: 400;
+  text-shadow: 
+    2px 2px 0px black,   /* Bottom-right shadow (black) */
+    -2px -2px 0px black, /* Top-left shadow (black) */
+    2px -2px 0px black,  /* Top-right shadow (black) */
+    -2px 2px 0px black;  /* Bottom-left shadow (black) */
+
+  
+  display: flex;
+  justify-content: center;  
+  align-items: center;      
+}
+
+.nav-button {
+  width: 156px;
+  height: 51px;
+  position: absolute;
+  background: rgba(99, 107, 47, 0.57);
+  border-radius: 20px;
+  position: absolute;
+  color: black;
+  font-size: 20px;
+  font-family: 'Adamina', serif;
+  font-weight: 400;
+
+  display: flex;
+  justify-content: center;  
+  align-items: center; 
+}
+
+.nav-about-us {
+  left: 1539px;
+  top: 40px;
+}
+
+.nav-log-in {
+  left: 1361px;
+  top: 40px;
+}
+
+.nav-sign-up {
+  left: 1710px;
+  top: 40px;
+}
+
+.success-text {
+  width: 808px;
+  height: 84px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 560px;
+  color: #7A7B75;
+  font-size: 40px;
+  font-family: 'Adamina', serif;
+  font-weight: 400;
+  word-wrap: break-word;
+  
+  display: flex;
+  justify-content: center;  
+  align-items: center; 
+}
+
+.section-text {
+  width: 808px;
+  position: absolute;
+  color: #7A7B75;
+  font-size: 40px;
+  font-family: 'Adamina', serif;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+.section-text-1 {
+  left: 176px;
+  top: 1211px;
+}
+
+.section-text-2 {
+  left: 176px;
+  top: 2105px;
+}
+
+.section-text-3 {
+  left: 1107px;
+  top: 1698px;
+}
+
+  
+  
+  
+  
