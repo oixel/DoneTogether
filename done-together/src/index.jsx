@@ -9,6 +9,9 @@ import Profile from './pages/Profile';
 import LogOut from './pages/LogOut';
 import PageNotFound from './pages/PageNotFound'
 
+// FOR TESTING SERVER
+import ServerTesting from './pages/ServerTesting';
+
 import { Auth0Provider } from '@auth0/auth0-react';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -26,6 +29,8 @@ root.render(
         <Route path="profile" element={<Profile />} />
 
         <Route path="logout" element={<LogOut />} />
+
+        <Route path="server-testing" element={<ServerTesting />} />
 
         {/* Redirects any unknown routes to PageNotFound */}
         <Route path="*" element={<PageNotFound />} />
