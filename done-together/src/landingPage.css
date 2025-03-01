@@ -87,7 +87,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 45%;
+  top: 47%;
   color: #7A7B75;
   font-size: 2.5vw;
   font-family: 'Adamina', serif;
@@ -99,21 +99,30 @@
 }
 
 .button {
-  width: 25%;
-  height: 7%;
+  width: 23%;
+  height: 8%;
   position: absolute;
   background: #636B2F;
-  border-radius: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   left: 50%;
   transform: translateX(-50%);
-  top: 55%;
+  top: 56%;
+  cursor: pointer;
+
   color: white;
   font-size: 30px;
   font-family: 'Adamina';
   font-weight: 400;
   display: flex;
   justify-content: center;  
-  align-items: center;      
+  align-items: center;   
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-text-stroke-width: .5px;
+  -webkit-text-stroke-color: #000;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 
@@ -172,7 +181,7 @@
 /* HOME PAGE DRAWINGS */
  .home-page-arrow{
   width: 35vw;
-  height: 35vw;
+  height: 30vw;
   position: absolute;
   top: 35%;
   left: 2%;
