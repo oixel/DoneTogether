@@ -7,7 +7,7 @@ function LoginButton() {
     const { logout } = useAuth0();
 
     return (
-        <button onClick={() => logout()} > Logout</button >
+        <button onClick={() => logout()} style={{ marginLeft: 10 }}> Logout</button >
     );
 }
 

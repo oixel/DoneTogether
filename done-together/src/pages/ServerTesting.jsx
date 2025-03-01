@@ -3,15 +3,22 @@ import React, { useState } from 'react'
 import { Link } from 'react-router';
 import axios from 'axios';
 
+import NavBar from '../components/NavBar';
+
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginButton from '../components/LoginButton';
+
 function ServerTesting() {
     const [userInfo, setUserInfo] = useState('No data found.');
+    const [newGoalName, setNewGoalName] = useState('');
+    const [newGoalDescription, setNewGoalDescription] = useState('');
 
-    const [newUserID, setNewUserID] = useState('');
-    const [newUsername, setNewUsername] = useState('');
+    const { isAuthenticated, isLoading, user } = useAuth0();
 
+    // Query for (checking both user ID and username)
     async function checkUser(query) {
         const res = await axios.get(
-            `http://localhost:8000/checkUser/${query}`
+            `http://localhost:8000/getUser/${query}`
         );
 
         return res.data.document;
@@ -22,23 +29,31 @@ function ServerTesting() {
         const user = (query) ? await checkUser(query) : false;
 
         if (user) {
-            setUserInfo(`Username: ${user.username} :: User ID: ${user.userID}`);
+            setUserInfo(`Username: ${user.username} :: User ID: ${user.auth0_id}`);
         } else {
             setUserInfo('No data found.')
         }
     }
 
-    async function createUser() {
-        axios.post('http://localhost:8000/createUser/', {
-            userID: newUserID,
-            username: newUsername
-        }).catch(function (err) {
-            console.log(err);
-        });
+    // 
+    async function createGoal() {
+        // Only create a goal if name is given
+        if (newGoalName && isAuthenticated) {
+            // 
+            axios.post('http://localhost:8000/goal', {
+                goalName: newGoalName,
+                goalDescription: newGoalDescription,
+                ownerID: user.sub
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
     }
 
     return (
         <>
+            <NavBar />
+            <br />
             <Link to="/">Back to Home</Link>
             <br />
             <br />
@@ -46,17 +61,31 @@ function ServerTesting() {
             <br />
             <label htmlFor='query'>User ID/Username: </label>
             <input type='text' name='query' onInput={(e) => updateUserInfo(e.target.value)} />
-            <br /> <br />
-            <div>
-                <h2>Create User:</h2>
-                <br />
-                <label htmlFor='userID'>User ID: </label>
-                <input type='text' name='userID' style={{ marginRight: 10 }} onChange={(e) => setNewUserID(e.target.value)} />
-                <label htmlFor='username'>Username: </label>
-                <input type='text' name='username' onChange={(e) => setNewUsername(e.target.value)} />
-                <br /> <br />
-                <button onClick={() => createUser()}>Create User</button>
-            </div>
+            <br />
+
+            <br />
+            <br />
+            <h2>Goal Creation:</h2>
+            <br />
+
+            {/* Code for goal creation */}
+            {isAuthenticated && (
+                <>
+                    <label htmlFor='goalName'>Goal Name: </label>
+                    <input type='text' name='goalName' onInput={(e) => setNewGoalName(e.target.value)} style={{ marginBottom: 5 }} />
+                    <br />
+                    <label htmlFor='goalDescription'>Goal Description: </label>
+                    <input type='text' name='goalDescription' onInput={(e) => setNewGoalDescription(e.target.value)} style={{ marginBottom: 5 }} />
+                    <br />
+                    <button onClick={() => createGoal()}>Create</button>
+                </>
+            ) || (
+                    <>
+                        <b><p>Login to create goals.</p></b>
+                        <br />
+                        <LoginButton />
+                    </>
+                )}
         </>
     );
 }
