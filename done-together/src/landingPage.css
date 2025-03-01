@@ -1,5 +1,4 @@
 /* Load the Font - Montserrat for now?*/
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik+Doodle+Shadow&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik+Doodle+Shadow&family=Rubik+Scribble&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Adamina&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik+Doodle+Shadow&family=Rubik+Scribble&display=swap');
@@ -62,6 +61,7 @@
   display: flex;
   justify-content: center;  
   align-items: center; 
+  text-decoration: none;
 }
 
 .home-page-navbar-logo {
@@ -69,8 +69,6 @@
   height: auto;
   position: absolute;
   margin-right: 92vw;
-
-  color: white; /* not working */
 }
 
 .home-page-logo {
@@ -138,6 +136,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  text-decoration: none;
 }
 
 
@@ -208,6 +207,14 @@
   position: absolute;
   top: 15%;
   left: 7%;
+ }
+
+ .right-petal{
+  width: 11vw;
+  height: 11vw;
+  position: absolute;
+  top: 35%;
+  right: 8%;
  }
   
 

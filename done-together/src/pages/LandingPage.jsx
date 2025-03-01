@@ -1,11 +1,13 @@
 import React from 'react'
 import { Link } from "react-router"; // If you're using `react-router-dom`, this should be `import { Link } from "react-router-dom";`
-
 import homeArrow from '../assets/icons/arrowHomePage.svg';
 import leftPetal from '../assets/icons/leftPetalsDoodle.svg';
-import { ReactComponent as Logo } from '../assets/icons/logo.svg'
+import rightPetal from '../assets/icons/rightPetalsDoodle.svg';
+import { ReactComponent as BeigeLogo } from '../assets/icons/logo-beige.svg'
+import { ReactComponent as GreenLogo} from '../assets/icons/logo-dark-green.svg'
 
 import "../landingPage.css"
+import "../globalStyles.css"
 
 function LandingPage(){
     return (
@@ -14,15 +16,16 @@ function LandingPage(){
             <h1 className="done-together">DoneTogether</h1>
             <img src={homeArrow} alt="Home Arrow" className="home-page-arrow"/>
             <img src={leftPetal} alt="Flower Petal" className="left-petal"/>
-            <div className="get-started-button">Get Started ➪</div>
+            <img src={rightPetal} alt="Flower Petal" className="right-petal"/>
+            <Link to= '/login' className="get-started-button">Get Started ➪</Link>
 
             <div className="navbar">
-              <Logo className='home-page-navbar-logo'/>
-              <div className="nav-button nav-about-us">About Us</div>
-              <div className="nav-button nav-log-in">Log In</div>
+              <BeigeLogo className='home-page-navbar-logo'/>
+              <Link to="/aboutUs" className="nav-button">About Us</Link> {/* Change to Link */}
+              <Link to="/login" className="nav-button">Log In</Link> {/* Change to Link */}
             </div>
 
-            <Logo className='home-page-logo'/>
+            <GreenLogo className='home-page-logo'/>
             <div className="success-text">Success is better together.</div>
           </div>
 
@@ -35,7 +38,7 @@ function LandingPage(){
             <div className="section-text compete-text">Ort nur endigend erzahlte spielend hausherr ihr schmales tadellos. Wu preisen so pa argerte gefallt wahrend schonen. Neu</div>
           </div>
 
-          <div className='footer-container'></div>
+          <div className='footer'></div>
         </div>
     );
 }
