@@ -20,7 +20,7 @@ function NavBar() {
                 `http://localhost:8000/getUser/${user.sub}`  // 'sub' represent's the user's unique auth0_id
             );
 
-            setUsername(res.data.document.username);
+            setUsername(res.data.user.username);
         }
     };
 

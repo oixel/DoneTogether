@@ -29,17 +29,60 @@ app.get('/getUser/:query', async (req, res) => {
 
     try {
         // Attempt to find a user with given ID or username in database
-        const document = await User.findOne({ auth0_id: query }) || await User.findOne({ username: query });
+        const user = await User.findOne({ auth0_id: query }) || await User.findOne({ username: query });
 
         // Cast a truthy/falsy value to true/false (EX: 0 will become false [boolean type])
-        const exists = !!document;
+        const exists = !!user;
 
         // If a result exists, return its content; otherwise, return false
-        (exists) ? res.json({ document }) : res.json({ exists });
+        (exists) ? res.json({ user }) : res.json({ exists });
     } catch (error) { // If an error occurs, return an error message in json format and output it to console
-        console.log(error);
         res.status(500).json({ error: "Server error." });
+        console.log(error);
     }
+});
+
+// 
+app.get('/getGoals/:userID', async (req, res) => {
+    const { userID } = req.params;
+
+    try {
+        // 
+        const goalsDocument = await Goals.find({ ownerID: userID });
+
+        // 
+        const exists = !!goalsDocument;
+
+        // 
+        (exists) ? res.json({ goalsDocument }) : res.json({ exists });
+    } catch (error) {
+        res.status(500).json({ error: "Server error." });
+        console.log(error);
+    }
+})
+
+// 
+app.post('/goal', async (req, res) => {
+    const newGoalData = new Goal({
+        goalName: req.body.goalName,
+        goalDescription: req.body.goalDescription,
+        ownerID: req.body.ownerID
+    });
+
+    try {
+        // 
+        await newGoalData.save();
+        res.send("New goal has been created.")
+    } catch (err) {  // Set result to POST error
+        // 
+        // Error code ____ represents unsuccesful POST
+        // 
+
+
+        // res.status(400).json({ error: "Goal POST Error." });
+        console.log(err);
+    }
+
 });
 
 // If port is specified in .env, use it; otherwise, default to 8000

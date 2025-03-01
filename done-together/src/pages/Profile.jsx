@@ -20,7 +20,7 @@ function Profile() {
         );
 
         // Update username variable to contain user's unique username 
-        setUsername(res.data.document.username);
+        setUsername(res.data.user.username);
     };
 
     // If finished loading and the user is properly authenticated, grab the username and update it

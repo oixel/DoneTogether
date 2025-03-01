@@ -14,7 +14,6 @@ const User = mongoose.model('User', userSchema);
 
 // Define and export the goal schema for Mongo DB
 const goalSchema = new mongoose.Schema({
-    goalID: { type: String, required: true },
     goalName: { type: String, required: true },
     goalDescription: { type: String, required: true },
     ownerID: { type: String, required: true }

@@ -3,8 +3,17 @@ import React, { useState } from 'react'
 import { Link } from 'react-router';
 import axios from 'axios';
 
+import NavBar from '../components/NavBar';
+
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginButton from '../components/LoginButton';
+
 function ServerTesting() {
     const [userInfo, setUserInfo] = useState('No data found.');
+    const [newGoalName, setNewGoalName] = useState('');
+    const [newGoalDescription, setNewGoalDescription] = useState('');
+
+    const { isAuthenticated, isLoading, user } = useAuth0();
 
     // Query for (checking both user ID and username)
     async function checkUser(query) {
@@ -26,8 +35,25 @@ function ServerTesting() {
         }
     }
 
+    // 
+    async function createGoal() {
+        // Only create a goal if name is given
+        if (newGoalName && isAuthenticated) {
+            // 
+            axios.post('http://localhost:8000/goal', {
+                goalName: newGoalName,
+                goalDescription: newGoalDescription,
+                ownerID: user.sub
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    }
+
     return (
         <>
+            <NavBar />
+            <br />
             <Link to="/">Back to Home</Link>
             <br />
             <br />
@@ -35,6 +61,31 @@ function ServerTesting() {
             <br />
             <label htmlFor='query'>User ID/Username: </label>
             <input type='text' name='query' onInput={(e) => updateUserInfo(e.target.value)} />
+            <br />
+
+            <br />
+            <br />
+            <h2>Goal Creation:</h2>
+            <br />
+
+            {/* Code for goal creation */}
+            {isAuthenticated && (
+                <>
+                    <label htmlFor='goalName'>Goal Name: </label>
+                    <input type='text' name='goalName' onInput={(e) => setNewGoalName(e.target.value)} style={{ marginBottom: 5 }} />
+                    <br />
+                    <label htmlFor='goalDescription'>Goal Description: </label>
+                    <input type='text' name='goalDescription' onInput={(e) => setNewGoalDescription(e.target.value)} style={{ marginBottom: 5 }} />
+                    <br />
+                    <button onClick={() => createGoal()}>Create</button>
+                </>
+            ) || (
+                    <>
+                        <b><p>Login to create goals.</p></b>
+                        <br />
+                        <LoginButton />
+                    </>
+                )}
         </>
     );
 }
