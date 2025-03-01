@@ -38,8 +38,6 @@
   justify-content: flex-end; 
   align-items: center; 
   padding: 0 20px; 
-  /*border-bottom-left-radius: 18px;
-  border-bottom-right-radius: 18px;*/
   background-color: #636B2F;
   width: 100vw;
   height: 4vw;
@@ -137,8 +135,9 @@
   font-weight: 400;
   line-height: normal;
   text-decoration: none;
-}
 
+  
+}
 
 .goals, .compete, .collaborate {
   width: 50%;
@@ -218,17 +217,6 @@
  }
   
 
- /*.about-us {
-  width: 1034px;
-  height: 156px;
-  position: absolute;
-  color: #636B2F;
-  font-size: 128px;
-  font-family: 'Rubik Doodle Shadow', sans-serif;
-  font-weight: 400;
-  left: 175px;
-  top: 2512px;
-}*/
   
   
   

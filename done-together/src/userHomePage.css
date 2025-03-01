@@ -1,0 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+.profile-image {
+    width: 100%; /* Ensure image fills the frame */
+    height: 100%; /* Maintain aspect ratio */
+    object-fit: cover;
+}
+
+.container {
+    background: rgba(99, 107, 47, 0.57);
+  }
+
+.user-profile-frame{
+    position: fixed; /* Keep it in place while scrolling */
+    top: 20px;      /* Adjust vertical position */
+    right: 20px;    /* Adjust horizontal position */
+    width: 60px;    /* Frame width */
+    height: 60px;   /* Frame height */
+    border-radius: 50%; /* Makes it circular */
+    background-color: #636B2F; /* Frame background color */
+    display: flex; /* Center the image inside the frame */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Ensure image fits within the circle */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
+  }
+
+  .profile-image {
+    width: 100%; /* Ensure image fills the frame */
+    height: 100%; /* Maintain aspect ratio */
+    object-fit: cover;
+}
+
+  .create-goal-button{
+    width: 25vw;
+    height: 4.5vw;
+
+    background: #EDE8D0;
+    border: none;
+    border-radius: 40px;
+    color: #636B2F;
+    font-size: 1.6vw;
+    font-family: Adamina;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0 5px;
+    position: absolute;
+    border-radius: 40px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 10%;
+    
+
+  /* make TEXT within button aligned center */
+    display: flex;
+    justify-content: center;  
+    align-items: center; 
+    text-decoration: none;
+  }
+  .create-goal-button:active {
+    background: #ececec /* Change outline on hover */
+}
