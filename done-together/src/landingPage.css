@@ -1,4 +1,4 @@
-/* Load the Font - Montserrat for now*/
+/* Load the Font - Montserrat for now?*/
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik+Doodle+Shadow&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Rubik+Doodle+Shadow&family=Rubik+Scribble&display=swap');
@@ -39,36 +39,48 @@
   justify-content: flex-end; 
   align-items: center; 
   padding: 0 20px; 
+  /*border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;*/
+  background-color: #636B2F;
+  width: 100vw;
+  height: 4vw;
 }
 
 .nav-button {
   width: 8vw;
   height: 2vw;
-  margin-left: 10px;
-  margin-top: 25px;
-  background: rgba(99, 107, 47, 0.57);
+  background: white;
   border-radius: 30px;
   color: black;
   font-size: 1.2vw;
-  font-family: 'Montserrat', serif;
+  font-family: 'Adamina', serif;
   font-weight: 400;
+  margin: 0 5px;
+
+  /* make TEXT within button aligned center */
   display: flex;
   justify-content: center;  
   align-items: center; 
 }
 
-.logo {
-  width: 350px;
-  height: 143px;
+.home-page-navbar-logo {
+  width: 6.5vw;
+  height: auto;
   position: absolute;
-  color: #636B2F;
-  font-size: 50px;
-  font-family: 'Rubik Doodle Shadow', sans-serif;
-  font-weight: 400;
-  word-wrap: break-word;
-  left: 23px;
-  top: 4px;
+  margin-right: 92vw;
+
+  color: white; /* not working */
 }
+
+.home-page-logo {
+  width: 25vw;
+  height: auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 65%;
+}
+
 
 .done-together {
   position: absolute;
@@ -90,7 +102,7 @@
   top: 45%;
   color: #7A7B75;
   font-size: 2.5vw;
-  font-family: 'Montserrat', serif;
+  font-family: 'Adamina', serif;
   font-weight: 400;
   
   display: flex;
@@ -98,7 +110,7 @@
   align-items: center; 
 }
 
-.button {
+.get-started-button {
   width: 25%;
   height: 7%;
   position: absolute;
@@ -109,7 +121,7 @@
   top: 55%;
   color: white;
   font-size: 30px;
-  font-family: 'Montserrat';
+  font-family: 'Adamina', serif;
   font-weight: 400;
   display: flex;
   justify-content: center;  
