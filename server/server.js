@@ -1,96 +1,192 @@
-const cors = require('cors');
-
-const mongoose = require('mongoose');
-const { User, Goal } = require('./model/mongoSchemas.js');
-
+// Import required modules
 const express = require('express');
+const { MongoClient } = require('mongodb');
+const { ClerkExpressRequireAuth } = require('@clerk/clerk-sdk-node');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
-// Import .env
-require('dotenv').config()
+// Load environment variables
+dotenv.config();
 
-// Create an express application and define its uses
+// Initialize Express app
 const app = express();
-app.use(express.json());
-app.use(cors());
+const PORT = process.env.PORT || 3001;
 
-// Configure database
-mongoose.set('strictQuery', true);
-const db = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.mem1m.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// MongoDB connection
+const mongoUri = process.env.MONGODB_URI;
+let db;
 
 // Connect to MongoDB
-mongoose.connect(db, { dbName: 'app_db' });
+async function connectToMongo() {
+  try {
+    const client = new MongoClient(mongoUri);
+    await client.connect();
+    
+    db = client.db(process.env.DB_NAME || 'clerkApp');
+    console.log('Connected to MongoDB');
+    
+    // Create indexes if they don't exist
+    await db.collection('users').createIndex({ username: 1 }, { unique: true });
+    await db.collection('users').createIndex({ clerkId: 1 }, { unique: true });
+    
+    return db;
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+  }
+}
 
-//
-app.use(express.urlencoded({ extended: false }));
-
-// Whenever GET is called, check the query for both userID and username
-app.get('/getUser/:query', async (req, res) => {
-    const { query } = req.params;
-
-    try {
-        // Attempt to find a user with given ID or username in database
-        const user = await User.findOne({ auth0_id: query }) || await User.findOne({ username: query });
-
-        // Cast a truthy/falsy value to true/false (EX: 0 will become false [boolean type])
-        const exists = !!user;
-
-        // If a result exists, return its content; otherwise, return false
-        (exists) ? res.json({ user }) : res.json({ exists });
-    } catch (error) { // If an error occurs, return an error message in json format and output it to console
-        res.status(500).json({ error: "Server error." });
-        console.log(error);
-    }
+// Auth middleware
+const requireAuth = ClerkExpressRequireAuth({
+  onError: (err, req, res) => {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
 });
 
-// 
-app.get('/getGoals/:userID', async (req, res) => {
-    const { userID } = req.params;
+// Routes
 
-    try {
-        // 
-        const goalsDocument = await Goals.find({ ownerID: userID });
+// Health check route
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
 
-        // 
-        const exists = !!goalsDocument;
-
-        // 
-        (exists) ? res.json({ goalsDocument }) : res.json({ exists });
-    } catch (error) {
-        res.status(500).json({ error: "Server error." });
-        console.log(error);
+// Clerk webhook handler
+app.post('/api/webhook/clerk', async (req, res) => {
+  try {
+    const { type, data } = req.body;
+    
+    // Handle user.created event
+    if (type === 'user.created') {
+      const userData = {
+        clerkId: data.id,
+        username: data.username || data.id,
+        email: data.email_addresses?.[0]?.email_address || '',
+        firstName: data.first_name || '',
+        lastName: data.last_name || '',
+        profileImageUrl: data.image_url || '',
+        createdAt: new Date()
+      };
+      
+      // Insert into MongoDB
+      await db.collection('users').insertOne(userData);
+      console.log(`User ${userData.username} created in MongoDB`);
     }
-})
+    
+    // Handle user.updated event
+    if (type === 'user.updated') {
+      const userData = data;
+      
+      await db.collection('users').updateOne(
+        { clerkId: userData.id },
+        { 
+          $set: { 
+            username: userData.username,
+            firstName: userData.first_name,
+            lastName: userData.last_name,
+            profileImageUrl: userData.image_url,
+            updatedAt: new Date()
+          } 
+        }
+      );
+      
+      console.log(`User ${userData.id} updated in MongoDB`);
+    }
+    
+    // Handle user.deleted event
+    if (type === 'user.deleted') {
+      const userData = data;
+      
+      await db.collection('users').deleteOne({ clerkId: userData.id });
+      
+      console.log(`User ${userData.id} deleted from MongoDB`);
+    }
+    
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Webhook error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
-// 
-app.post('/goal', async (req, res) => {
-    const newGoalData = new Goal({
-        goalName: req.body.goalName,
-        goalDescription: req.body.goalDescription,
-        ownerID: req.body.ownerID
+// User profile route
+app.get('/api/user/profile', requireAuth, async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    
+    const user = await db.collection('users').findOne({ clerkId: userId });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Update user profile
+app.put('/api/user/profile', requireAuth, async (req, res) => {
+  try {
+    const { userId } = req.auth;
+    const { bio, location, website } = req.body;
+    
+    const result = await db.collection('users').updateOne(
+      { clerkId: userId },
+      { 
+        $set: { 
+          bio, 
+          location, 
+          website,
+          updatedAt: new Date() 
+        } 
+      }
+    );
+    
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Check username availability
+app.get('/api/check-username', async (req, res) => {
+  try {
+    const { username } = req.query;
+    
+    if (!username) {
+      return res.status(400).json({ error: 'Username is required' });
+    }
+    
+    const existingUser = await db.collection('users').findOne({ username });
+    
+    res.json({ 
+      available: !existingUser,
+      message: existingUser ? 'Username is already taken' : 'Username is available' 
     });
-
-    try {
-        // 
-        await newGoalData.save();
-        res.send("New goal has been created.")
-    } catch (err) {  // Set result to POST error
-        // 
-        // Error code ____ represents unsuccesful POST
-        // 
-
-
-        // res.status(400).json({ error: "Goal POST Error." });
-        console.log(err);
-    }
-
+  } catch (error) {
+    console.error('Error checking username:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
-// If port is specified in .env, use it; otherwise, default to 8000
-const port = process.env.PORT || 8000;
+// Start server
+async function startServer() {
+  await connectToMongo();
+  
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
-// 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}.`);
-
-    User.insertOne({ email: 'test', auth0_id: 'test', created_at: Date(), last_login: Date(), username: 'test' });
-});
+startServer();
