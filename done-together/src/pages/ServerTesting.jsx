@@ -3,8 +3,6 @@ import React, { useState } from 'react'
 import { Link } from 'react-router';
 import axios from 'axios';
 
-import NavBar from '../components/NavBar';
-
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from '../components/LoginButton';
 
@@ -48,11 +46,14 @@ function ServerTesting() {
                 console.log(error);
             });
         }
+
+        // Wipe input bars for some sort of feedback
+        document.getElementById("goalName").value = '';
+        document.getElementById("goalDescription").value = '';
     }
 
     return (
         <>
-            <NavBar />
             <br />
             <Link to="/">Back to Home</Link>
             <br />
@@ -72,10 +73,10 @@ function ServerTesting() {
             {isAuthenticated && (
                 <>
                     <label htmlFor='goalName'>Goal Name: </label>
-                    <input type='text' name='goalName' onInput={(e) => setNewGoalName(e.target.value)} style={{ marginBottom: 5 }} />
+                    <input type='text' name='goalName' id='goalName' onInput={(e) => setNewGoalName(e.target.value)} style={{ marginBottom: 5 }} />
                     <br />
                     <label htmlFor='goalDescription'>Goal Description: </label>
-                    <input type='text' name='goalDescription' onInput={(e) => setNewGoalDescription(e.target.value)} style={{ marginBottom: 5 }} />
+                    <input type='text' name='goalDescription' id='goalDescription' onInput={(e) => setNewGoalDescription(e.target.value)} style={{ marginBottom: 5 }} />
                     <br />
                     <button onClick={() => createGoal()}>Create</button>
                 </>

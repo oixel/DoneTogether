@@ -48,7 +48,7 @@ app.get('/getGoals/:userID', async (req, res) => {
 
     try {
         // 
-        const goalsDocument = await Goals.find({ ownerID: userID });
+        const goalsDocument = await Goal.find({ ownerID: userID });
 
         // 
         const exists = !!goalsDocument;
