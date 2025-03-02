@@ -11,4 +11,5 @@
 
 .goalsDiv {
     overflow-y: auto;
+    margin: 5px;
 }
