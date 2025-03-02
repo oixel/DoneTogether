@@ -85,6 +85,18 @@ app.post('/goal', async (req, res) => {
 
 });
 
+// Searches for goal with given ID and deletes it
+app.delete('/goal/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await Goal.deleteOne({ _id: new mongoose.Types.ObjectId(id) });
+        res.send("Goal has been deleted.")
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 // If port is specified in .env, use it; otherwise, default to 8000
 const port = process.env.PORT || 8000;
 

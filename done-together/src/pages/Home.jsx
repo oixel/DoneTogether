@@ -76,7 +76,14 @@ function Home() {
 
             <div className="goalsDiv">
                 {(goals.length) ?
-                    goals.map(goal => <Goal key={goal._id} name={goal.goalName} description={goal.goalDescription} />)
+                    goals.map(goal =>
+                        <Goal
+                            key={goal._id}
+                            id={goal._id}
+                            name={goal.goalName}
+                            description={goal.goalDescription}
+                        />
+                    )
                     : "You have no goals..."
                 }
             </div>
