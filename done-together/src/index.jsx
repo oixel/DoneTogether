@@ -17,7 +17,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <Routes>
-    <Route path="/" element={<UserHomePage />} />
+    <Route path="/" element={<LandingPage />} />
 
       {/* Makes it so both "/login" and "/signup" routes use the LoginLayout component */}
       <Route element={<LoginLayout />}>
@@ -26,6 +26,7 @@ root.render(
       </Route>
       
       <Route path="/aboutUs" element={<AboutUs />} /> 
+
     </Routes>
   </BrowserRouter >
 );

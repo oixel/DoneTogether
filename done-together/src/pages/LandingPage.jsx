@@ -21,8 +21,8 @@ function LandingPage(){
 
             <div className="navbar">
               <BeigeLogo className='home-page-navbar-logo'/>
-              <Link to="/aboutUs" className="nav-button">About Us</Link> {/* Change to Link */}
-              <Link to="/login" className="nav-button">Log In</Link> {/* Change to Link */}
+              <Link to="/aboutUs" className="nav-button">About Us</Link>
+              <Link to="/login" className="nav-button">Log In</Link> 
             </div>
 
             <GreenLogo className='home-page-logo'/>
@@ -38,7 +38,7 @@ function LandingPage(){
             <div className="section-text compete-text">Ort nur endigend erzahlte spielend hausherr ihr schmales tadellos. Wu preisen so pa argerte gefallt wahrend schonen. Neu</div>
           </div>
 
-          <div className='footer'></div>
+          {/* <div className='footer'></div> */}
         </div>
     );
 }
