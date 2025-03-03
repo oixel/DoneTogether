@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import SignOut from './pages/SignOut';
 import Page404 from './pages/Page404';
-import './App.css';
+import './styles/App.css';
 import './styles/global.css'
 
 // Get publishable key from environment variables

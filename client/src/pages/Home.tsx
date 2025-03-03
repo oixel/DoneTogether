@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from '@clerk/clerk-react';
-import './Home.css';
+import '../styles/Home.css';
 
 const Home = () => {
 
