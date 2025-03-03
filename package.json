@@ -12,6 +12,7 @@
     "concurrently": "^8.0.1"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.24.1",
     "@clerk/nextjs": "^6.12.2"
   }
 }
