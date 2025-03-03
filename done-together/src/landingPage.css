@@ -39,6 +39,7 @@
   align-items: center; 
   padding: 0 20px; 
   background-color: #636B2F;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   width: 100vw;
   height: 4vw;
 }
@@ -46,8 +47,9 @@
 .nav-button {
   width: 8vw;
   height: 2vw;
-  background: white;
-  border-radius: 30px;
+  border-radius: 20px;
+  background: #F0F2DC;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   color: black;
   font-size: 1.2vw;
   font-family: 'Adamina', serif;
@@ -70,12 +72,12 @@
 }
 
 .home-page-logo {
-  width: 25vw;
+  width: 18vw;
   height: auto;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 65%;
+  top: 73%;
 }
 
 
@@ -117,7 +119,7 @@
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   left: 50%;
   transform: translateX(-50%);
-  top: 56%;
+  top: 59%;
   cursor: pointer;
 
   color: white;
@@ -150,21 +152,21 @@
 }
 
 .goals {
-  left: 15%;
+  left: 7%;
   top: -1%;
 }
 .collaborate {
   left: 55%;
-  top: 30%;
+  top: 32%;
 }
 .compete {
-  left: 15%;
-  top: 62%;
+  left: 7%;
+  top: 64%;
 }
 
 
 .section-text {
-  width: 30%;
+  width: 40%;
   position: absolute;
   color: #7A7B75;
   font-size: 25px;
@@ -175,19 +177,21 @@
 }
 
 .goals-text {
-  left: 15%;
+  left: 7%;
   top: 12%;
 }
 
-.compete-text {
-  left: 15%;
-  top: 74%;
-}
 
 .collaborate-text {
   left: 55%;
-  top: 40%;
+  top: 45%;
 }
+
+.compete-text {
+  left: 7%;
+  top: 77%;
+}
+
 
 
 
@@ -215,8 +219,132 @@
   top: 35%;
   right: 8%;
  }
-  
 
+ .left-branch{
+  width: 5vw;
+  height: 5vw;
+  position: absolute;
+  top: 45%;
+  left: 30%;
+ }
+
+ .right-branch{
+  width: 5vw;
+  height: 5vw;
+  position: absolute;
+  top: 47%;
+  right: 30%;
+ }
+
+ .two-underline{
+  width: 11vw;
+  height: 11vw;
+  position: absolute;
+  top: 43%;
+  right: 35%;
+ }
+
+ .circle{
+  width: 28vw;
+  height: 25vw;
+  position: absolute;
+  top: 38%;
+  left: 36%;
+ }
   
+ .cross-hatch{
+  width: 7vw;
+  height: 7vw;
+  position: absolute;
+  top: -1%;
+  left: 0%;
+ }
+
+ .three-arrow{
+  width: 10vw;
+  height: 10vw;
+  position: absolute;
+  top: 17%;
+  right: 44%;
+ }
+
+ .swirl{
+  width: 7vw;
+  height: 7vw;
+  position: absolute;
+  top: 60%;
+ }
+
+ .target{
+  width: 10vw;
+  height: 10vw;
+  position: absolute;
+  top: 8%;
+  right: 22%;
+ }
+
+ .three-smiles{
+  width: 30vw;
+  height: 30vw;
+  position: absolute;
+  top: 19%;
+  left: 14%;
+ }
+
+ .trophy{
+  width: 10vw;
+  height: 10vw;
+  position: absolute;
+  top: 73%;
+  right: 20%;
+ }
+
+ .spark-one{
+  width: 4vw;
+  height: 4vw;
+  position: absolute;
+  top: 73%;
+  right: 10%;
+ }
   
+ 
+ .spark-two{
+  width: 4vw;
+  height: 4vw;
+  position: absolute;
+  top: 83%;
+  right: 15%;
+ }
+
+ .spark-one{
+  width: 4vw;
+  height: 4vw;
+  position: absolute;
+  top: 73%;
+  right: 10%;
+ }
   
+ 
+ .spark-two{
+  width: 4vw;
+  height: 4vw;
+  position: absolute;
+  top: 83%;
+  right: 15%;
+ }
+
+ .spark-three{
+  width: 4vw;
+  height: 4vw;
+  position: absolute;
+  top: 73%;
+  right: 32%;
+ }
+  
+ .spark-four{
+  width: 4vw;
+  height: 4vw;
+  position: absolute;
+  top: 83%;
+  right: 37%;
+ }
