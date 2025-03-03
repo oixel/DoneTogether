@@ -5,16 +5,14 @@ import './Home.css';
 
 const Home = () => {
 
-
-
   return (
     <div className="container">
       <header>
         <h1>DoneTogether</h1>
         <nav>
           <SignedIn>
-            <Link to="/dashboard" className ="sign-up-button">Dashboard</Link>
-            <UserButton afterSignOutUrl="/" />
+            <Link to="/dashboard" className="sign-up-button">Dashboard</Link>
+            <UserButton />
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
