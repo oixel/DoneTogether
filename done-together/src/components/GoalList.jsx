@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
-const GoalList = ( props ) => {
-    const goals = props.goals;
-    
+import { GiHamburgerMenu } from "react-icons/gi";
+
+
+const GoalList = ( { goals, handleDelete } ) => {
     return (  
         <div> 
-            <h2>My Current Goals: </h2>
             <div className= 'goal-list'>
                 {goals.map((goal) => (
                     <div className= 'goal-box' key={goal.id}>
-                        <h2>{ goal.title} </h2>
+                        {/* for now the Menu will delete the goal, will do more menu options later */}
+                        <GiHamburgerMenu onClick={() => handleDelete(goal.goalID)} className='hamburger-menu'/>
+                        <h2>{ goal.title } </h2>
                         <p>{ goal.goalID }</p>
                     </div>
                 ))}

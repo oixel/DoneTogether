@@ -26,7 +26,6 @@ root.render(
       </Route>
       
       <Route path="/aboutUs" element={<AboutUs />} /> 
-
     </Routes>
   </BrowserRouter >
 );
