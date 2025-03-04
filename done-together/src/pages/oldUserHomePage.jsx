@@ -4,7 +4,7 @@ import "../globalStyles.css"
 import "../userHomePage.css"
 import elmo from '../assets/elmo-profile-picture.jpg'
 import { ReactComponent as BeigeLogo } from '../assets/icons/logo-beige.svg'
-import GoalList from '../components/goalList'
+import GoalList from '../components/GoalList'
 import GoalPopUp from '../components/GoalPopUp'
 
 function UserHomePage() {
