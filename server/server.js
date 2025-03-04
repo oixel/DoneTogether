@@ -1,5 +1,5 @@
 const express = require('express');
-const { clerkMiddleware, requireAuth } = require('@clerk/express');
+const { clerkMiddleware, clerkClient } = require('@clerk/express');
 const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
 
@@ -19,6 +19,29 @@ async function connectToMongo() {
   await mongoClient.connect();
   db = mongoClient.db(process.env.MONGODB_DB || 'GoalData');
 }
+
+app.get('/userByName/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const { data } = await clerkClient.users.getUserList({ username: username });
+
+    res.status(200).json({ user: data[0] });
+  } catch (error) {
+    res.status(500).send("Server error while getting user by username.");
+  }
+});
+
+// 
+app.get('/userById/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await clerkClient.users.getUser(id);
+    res.status(200).json({ user: user });
+  } catch (error) {
+    res.status(500).send("Server error while getting user by ID");
+  }
+});
 
 // Queries all goals owned by the current user
 app.get('/getGoals/:userId', async (req, res) => {
@@ -40,7 +63,8 @@ app.post('/goal', async (req, res) => {
     const goal = {
       name: req.body.name,
       description: req.body.description,
-      ownerId: req.body.ownerId
+      ownerId: req.body.ownerId,
+      users: req.body.users
     };
 
     const result = await db.collection('goals').insertOne(goal);

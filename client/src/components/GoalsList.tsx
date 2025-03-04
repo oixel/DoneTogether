@@ -1,4 +1,4 @@
-// src/pages/Dashboard.tsx
+// src/pages/GoalsList.tsx
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import Goal from "./Goal";
 
 import '../styles/GoalsList.css'
 
-const Dashboard = () => {
+const GoalsList = () => {
     const { isLoaded, isSignedIn, user } = useUser();
 
     const [name, setName] = useState('');
@@ -41,7 +41,8 @@ const Dashboard = () => {
             axios.post('http://localhost:3001/goal', {
                 name: name,
                 description: description,
-                ownerId: user.id
+                ownerId: user.id,
+                users: [user.id]
             }).catch(function (error) {
                 console.log(error);
             });
@@ -62,7 +63,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="goals">
+        <div className="goalsListContainer">
             <div className="goalsDiv">
                 {(goals.length) ?
                     goals.map(goal =>
@@ -72,6 +73,7 @@ const Dashboard = () => {
                             name={goal.name}
                             description={goal.description}
                             setUpdated={setUpdated}
+                            users={goal.users}
                         />
                     )
                     : "You have no goals..."
@@ -92,4 +94,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default GoalsList;
