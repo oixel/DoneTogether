@@ -1,13 +1,15 @@
 
 import { Link } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from '@clerk/clerk-react';
+import GoalsList from '../components/GoalsList';
+
 import '../styles/Home.css';
 
 const Home = () => {
 
   return (
     <div className="container">
-      <header>
+      <header style={{ paddingBottom: '30px' }}>
         <h1>DoneTogether</h1>
         <nav>
           <SignedIn>
@@ -24,6 +26,15 @@ const Home = () => {
           </SignedOut>
         </nav>
       </header>
+      <div>
+        <SignedIn>
+          <GoalsList />
+        </SignedIn>
+
+        <SignedOut>
+          <p>Please sign in to see your goals!</p>
+        </SignedOut>
+      </div>
     </div>
   );
 };
