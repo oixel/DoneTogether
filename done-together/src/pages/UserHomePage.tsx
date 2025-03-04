@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "../globalStyles.css";
 import "../userHomePage.css";
 import elmo from '../assets/elmo-profile-picture.jpg';
-import BeigeLogo from '../assets/icons/logo-beige.svg'; // im confused why this is not working
+import { ReactComponent as BeigeLogo } from '../assets/icons/logo-beige.svg'; // im confused why this is not working
 import GoalList from '../components/GoalList.tsx';  
 import GoalPopUp from '../components/GoalPopUp.tsx'; 
 
@@ -42,7 +42,7 @@ const UserHomePage: React.FC = () => {
   return (
     <div className="container">
       <div className="navbar">
-        {/* <BeigeLogo className="home-page-navbar-logo" /> need to check again*/}
+        <BeigeLogo className="home-page-navbar-logo" />
         <div className="user-profile-frame">
           <img src={elmo} className="profile-image" alt="Profile" />
         </div>
