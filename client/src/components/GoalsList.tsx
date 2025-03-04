@@ -10,6 +10,9 @@ import '../styles/GoalsList.css'
 const Dashboard = () => {
     const { isLoaded, isSignedIn, user } = useUser();
 
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+
     const [goals, setGoals] = useState([]);
 
     const [updated, setUpdated] = useState(false);
@@ -34,10 +37,10 @@ const Dashboard = () => {
 
     // Send POST request to server to create a new goal for the current user
     async function createGoal(): Promise<void> {
-        if (isSignedIn) {
+        if (isSignedIn && name) {
             axios.post('http://localhost:3001/goal', {
-                name: 'filler name',
-                description: 'filler description',
+                name: name,
+                description: description,
                 ownerId: user.id
             }).catch(function (error) {
                 console.log(error);
@@ -74,7 +77,17 @@ const Dashboard = () => {
                     : "You have no goals..."
                 }
             </div>
-            <button onClick={() => createGoal()}>Create Goal +</button>
+            <div className="createContainer">
+                <div>
+                    <label htmlFor='name'>Goal Name:</label>
+                    <input name='name' onChange={(e) => setName(e.target.value)} />
+                </div>
+                <div>
+                    <label htmlFor='description'>Goal Description:</label>
+                    <input name='description' onChange={(e) => setDescription(e.target.value)} />
+                </div>
+                <button onClick={() => createGoal()}>Create Goal +</button>
+            </div>
         </div>
     );
 };
