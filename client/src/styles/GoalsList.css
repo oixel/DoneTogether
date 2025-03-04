@@ -4,6 +4,18 @@ button {
     margin-top: 15px;
 }
 
+.refreshButton {
+    width: 35px;
+    margin-left: 10px;
+}
+
+.goalsDiv {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0px 15px;
+}
+
 .createContainer {
     display: flex;
     flex-direction: column;

@@ -20,6 +20,7 @@ async function connectToMongo() {
   db = mongoClient.db(process.env.MONGODB_DB || 'GoalData');
 }
 
+// 
 app.get('/userByName/:username', async (req, res) => {
   const { username } = req.params;
   try {
@@ -48,7 +49,7 @@ app.get('/getGoals/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const goals = await db.collection('goals').find({ ownerId: userId }).toArray();
+    const goals = await db.collection('goals').find({ users: userId }).toArray();
 
     // Return successful status and goals
     res.status(200).json({ goals: goals });
@@ -71,6 +72,23 @@ app.post('/goal', async (req, res) => {
     res.send(`Goal has been created with the ID ${result.insertedId}!`);
   } catch (error) {
     res.status(500).send("Server error while creating new goal.");
+  }
+});
+
+// Updates goal with new attributes (primarily used for adding new users to goals)
+app.put('/goal', async (req, res) => {
+  try {
+    // 
+    const filter = { _id: new ObjectId(req.body._id) };
+    const update = { $push: { users: req.body.newUserId } };
+
+    // 
+    const result = await db.collection('goals').updateOne(filter, update, { upsert: true });
+
+    // 
+    res.send(`${result.modified} document(s) have been updated.`);
+  } catch (error) {
+    res.status(500).send("Server error while updating goal.");
   }
 });
 

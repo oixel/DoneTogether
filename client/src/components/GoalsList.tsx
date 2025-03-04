@@ -15,10 +15,11 @@ const GoalsList = () => {
 
     const [goals, setGoals] = useState([]);
 
-    const [updated, setUpdated] = useState(false);
+    const [goalUpdated, setGoalUpdated] = useState(false);
 
     // Send GET request to server to query all goals created by this user
     async function getGoals(): Promise<void> {
+        console.log('Getting Goals');
         if (user) {
             try {
                 const res = await axios.get(
@@ -28,7 +29,7 @@ const GoalsList = () => {
                 setGoals(res.data.goals);
 
                 // Toggle updated back to false since goals have been refreshed
-                if (updated) setUpdated(false);
+                if (goalUpdated) setGoalUpdated(false);
             } catch (error) {
                 console.error(`Failed to fetch goals: ${error}.`);
             }
@@ -47,15 +48,19 @@ const GoalsList = () => {
                 console.log(error);
             });
 
-            // Set updated to true to cause goal refresh
-            setUpdated(true);
+            // Wipe name/description inputs when goal is successfully created
+            document.getElementById('nameInput').value = '';
+            document.getElementById('descriptionInput').value = '';
+
+            // Set updated to true to cause goal to re-render
+            setGoalUpdated(true);
         }
     }
 
     // Update the goals displayed if page is finally loaded or the goals have been updated
     useEffect(() => {
         if (isLoaded && isSignedIn) getGoals();
-    }, [isLoaded, updated]);
+    }, [isLoaded, goalUpdated]);
 
     // Display loading text while user's information gets loaded
     if (!isLoaded) {
@@ -72,7 +77,7 @@ const GoalsList = () => {
                             id={goal._id}
                             name={goal.name}
                             description={goal.description}
-                            setUpdated={setUpdated}
+                            setGoalUpdated={setGoalUpdated}
                             users={goal.users}
                         />
                     )
@@ -81,14 +86,17 @@ const GoalsList = () => {
             </div>
             <div className="createContainer">
                 <div>
-                    <label htmlFor='name'>Goal Name:</label>
-                    <input name='name' onChange={(e) => setName(e.target.value)} />
+                    <label htmlFor='nameInput'>Goal Name:</label>
+                    <input name='nameInput' id='nameInput' onChange={(e) => setName(e.target.value)} />
                 </div>
                 <div>
-                    <label htmlFor='description'>Goal Description:</label>
-                    <input name='description' onChange={(e) => setDescription(e.target.value)} />
+                    <label htmlFor='descriptionInput'>Goal Description:</label>
+                    <input name='descriptionInput' id='descriptionInput' onChange={(e) => setDescription(e.target.value)} />
                 </div>
-                <button onClick={() => createGoal()}>Create Goal +</button>
+                <div>
+                    <button onClick={() => createGoal()}>Create Goal +</button>
+                    <button className="refreshButton" onClick={() => getGoals()}>🔃</button>
+                </div>
             </div>
         </div>
     );

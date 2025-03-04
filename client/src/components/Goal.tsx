@@ -10,18 +10,18 @@ interface GoalPropTypes {
     id: string;
     name: string;
     description: string;
-    setUpdated: CallableFunction;
+    setGoalUpdated: CallableFunction;
     users: Array<string>;
 }
 
-function Goal({ id, name, description, setUpdated, users }: GoalPropTypes) {
+function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
     const [searchedUser, setSearchedUser] = useState(undefined);
     const [usersData, setUsersData] = useState([]);
 
     // Send a DELETE request to server based on this goal's ObjectId in MongoDB
     async function deleteGoal(): Promise<void> {
         await axios.delete(`http://localhost:3001/goal/${id}`);
-        setUpdated(true);
+        setGoalUpdated(true);
     }
 
     // 
@@ -44,8 +44,7 @@ function Goal({ id, name, description, setUpdated, users }: GoalPropTypes) {
     // 
     useEffect(() => {
         getUsers();
-    }, []);
-
+    }, [users]);
 
     // 
     async function checkIfUserExists(username: string): Promise<void> {
@@ -60,7 +59,23 @@ function Goal({ id, name, description, setUpdated, users }: GoalPropTypes) {
     // 
     async function addUser(): Promise<void> {
         if (searchedUser) {
-            console.log(`Add user with username ${searchedUser.username}.`);
+            // Only add user if the user is not already part of this goal
+            if (!users.includes(searchedUser.id)) {
+                await axios.put('http://localhost:3001/goal', {
+                    _id: id,
+                    newUserId: searchedUser.id  // Add the new user into the data
+                }).catch(function (error) {
+                    console.log(error);
+                });
+
+                // Wipe search bar if adding was successful
+                document.getElementById('searchInput').value = '';
+            } else {
+                console.log(`${searchedUser.username} is already in this goal.`);
+            }
+
+            // Set updated to true to cause goal to re-render
+            setGoalUpdated(true);
         }
     }
 
@@ -68,8 +83,8 @@ function Goal({ id, name, description, setUpdated, users }: GoalPropTypes) {
         <div className="goalContainer">
             <div className="goalInfo">
                 <div style={{ flexGrow: 1 }}>
-                    <h1>{name || "This is the name of the goal."}</h1>
-                    <p>{description || "This is the description."}</p>
+                    <h1>{name}</h1>
+                    <p>{description}</p>
                 </div>
                 <button className="goalButton" onClick={() => deleteGoal()}>🗑️</button>
             </div>
@@ -85,7 +100,7 @@ function Goal({ id, name, description, setUpdated, users }: GoalPropTypes) {
                 }
                 <div className="addUser">
                     <p>{(searchedUser) ? '✅' : '❌'}</p>
-                    <input type="text" onChange={(e) => checkIfUserExists(e.target.value)}></input>
+                    <input id="searchInput" type="text" onChange={(e) => checkIfUserExists(e.target.value)} placeholder='Enter username here.'></input>
                     <button onClick={() => addUser()}>Add User +</button>
                 </div>
             </div>
