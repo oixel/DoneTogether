@@ -8,7 +8,7 @@ import Home from './pages/Home.jsx';
 
 import LoginLayout from './pages/LoginLayout.jsx';
 import Login from './pages/Login.jsx';
-import UserHomePage from './pages/UserHomePage.jsx';
+import UserHomePage from './pages/UserHomePage.tsx';
 import SignUp from './pages/SignUp.jsx';
 import AboutUs from './pages/AboutUs.jsx';
 import LandingPage from './pages/LandingPage.jsx';
