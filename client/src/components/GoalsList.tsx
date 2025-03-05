@@ -19,7 +19,6 @@ const GoalsList = () => {
 
     // Send GET request to server to query all goals created by this user
     async function getGoals(): Promise<void> {
-        console.log('Getting Goals');
         if (user) {
             try {
                 const res = await axios.get(

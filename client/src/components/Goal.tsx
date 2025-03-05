@@ -6,6 +6,7 @@ import '../styles/Goal.css';
 
 import User from './User';
 
+// Define the schema for goals
 interface GoalPropTypes {
     id: string;
     name: string;
@@ -24,14 +25,15 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
         setGoalUpdated(true);
     }
 
-    // 
+    // Send a GET request to server with user's id
     async function getUserById(id: string) {
         const result = await axios.get(`http://localhost:3001/userById/${id}`);
         return result.data.user;
     }
 
+    // Loops through all user IDs and grabs their data from Clerk database
     async function getUsers(): Promise<void> {
-        let newUsers = [];
+        const newUsers: Array<typeof User> = [];
 
         for (const userId of users) {
             const newUser = await getUserById(userId);
@@ -41,29 +43,30 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
         setUsersData(newUsers);
     }
 
-    // 
+    // Update the user data whenever there is a change in users array
     useEffect(() => {
         getUsers();
     }, [users]);
 
-    // 
+    // Verify whether inputted username exists in Clerk database
     async function checkIfUserExists(username: string): Promise<void> {
         if (username) {
             const result = await axios.get(`http://localhost:3001/userByName/${username}`);
 
             setSearchedUser(result.data.user);
-        }
+        }  // If no input is currently given, update searchedUser to be undefined
         else setSearchedUser(undefined);
     }
 
-    // 
+    // Attempt to add user to goal's array of users in MongoDB
     async function addUser(): Promise<void> {
         if (searchedUser) {
             // Only add user if the user is not already part of this goal
             if (!users.includes(searchedUser.id)) {
+                // Pass the goal's ObjectId for querying and newUserId to append to it's array
                 await axios.put('http://localhost:3001/goal', {
                     _id: id,
-                    newUserId: searchedUser.id  // Add the new user into the data
+                    newUserId: searchedUser.id
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -99,6 +102,7 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
 
                 }
                 <div className="addUser">
+                    {/* Displays whether searchedUser actually exists in Clerk database */}
                     <p>{(searchedUser) ? '✅' : '❌'}</p>
                     <input id="searchInput" type="text" onChange={(e) => checkIfUserExists(e.target.value)} placeholder='Enter username here.'></input>
                     <button onClick={() => addUser()}>Add User +</button>
