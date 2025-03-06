@@ -1,5 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
+import { CgClose } from "react-icons/cg";
+import "../popUp.css";
+import swirlyDoodle from "../assets/icons/swirlydoodle.svg";
+import threeArrows from "../assets/icons/threearrowsPopUp.svg";
 
 
 interface GoalPopUpProps {
@@ -9,43 +13,40 @@ interface GoalPopUpProps {
 const GoalPopUp: React.FC<GoalPopUpProps> = ({ setGoalPopUpState }) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   return (
     <div className="pop-up">
-      <button onClick={() => setGoalPopUpState(false)}>Exit</button>
-      <div className="create-goal">Create Goal</div>
-      <form className="goal-form">
-        <label className="goal-name">Goal Name:</label>
+      <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-left"/>
+      <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-right"/>
+      <CgClose onClick={() => setGoalPopUpState(false)} className= "exit-icon"/>
+      <h2 className="create-goal-title">Create Goal</h2>
+      
+      <form className="form-container">
+        <label className='form-label'>Goal Name: </label>
         <input
-          className="goal-name-input"
-          type="text"
-          required
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        type = "text"
+        required
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className='form-input'
+        /><br/>
 
-        <label className="goal-description">Goal Description:</label>
-        <textarea
-          className="goal-description-input"
-          required
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+        <label className='form-label'>Description: </label>
+        <textarea className='form-input' style={{ height: '6vw' }}/> <br/>
 
-        <label className="start-date">Start Date:</label>
-        <input
-          className="start-date-input"
-          type="date"
-          required
-          value={startDate.toISOString().split("T")[0]} // Converts Date to "YYYY-MM-DD"
-          onChange={(e) => setStartDate(new Date(e.target.value + "T00:00:00"))} // Ensures correct Date parsing
-        />
+        <label className='form-label'>Start Date: </label>
+        <input type= "date" className='form-input'/> <br/>
 
-        {/* Debugging  */}
-        <p>{startDate.toISOString().split("T")[0]}</p>
-
+        <label className='form-label'>End Date: </label>
+        <input type= "date" className='form-input'/> <br/>
       </form>
+
+      <img src={threeArrows} alt="three arrows" className="three-arrows-left"/>
+      <img src={threeArrows} alt="three arrows" className="three-arrows-right"/>
+      <button className="create-button">Create!</button>
+      
     </div>
   );
 

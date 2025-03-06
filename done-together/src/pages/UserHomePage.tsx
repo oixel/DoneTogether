@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import "../globalStyles.css";
 import "../userHomePage.css";
+import "../popUp.css";
 import elmo from '../assets/elmo-profile-picture.jpg';
-import { ReactComponent as BeigeLogo } from '../assets/icons/logo-beige.svg'; // im confused why this is not working
+import { ReactComponent as BeigeLogo } from '../assets/icons/logo-beige.svg'; 
 import GoalList from '../components/GoalList.tsx';  
 import GoalPopUp from '../components/GoalPopUp.tsx'; 
 
-interface Goal {
+// define Goal object
+interface Goal { 
   title: string;
   description: string;
   date: string;
@@ -47,9 +49,8 @@ const UserHomePage: React.FC = () => {
           <img src={elmo} className="profile-image" alt="Profile" />
         </div>
       </div>
-      <button onClick={handleClick} className="create-goal-button">
-        + Add Goal {goalPopUpState ? 1 : 0}
-      </button>
+      
+      <button onClick={handleClick} className="create-goal-button">+ Add Goal</button>
 
       {goalPopUpState && <div className="overlay active"></div>}
       {goalPopUpState && (

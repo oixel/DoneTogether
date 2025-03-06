@@ -1,0 +1,10 @@
+{
+    "goals": [
+    { "title": "Drink More Water.", "description": "lorem ipsum...", "date": "00/00/0000", "userID": 12345, "goalID": 1 },
+    { "title": "Drink More Water.", "description": "lorem ipsum...", "date": "00/00/0000", "userID": 12345, "goalID": 2 },
+    { "title": "Drink More Water.", "description": "lorem ipsum...", "date": "00/00/0000", "userID": 12345, "goalID": 3 },
+    { "title": "Drink More Water.", "description": "lorem ipsum...", "date": "00/00/0000", "userID": 12345, "goalID": 4 },
+    { "title": "Drink More Water.", "description": "lorem ipsum...", "date": "00/00/0000", "userID": 12345, "goalID": 5 },
+    { "title": "Drink More Water.", "description": "lorem ipsum...", "date": "00/00/0000", "userID": 12345, "goalID": 6 }
+    ]
+}
