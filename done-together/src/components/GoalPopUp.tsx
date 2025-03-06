@@ -12,10 +12,10 @@ const GoalPopUp: React.FC<GoalPopUpProps> = ({ setGoalPopUpState }) => {
   return (
     <div className="pop-up">
       <button onClick={() => setGoalPopUpState(false)}>Exit</button>
-      <h2 className="create-goal">Create Goal</h2>
+      <div className="create-goal">Create Goal</div>
       <form>
-        <label>Goal Name</label>
-        <input
+        <label className='goal-name'>Goal Name: </label>
+        <input className="goal-name-input"
         type = "text"
         required
         value={title}
