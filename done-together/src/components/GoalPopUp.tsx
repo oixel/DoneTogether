@@ -1,5 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
+import { CgClose } from "react-icons/cg";
+import "../popUp.css";
+import swirlyDoodle from "../assets/icons/swirlydoodle.svg";
+import threeArrows from "../assets/icons/threearrowsPopUp.svg";
 
 
 interface GoalPopUpProps {
@@ -8,21 +12,41 @@ interface GoalPopUpProps {
 
 const GoalPopUp: React.FC<GoalPopUpProps> = ({ setGoalPopUpState }) => {
   const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   return (
     <div className="pop-up">
-      <button onClick={() => setGoalPopUpState(false)}>Exit</button>
-      <h2 className="create-goal">Create Goal</h2>
-      <form>
-        <label>Goal Name</label>
+      <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-left"/>
+      <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-right"/>
+      <CgClose onClick={() => setGoalPopUpState(false)} className= "exit-icon"/>
+      <h2 className="create-goal-title">Create Goal</h2>
+      
+      <form className="form-container">
+        <label className='form-label'>Goal Name: </label>
         <input
         type = "text"
         required
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        />
-       <p>{title}</p>
+        className='form-input'
+        /><br/>
+
+        <label className='form-label'>Description: </label>
+        <textarea className='form-input' style={{ height: '6vw' }}/> <br/>
+
+        <label className='form-label'>Start Date: </label>
+        <input type= "date" className='form-input'/> <br/>
+
+        <label className='form-label'>End Date: </label>
+        <input type= "date" className='form-input'/> <br/>
       </form>
+
+      <img src={threeArrows} alt="three arrows" className="three-arrows-left"/>
+      <img src={threeArrows} alt="three arrows" className="three-arrows-right"/>
+      <button className="create-button">Create!</button>
+      
     </div>
     
   );
