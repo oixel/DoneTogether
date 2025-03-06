@@ -9,6 +9,7 @@ interface GoalPopUpProps {
 const GoalPopUp: React.FC<GoalPopUpProps> = ({ setGoalPopUpState }) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [startDate, setStartDate] = useState<Date>(new Date());
 
   return (
     <div className="pop-up">
@@ -31,8 +32,18 @@ const GoalPopUp: React.FC<GoalPopUpProps> = ({ setGoalPopUpState }) => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
+
+        <label className="start-date">Start Date:</label>
+        <input
+          className="start-date-input"
+          type="date"
+          required
+          value={startDate.toISOString().split("T")[0]} // Converts Date to "YYYY-MM-DD"
+          onChange={(e) => setStartDate(new Date(e.target.value + "T00:00:00"))} // Ensures correct Date parsing
+        />
+
         {/* Debugging  */}
-        {/* <p>{description}</p> */}
+        <p>{startDate.toISOString().split("T")[0]}</p>
 
       </form>
     </div>
