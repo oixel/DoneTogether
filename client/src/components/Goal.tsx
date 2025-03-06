@@ -1,18 +1,23 @@
 import { useEffect, useState } from 'react';
-
 import axios from 'axios';
-
 import '../styles/Goal.css';
-
 import User from './User';
 
-// Define the schema for goals
+// Define the interface for user objects
+interface UserObject {
+    userId: string;
+    username?: string;
+    joinedAt?: Date;
+    role?: string;
+}
+
+// Define the schema for goals with updated users type
 interface GoalPropTypes {
     id: string;
     name: string;
     description: string;
     setGoalUpdated: CallableFunction;
-    users: Array<string>;
+    users: Array<UserObject>; // Changed from Array<string> to Array<UserObject>
 }
 
 function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
@@ -31,13 +36,28 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
         return result.data.user;
     }
 
-    // Loops through all user IDs and grabs their data from Clerk database
+    // Loops through all user objects and grabs their data from Clerk database
     async function getUsers(): Promise<void> {
-        const newUsers: Array<typeof User> = [];
+        const newUsers = [];
 
-        for (const userId of users) {
-            const newUser = await getUserById(userId);
-            newUsers.push(newUser);
+        // Check if users exists and is an array
+        if (users && Array.isArray(users)) {
+            for (const userObj of users) {
+                // Make sure userObj is an object with userId
+                if (userObj && typeof userObj === 'object' && 'userId' in userObj) {
+                    const userId = userObj.userId;
+                    const newUser = await getUserById(userId);
+                    if (newUser) {
+                        newUsers.push(newUser);
+                    }
+                } else if (typeof userObj === 'string') {
+                    // Handle the case where users might still be strings during transition
+                    const newUser = await getUserById(userObj);
+                    if (newUser) {
+                        newUsers.push(newUser);
+                    }
+                }
+            }
         }
 
         setUsersData(newUsers);
@@ -52,21 +72,34 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
     async function checkIfUserExists(username: string): Promise<void> {
         if (username) {
             const result = await axios.get(`http://localhost:3001/userByName/${username}`);
-
             setSearchedUser(result.data.user);
-        }  // If no input is currently given, update searchedUser to be undefined
-        else setSearchedUser(undefined);
+        } else {
+            setSearchedUser(undefined);
+        }
     }
 
     // Attempt to add user to goal's array of users in MongoDB
     async function addUser(): Promise<void> {
         if (searchedUser) {
-            // Only add user if the user is not already part of this goal
-            if (!users.includes(searchedUser.id)) {
-                // Pass the goal's ObjectId for querying and newUserId to append to it's array
+            // Check if user is already part of this goal
+            const userExists = users.some(user => 
+                (typeof user === 'object' && 'userId' in user && user.userId === searchedUser.id) || 
+                user === searchedUser.id
+            );
+            
+            if (!userExists) {
+                // Create new user object
+                const newUserObj = {
+                    userId: searchedUser.id,
+                    username: searchedUser.username,
+                    joinedAt: new Date(),
+                    role: 'member'
+                };
+                
+                // Pass the goal's ObjectId for querying and newUserObj to append to its array
                 await axios.put('http://localhost:3001/goal', {
                     _id: id,
-                    newUserId: searchedUser.id
+                    newUserObj: newUserObj // Changed parameter name to match the object
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -98,17 +131,20 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
                         imageUrl={currentUser.imageUrl}
                         username={currentUser.username}
                     />
-                )
-
-                }
+                )}
                 <div className="addUser">
                     {/* Displays whether searchedUser actually exists in Clerk database */}
                     <p>{(searchedUser) ? '✅' : '❌'}</p>
-                    <input id="searchInput" type="text" onChange={(e) => checkIfUserExists(e.target.value)} placeholder='Enter username here.'></input>
+                    <input 
+                        id="searchInput" 
+                        type="text" 
+                        onChange={(e) => checkIfUserExists(e.target.value)} 
+                        placeholder='Enter username here.'
+                    />
                     <button onClick={() => addUser()}>Add User +</button>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
 

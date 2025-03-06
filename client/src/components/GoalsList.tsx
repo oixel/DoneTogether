@@ -42,7 +42,12 @@ const GoalsList = () => {
                 name: name,
                 description: description,
                 ownerId: user.id,
-                users: [user.id]
+                users: [{
+                    userId: user.id,
+                    username: user.username,
+                    joinedAt: new Date(),
+                    role: 'owner'
+                }]
             }).catch(function (error) {
                 console.log(error);
             });
