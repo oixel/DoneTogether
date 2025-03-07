@@ -43,14 +43,12 @@ const GoalPopUp: React.FC<GoalPopUpProps> = ({ setGoalPopUpState }) => {
         <input type= "date" className='form-input'/> <br/>
       
         <div className="arrows-container">
-        <img src={threeArrows} alt="three arrows" className="three-arrows-left"/>
-        <img src={threeArrows} alt="three arrows" className="three-arrows-right"/>
-
-        </div>
-        
-        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img src={threeArrows} alt="three arrows" className="three-arrows-left"/>
           <button className="create-button">Create!</button>
+          <img src={threeArrows} alt="three arrows" className="three-arrows-right"/>
         </div>
+
+        
 
       </form>
       
