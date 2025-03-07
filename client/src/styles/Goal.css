@@ -1,0 +1,68 @@
+h1 {
+    font-size: 24px;
+}
+
+.goalContainer {
+    flex-shrink: 0;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 200px;
+    padding: 5;
+    background-color: lightgrey;
+    border: 2px solid black;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.goalInfo {
+    flex-grow: 0.3;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 2px solid rgb(150, 150, 150);
+}
+
+.usersSection {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    overflow-y: auto;
+    background-color: rgb(230, 230, 230);
+}
+
+.goalButton {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+}
+
+.addUser {
+    flex-shrink: 0;
+    display: flex;
+    width: 100%;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+}
+
+.addUser p {
+    margin-bottom: 3px;
+}
+
+.addUser input {
+    margin-left: 10px;
+}
+
+.addUser button {
+    height: 20px;
+    margin-bottom: 15px;
+    margin-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
