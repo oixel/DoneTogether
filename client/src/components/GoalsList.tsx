@@ -113,7 +113,7 @@ function GoalsList() {
               name={goal.name}
               description={goal.description}
               ownerId={goal.ownerId}
-              users={goal.users || []}
+              users={goal.users as UserObject[]}
               setGoalUpdated={setGoalsUpdated}
               //@ts-expect-error user is not null cause this component will only be shown during a signed in state
               currentUserId={user.id}

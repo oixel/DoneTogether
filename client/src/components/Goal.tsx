@@ -26,7 +26,7 @@ interface GoalPropTypes {
     description: string;
     ownerId: string;
     setGoalUpdated: CallableFunction;
-    users: Array<UserObject | string>; // Support both formats during transition
+    users: Array<UserObject>;
     currentUserId: string; // Add the current user's ID
 }
 
@@ -70,13 +70,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                     if (newUser) {
                         newUsers.push(newUser);
                     }
-                } else if (typeof userObj === 'string') {
-                    // Handle the case where users might still be strings during transition
-                    const newUser = await getUserById(userObj);
-                    if (newUser) {
-                        newUsers.push(newUser);
-                    }
-                }
+                } 
             }
         }
 
