@@ -13,22 +13,33 @@
     display: block; 
   }
 
-.pop-up{
+  .pop-up {
     position: absolute;
     width: 30vw;
     height: 65vh;
-    margin-top: 30px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%); /* Centers it vertically and horizontally */
     z-index: 2;
     border-radius: 20px;
+    border: 2px solid red;
     background: #FFF;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  }
+    display: flex;
+    flex-direction: column;
+}
 
 .form-container {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
+    flex-wrap: wrap; /* Ensures labels and inputs do not overflow */
+    overflow: auto;
+    display: flex;
+    flex-direction: column; /* Stacks everything vertically */
+    flex-wrap: nowrap; /* Prevents horizontal scrolling */
+    overflow-y: auto; /* Allows vertical scrolling inside if needed */
+    border: 2px solid blue;
+    border: 2px solid blue;
 }
 
 .form-label{
@@ -40,10 +51,12 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    flex-shrink: 1; 
+    width: 100%;
   }
 
 .form-input{
-    padding: 0.5vw;  
+    padding: 0.5vw;
     padding-top: 0.3vw; 
     margin-top: 0.5vw;
     margin-left: 1vw;
@@ -54,10 +67,12 @@
     background: #D9D9D9;
     border: 0px solid;
     resize: none;
+    flex-shrink: 1; 
   }
 
 .create-goal-title {
-    
+  flex-shrink: 1;
+
     text-align: center;
     top: 0%;
     margin-top: 1vw;
@@ -67,33 +82,33 @@
     font-weight: 400;
   }
 
-.create-button{
-  position: absolute;
-  bottom: 7%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 35%;
-  height: 7%;
-  background: #636B2F;
-  border-radius: 10px;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  color: white;
-  font-size: 1vw;
-  font-family: 'Adamina';
-  font-weight: 400;
+  .create-button {
+    flex-shrink: 1;
+    width: 35%;
+    height: 60%;
+    background: #636B2F;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    color: white;
+    font-size: 1vw;
+    font-family: 'Adamina';
+    font-weight: 400;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    cursor: pointer;
+    margin: 1vw auto; /* Centers button inside the form */
+    
+  }
   
-  display: flex;
-  justify-content: center;  
-  align-items: center; 
-  cursor: pointer;
-}
-
 .exit-icon {
   position: absolute;
   top: 2%;
   right: 3%;
   font-size: 2vw;
   cursor: pointer;
+  
 }
 
 .swirly-doodle-left{
@@ -112,21 +127,33 @@
   left: 81%;
 }
 
+.arrows-container {
+  position: absolute; /* Position the container relative to its parent (pop-up) */
+  bottom: 0%; /* Adjust this value to move it closer or further from the bottom */
+  left: 50%;
+  justify-content: space-between;
+  transform: translateX(-50%); /* Centers it horizontally */
+  display: flex;
+  align-items: center;
+  width: 80%;
+  border: 2px solid green;
+}
+
 .three-arrows-left{
-  position: absolute;
   width: 7vw;
   height: 7vw;
   top: 78%;
+ 
   left: 10%;
+  
 }
+
 .three-arrows-right{
-  position: absolute;
   transform: scaleX(-1);
+
   width: 7vw;
   height: 7vw;
   top: 78%;
   right: 10%;
+  
 }
-
-
-
