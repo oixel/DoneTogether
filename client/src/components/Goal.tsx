@@ -11,18 +11,26 @@ interface UserObject {
     role?: string;
 }
 
+// Define interface for user data from Clerk
+interface ClerkUser {
+    id: string;
+    username: string;
+    imageUrl: string;
+    [key: string]: any; // Allow for other properties that might come from Clerk
+}
+
 // Define the schema for goals with updated users type
 interface GoalPropTypes {
     id: string;
     name: string;
     description: string;
     setGoalUpdated: CallableFunction;
-    users: Array<UserObject>; // Changed from Array<string> to Array<UserObject>
+    users: Array<UserObject>;
 }
 
 function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
-    const [searchedUser, setSearchedUser] = useState(undefined);
-    const [usersData, setUsersData] = useState([]);
+    const [searchedUser, setSearchedUser] = useState<ClerkUser | undefined>(undefined);
+    const [usersData, setUsersData] = useState<ClerkUser[]>([]);
 
     // Send a DELETE request to server based on this goal's ObjectId in MongoDB
     async function deleteGoal(): Promise<void> {
@@ -31,20 +39,25 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
     }
 
     // Send a GET request to server with user's id
-    async function getUserById(id: string) {
-        const result = await axios.get(`http://localhost:3001/userById/${id}`);
-        return result.data.user;
+    async function getUserById(id: string): Promise<ClerkUser | null> {
+        try {
+            const result = await axios.get(`http://localhost:3001/userById/${id}`);
+            return result.data.user;
+        } catch (error) {
+            console.error("Error fetching user:", error);
+            return null;
+        }
     }
 
     // Loops through all user objects and grabs their data from Clerk database
     async function getUsers(): Promise<void> {
-        const newUsers = [];
+        const newUsers: ClerkUser[] = [];
 
         // Check if users exists and is an array
         if (users && Array.isArray(users)) {
             for (const userObj of users) {
-                // Make sure userObj is an object with userId
-                if (userObj && typeof userObj === 'object' && 'userId' in userObj) {
+                if (typeof userObj === 'object' && userObj !== null && 'userId' in userObj) {
+                    // Handle user object format
                     const userId = userObj.userId;
                     const newUser = await getUserById(userId);
                     if (newUser) {
@@ -71,8 +84,13 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
     // Verify whether inputted username exists in Clerk database
     async function checkIfUserExists(username: string): Promise<void> {
         if (username) {
-            const result = await axios.get(`http://localhost:3001/userByName/${username}`);
-            setSearchedUser(result.data.user);
+            try {
+                const result = await axios.get(`http://localhost:3001/userByName/${username}`);
+                setSearchedUser(result.data.user);
+            } catch (error) {
+                console.error("Error checking if user exists:", error);
+                setSearchedUser(undefined);
+            }
         } else {
             setSearchedUser(undefined);
         }
@@ -83,8 +101,7 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
         if (searchedUser) {
             // Check if user is already part of this goal
             const userExists = users.some(user => 
-                (typeof user === 'object' && 'userId' in user && user.userId === searchedUser.id) || 
-                user === searchedUser.id
+                (typeof user === 'object' && user !== null && 'userId' in user && user.userId === searchedUser.id)
             );
             
             if (!userExists) {
@@ -97,15 +114,20 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
                 };
                 
                 // Pass the goal's ObjectId for querying and newUserObj to append to its array
-                await axios.put('http://localhost:3001/goal', {
-                    _id: id,
-                    newUserObj: newUserObj // Changed parameter name to match the object
-                }).catch(function (error) {
-                    console.log(error);
-                });
-
-                // Wipe search bar if adding was successful
-                document.getElementById('searchInput').value = '';
+                try {
+                    await axios.put('http://localhost:3001/goal', {
+                        _id: id,
+                        newUserObj: newUserObj
+                    });
+                    
+                    // Wipe search bar if adding was successful
+                    const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+                    if (searchInput) {
+                        searchInput.value = '';
+                    }
+                } catch (error) {
+                    console.error("Error adding user to goal:", error);
+                }
             } else {
                 console.log(`${searchedUser.username} is already in this goal.`);
             }
@@ -125,16 +147,16 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
                 <button className="goalButton" onClick={() => deleteGoal()}>🗑️</button>
             </div>
             <div className="usersSection">
-                {usersData.map(currentUser =>
+                {usersData.map(currentUser => (
                     <User
                         key={currentUser.id}
                         imageUrl={currentUser.imageUrl}
                         username={currentUser.username}
                     />
-                )}
+                ))}
                 <div className="addUser">
                     {/* Displays whether searchedUser actually exists in Clerk database */}
-                    <p>{(searchedUser) ? '✅' : '❌'}</p>
+                    <p>{searchedUser ? '✅' : '❌'}</p>
                     <input 
                         id="searchInput" 
                         type="text" 

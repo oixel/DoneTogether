@@ -2,21 +2,14 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import axios from 'axios';
-
 import Goal from "./Goal";
-
 import '../styles/GoalsList.css'
-
 const GoalsList = () => {
     const { isLoaded, isSignedIn, user } = useUser();
-
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-
     const [goals, setGoals] = useState([]);
-
     const [goalUpdated, setGoalUpdated] = useState(false);
-
     // Send GET request to server to query all goals created by this user
     async function getGoals(): Promise<void> {
         if (user) {
@@ -24,9 +17,7 @@ const GoalsList = () => {
                 const res = await axios.get(
                     `http://localhost:3001/getGoals/${user.id}`
                 );
-
                 setGoals(res.data.goals);
-
                 // Toggle updated back to false since goals have been refreshed
                 if (goalUpdated) setGoalUpdated(false);
             } catch (error) {
@@ -34,7 +25,6 @@ const GoalsList = () => {
             }
         }
     }
-
     // Send POST request to server to create a new goal for the current user
     async function createGoal(): Promise<void> {
         if (isSignedIn && name) {
@@ -51,26 +41,21 @@ const GoalsList = () => {
             }).catch(function (error) {
                 console.log(error);
             });
-
             // Wipe name/description inputs when goal is successfully created
             document.getElementById('nameInput').value = '';
             document.getElementById('descriptionInput').value = '';
-
             // Set updated to true to cause goal to re-render
             setGoalUpdated(true);
         }
     }
-
     // Update the goals displayed if page is finally loaded or the goals have been updated
     useEffect(() => {
         if (isLoaded && isSignedIn) getGoals();
     }, [isLoaded, goalUpdated]);
-
     // Display loading text while user's information gets loaded
     if (!isLoaded) {
         return <div>Loading goals...</div>;
     }
-
     return (
         <div className="goalsListContainer">
             <div className="goalsDiv">
@@ -105,5 +90,4 @@ const GoalsList = () => {
         </div>
     );
 };
-
 export default GoalsList;

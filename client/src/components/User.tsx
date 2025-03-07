@@ -1,10 +1,9 @@
-import axios from 'axios';
 
 import '../styles/User.css';
 
 interface UserPropTypes {
-    username: string;
-    imageUrl: string;
+    username?: string;
+    imageUrl?: string;
 }
 
 function User({ username, imageUrl }: UserPropTypes) {
