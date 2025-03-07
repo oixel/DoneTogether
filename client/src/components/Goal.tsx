@@ -24,13 +24,20 @@ interface GoalPropTypes {
     id: string;
     name: string;
     description: string;
+    ownerId: string;
     setGoalUpdated: CallableFunction;
-    users: Array<UserObject>;
+    users: Array<UserObject | string>; // Support both formats during transition
+    currentUserId: string; // Add the current user's ID
 }
 
-function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
+function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUserId }: GoalPropTypes) {
     const [searchedUser, setSearchedUser] = useState<ClerkUser | undefined>(undefined);
     const [usersData, setUsersData] = useState<ClerkUser[]>([]);
+    const [isRequesting, setIsRequesting] = useState(false);
+    const [requestSent, setRequestSent] = useState(false);
+
+    // Check if current user is the owner
+    const isOwner = currentUserId === ownerId;
 
     // Send a DELETE request to server based on this goal's ObjectId in MongoDB
     async function deleteGoal(): Promise<void> {
@@ -87,6 +94,7 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
             try {
                 const result = await axios.get(`http://localhost:3001/userByName/${username}`);
                 setSearchedUser(result.data.user);
+                setRequestSent(false); // Reset request sent state when searching for a new user
             } catch (error) {
                 console.error("Error checking if user exists:", error);
                 setSearchedUser(undefined);
@@ -96,44 +104,44 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
         }
     }
 
-    // Attempt to add user to goal's array of users in MongoDB
-    async function addUser(): Promise<void> {
+    // Send a goal invitation request instead of directly adding the user
+    async function sendJoinRequest(): Promise<void> {
         if (searchedUser) {
             // Check if user is already part of this goal
             const userExists = users.some(user => 
-                (typeof user === 'object' && user !== null && 'userId' in user && user.userId === searchedUser.id)
+                (typeof user === 'object' && user !== null && 'userId' in user && user.userId === searchedUser.id) || 
+                (typeof user === 'string' && user === searchedUser.id)
             );
             
             if (!userExists) {
-                // Create new user object
-                const newUserObj = {
-                    userId: searchedUser.id,
-                    username: searchedUser.username,
-                    joinedAt: new Date(),
-                    role: 'member'
-                };
+                setIsRequesting(true);
                 
-                // Pass the goal's ObjectId for querying and newUserObj to append to its array
                 try {
-                    await axios.put('http://localhost:3001/goal', {
-                        _id: id,
-                        newUserObj: newUserObj
+                    // Create a goal request instead of directly adding the user
+                    await axios.post('http://localhost:3001/goalRequest', {
+                        goalId: id,
+                        goalName: name,
+                        userId: searchedUser.id,
+                        inviterId: currentUserId
                     });
+                    console.log("Creating request with inviterId:", currentUserId);
                     
-                    // Wipe search bar if adding was successful
+                    // Show success state
+                    setRequestSent(true);
+                    
+                    // Wipe search bar
                     const searchInput = document.getElementById('searchInput') as HTMLInputElement;
                     if (searchInput) {
                         searchInput.value = '';
                     }
                 } catch (error) {
-                    console.error("Error adding user to goal:", error);
+                    console.error("Error sending join request:", error);
+                } finally {
+                    setIsRequesting(false);
                 }
             } else {
                 console.log(`${searchedUser.username} is already in this goal.`);
             }
-
-            // Set updated to true to cause goal to re-render
-            setGoalUpdated(true);
         }
     }
 
@@ -144,27 +152,52 @@ function Goal({ id, name, description, setGoalUpdated, users }: GoalPropTypes) {
                     <h1>{name}</h1>
                     <p>{description}</p>
                 </div>
-                <button className="goalButton" onClick={() => deleteGoal()}>🗑️</button>
+                {isOwner && (
+                    <button className="goalButton" onClick={() => deleteGoal()}>🗑️</button>
+                )}
             </div>
             <div className="usersSection">
-                {usersData.map(currentUser => (
-                    <User
-                        key={currentUser.id}
-                        imageUrl={currentUser.imageUrl}
-                        username={currentUser.username}
-                    />
-                ))}
-                <div className="addUser">
-                    {/* Displays whether searchedUser actually exists in Clerk database */}
-                    <p>{searchedUser ? '✅' : '❌'}</p>
-                    <input 
-                        id="searchInput" 
-                        type="text" 
-                        onChange={(e) => checkIfUserExists(e.target.value)} 
-                        placeholder='Enter username here.'
-                    />
-                    <button onClick={() => addUser()}>Add User +</button>
+                <h3>Members</h3>
+                <div className="usersList">
+                    {usersData.map(currentUser => (
+                        <User
+                            key={currentUser.id}
+                            imageUrl={currentUser.imageUrl}
+                            username={currentUser.username}
+                        />
+                    ))}
                 </div>
+                
+                {isOwner && (
+                    <div className="addUser">
+                        <div className="searchStatus">
+                            {searchedUser && !requestSent && (
+                                <span className="userFound">✅ User found</span>
+                            )}
+                            {!searchedUser && (
+                                <span className="userNotFound">❌ No user found</span>
+                            )}
+                            {requestSent && (
+                                <span className="requestSent">✓ Invitation sent</span>
+                            )}
+                        </div>
+                        
+                        <input 
+                            id="searchInput" 
+                            type="text" 
+                            onChange={(e) => checkIfUserExists(e.target.value)} 
+                            placeholder="Search for a user by username"
+                        />
+                        
+                        <button 
+                            onClick={sendJoinRequest}
+                            disabled={!searchedUser || isRequesting || requestSent}
+                            className={requestSent ? "button-success" : ""}
+                        >
+                            {isRequesting ? "Sending..." : requestSent ? "Invitation Sent" : "Invite User"}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

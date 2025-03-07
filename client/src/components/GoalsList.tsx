@@ -1,93 +1,162 @@
-// src/pages/GoalsList.tsx
-import { useState, useEffect } from 'react';
+import  { useEffect, useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import axios from 'axios';
-import Goal from "./Goal";
-import '../styles/GoalsList.css'
-const GoalsList = () => {
-    const { isLoaded, isSignedIn, user } = useUser();
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [goals, setGoals] = useState([]);
-    const [goalUpdated, setGoalUpdated] = useState(false);
-    // Send GET request to server to query all goals created by this user
-    async function getGoals(): Promise<void> {
-        if (user) {
-            try {
-                const res = await axios.get(
-                    `http://localhost:3001/getGoals/${user.id}`
-                );
-                setGoals(res.data.goals);
-                // Toggle updated back to false since goals have been refreshed
-                if (goalUpdated) setGoalUpdated(false);
-            } catch (error) {
-                console.error(`Failed to fetch goals: ${error}.`);
-            }
-        }
+import Goal from './Goal';
+
+// Define interfaces for your data structures
+interface GoalData {
+  _id: string;
+  name: string;
+  description: string;
+  ownerId: string;
+  users: Array<UserObject | string>;
+}
+
+interface UserObject {
+  userId: string;
+  username?: string;
+  joinedAt?: Date;
+  role?: string;
+}
+
+function GoalsList() {
+  const { user } = useUser();
+  const [goals, setGoals] = useState<GoalData[]>([]);
+  const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [goalsUpdated, setGoalsUpdated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch goals when component mounts or when goals are updated
+  useEffect(() => {
+    getGoals();
+    if (goalsUpdated) {
+      setGoalsUpdated(false);
     }
-    // Send POST request to server to create a new goal for the current user
-    async function createGoal(): Promise<void> {
-        if (isSignedIn && name) {
-            axios.post('http://localhost:3001/goal', {
-                name: name,
-                description: description,
-                ownerId: user.id,
-                users: [{
-                    userId: user.id,
-                    username: user.username,
-                    joinedAt: new Date(),
-                    role: 'owner'
-                }]
-            }).catch(function (error) {
-                console.log(error);
-            });
-            // Wipe name/description inputs when goal is successfully created
-            document.getElementById('nameInput').value = '';
-            document.getElementById('descriptionInput').value = '';
-            // Set updated to true to cause goal to re-render
-            setGoalUpdated(true);
-        }
+  }, [goalsUpdated, user]);
+
+  // Function to fetch goals from the server
+  async function getGoals(): Promise<void> {
+    if (!user) {
+      setIsLoading(false);
+      return;
     }
-    // Update the goals displayed if page is finally loaded or the goals have been updated
-    useEffect(() => {
-        if (isLoaded && isSignedIn) getGoals();
-    }, [isLoaded, goalUpdated]);
-    // Display loading text while user's information gets loaded
-    if (!isLoaded) {
-        return <div>Loading goals...</div>;
+   
+    setIsLoading(true);
+    try {
+      const result = await axios.get(`http://localhost:3001/getGoals/${user.id}`);
+      setGoals(result.data.goals || []);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching goals:", err);
+      setError("Failed to load goals. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
+  }
+
+  // Function to create a new goal
+  async function createGoal(): Promise<void> {
+    if (!user || !name) return;
+   
+    try {
+      await axios.post('http://localhost:3001/goal', {
+        name: name,
+        description: description,
+        ownerId: user.id,
+        users: [{
+          userId: user.id,
+          username: user.username || user.firstName,
+          joinedAt: new Date(),
+          role: 'owner'
+        }]
+      });
+     
+      // Clear input fields
+      const nameInput = document.getElementById('nameInput') as HTMLInputElement;
+      const descInput = document.getElementById('descriptionInput') as HTMLInputElement;
+      if (nameInput) nameInput.value = '';
+      if (descInput) descInput.value = '';
+     
+      // Update goals list
+      setGoalsUpdated(true);
+    } catch (err) {
+      console.error("Error creating goal:", err);
+      setError("Failed to create goal. Please try again.");
+    }
+  }
+
+  // Show loading state
+  if (isLoading && !goals.length) {
+    return <div className="loading">Loading goals...</div>;
+  }
+
+  // Show error state
+  if (error) {
     return (
-        <div className="goalsListContainer">
-            <div className="goalsDiv">
-                {(goals.length) ?
-                    goals.map(goal =>
-                        <Goal
-                            key={goal._id}
-                            id={goal._id}
-                            name={goal.name}
-                            description={goal.description}
-                            setGoalUpdated={setGoalUpdated}
-                            users={goal.users}
-                        />
-                    )
-                    : "You have no goals..."
-                }
-            </div>
-            <div className="createContainer">
-                <div>
-                    <label htmlFor='nameInput'>Goal Name:</label>
-                    <input name='nameInput' id='nameInput' onChange={(e) => setName(e.target.value)} />
-                </div>
-                <div>
-                    <label htmlFor='descriptionInput'>Goal Description:</label>
-                    <input name='descriptionInput' id='descriptionInput' onChange={(e) => setDescription(e.target.value)} />
-                </div>
-                <div>
-                    <button onClick={() => createGoal()}>Create Goal +</button>
-                    <button className="refreshButton" onClick={() => getGoals()}>🔃</button>
-                </div>
-            </div>
-        </div>
+      <div className="error">
+        <p>{error}</p>
+        <button onClick={getGoals}>Try Again</button>
+      </div>
     );
-};
+  }
+
+  return (
+    <div className="goalsListContainer">
+      <div className="goalsDiv">
+        {goals.length > 0 ? (
+          goals.map(goal => (
+            <Goal
+              key={goal._id}
+              id={goal._id}
+              name={goal.name}
+              description={goal.description}
+              ownerId={goal.ownerId}
+              users={goal.users || []}
+              setGoalUpdated={setGoalsUpdated}
+              //@ts-expect-error user is not null cause this component will only be shown during a signed in state
+              currentUserId={user.id}
+            />
+          ))
+        ) : (
+          <div className="no-goals">You have no goals yet...</div>
+        )}
+      </div>
+      <div className="createContainer">
+        <div>
+          <label htmlFor="nameInput">Goal Name:</label>
+          <input
+            name="nameInput"
+            id="nameInput"
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="descriptionInput">Goal Description:</label>
+          <input
+            name="descriptionInput"
+            id="descriptionInput"
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div>
+          <button
+            onClick={createGoal}
+            disabled={!name}
+          >
+            Create Goal +
+          </button>
+          <button
+            className="refreshButton"
+            onClick={getGoals}
+          >
+            🔃
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default GoalsList;

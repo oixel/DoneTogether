@@ -1,11 +1,18 @@
-
 import { Link } from 'react-router-dom';
-import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton, useUser } from '@clerk/clerk-react';
+import { useState } from 'react';
 import GoalsList from '../components/GoalsList';
-
+import Notifications from '../components/Notifications';
 import '../styles/Home.css';
 
 const Home = () => {
+  const { user } = useUser();
+  const [goalsUpdated, setGoalsUpdated] = useState(false);
+  
+  // This will be used to refresh goals when notifications are handled
+  const handleRequestsUpdate = () => {
+    setGoalsUpdated(true);
+  };
 
   return (
     <div className="container">
@@ -28,9 +35,13 @@ const Home = () => {
       </header>
       <div>
         <SignedIn>
-          <GoalsList />
+          {user && (
+            <>
+              <Notifications userId={user.id} onRequestsUpdate={handleRequestsUpdate} />
+              <GoalsList />
+            </>
+          )}
         </SignedIn>
-
         <SignedOut>
           <p>Please sign in to see your goals!</p>
         </SignedOut>

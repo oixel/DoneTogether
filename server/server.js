@@ -129,6 +129,104 @@ app.delete('/goal/:id', async (req, res) => {
   }
 });
 
+const GoalRequestSchema = {
+  goalId: String,       // ID of the goal
+  goalName: String,     // Name of the goal for display in notifications
+  userId: String,       // ID of the user being invited
+  inviterId: String,    // ID of the user who sent the invite
+  status: String,       // 'pending', 'accepted', 'denied'
+  createdAt: Date       // When the request was created
+}
+
+// API Endpoint for creating a goal request
+app.post('/goalRequest', async (req, res) => {
+  try {
+    const { goalId, goalName, userId, inviterId } = req.body;
+    
+
+    console.log("Received body", {goalId, goalName, userId, inviterId});
+    // Check if a request already exists
+    const existingRequest = await db.collection('goalRequests').findOne({
+      goalId,
+      userId,
+      status: 'pending'
+    });
+    
+    if (existingRequest) {
+      return res.status(400).send("A request for this user to join this goal already exists.");
+    }
+    
+    const request = {
+      goalId,
+      goalName,
+      userId,
+      inviterId,
+      status: 'pending',
+      createdAt: new Date()
+    };
+    
+    const result = await db.collection('goalRequests').insertOne(request);
+    res.status(201).json({ requestId: result.insertedId });
+  } catch (error) {
+    console.error("Error creating goal request:", error);
+    res.status(500).send("Server error while creating goal request.");
+  }
+});
+
+// API Endpoint for getting a user's pending requests
+app.get('/goalRequests/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const requests = await db.collection('goalRequests')
+      .find({ userId, status: 'pending' })
+      .toArray();
+    
+    res.status(200).json({ requests });
+  } catch (error) {
+    console.error("Error fetching goal requests:", error);
+    res.status(500).send("Server error while fetching goal requests.");
+  }
+});
+
+// API Endpoint for responding to a request
+app.put('/goalRequest/:requestId', async (req, res) => {
+  try {
+    const { requestId } = req.params;
+    const { status } = req.body; // 'accepted' or 'denied'
+    
+    // Update the request status
+    await db.collection('goalRequests').updateOne(
+      { _id: new ObjectId(requestId) },
+      { $set: { status } }
+    );
+    
+    // If accepted, add the user to the goal
+    if (status === 'accepted') {
+      const request = await db.collection('goalRequests').findOne({ _id: new ObjectId(requestId) });
+      
+      if (request) {
+        const newUserObj = {
+          userId: request.userId,
+          role: 'member',
+          joinedAt: new Date()
+        };
+        
+        await db.collection('goals').updateOne(
+          { _id: new ObjectId(request.goalId) },
+          { $push: { users: newUserObj } }
+        );
+      }
+    }
+    
+    res.status(200).send(`Request ${status}.`);
+  } catch (error) {
+    console.error("Error responding to goal request:", error);
+    res.status(500).send("Server error while responding to goal request.");
+  }
+});
+
+
+
 const PORT = process.env.PORT || 3001;
 
 async function startServer() {
