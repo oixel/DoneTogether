@@ -23,10 +23,10 @@ const GoalPopUp: React.FC<GoalPopUpProps> = ({ setGoalPopUpState }) => {
     const selectedDate = e.target.value;
     if (selectedDate < today) {
       alert("Start date cannot be in the past.");
-    } else if(selectedDate > endDate) {
+    } else if(endDate && selectedDate > endDate) {
       alert("Start date cannot be after the end date.")
     } else{
-      setEndDate(selectedDate);
+      setStartDate(selectedDate);
     }
   };
 

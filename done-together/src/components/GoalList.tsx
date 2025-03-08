@@ -1,5 +1,5 @@
 import React from 'react';
-import { GiHamburgerMenu } from "react-icons/gi";
+import { BsThreeDots } from "react-icons/bs";
 
 interface Goal {
   goalID: number;
@@ -20,8 +20,8 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
           <div key={goal.goalID} className="goal-box">  
             {/* changed to goalID */}
             {/* for now the Menu will delete the goal, will do more menu options later */}
-            <GiHamburgerMenu onClick={() => handleDelete(goal.goalID)} className="hamburger-menu" />
-            <h2>{goal.title}</h2>
+            <BsThreeDots onClick={() => handleDelete(goal.goalID)} className="edit-menu" />
+            <h2 className='goal-title'>{goal.title}</h2>
             <p>{goal.goalID}</p>
           </div>
         ))}
