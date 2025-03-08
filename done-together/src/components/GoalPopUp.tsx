@@ -16,6 +16,32 @@ const GoalPopUp: React.FC<GoalPopUpProps> = ({ setGoalPopUpState }) => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
 
+
+  const today = new Date().toISOString().split('T')[0];
+
+  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = e.target.value;
+    if (selectedDate < today) {
+      alert("Start date cannot be in the past.");
+    } else if(selectedDate > endDate) {
+      alert("Start date cannot be after the end date.")
+    } else{
+      setEndDate(selectedDate);
+    }
+  };
+
+  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = e.target.value;
+    if (selectedDate < today) {
+      alert("End date cannot be in the past.");
+    } else if(selectedDate < startDate) {
+      alert("End date cannot be before the start date.")
+    } else{
+      setEndDate(selectedDate);
+    }
+  };
+
+
   return (
     <div className="pop-up">
       <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-left"/>
@@ -34,21 +60,32 @@ const GoalPopUp: React.FC<GoalPopUpProps> = ({ setGoalPopUpState }) => {
         /><br/>
 
         <label className='form-label'>Description: </label>
-        <textarea className='form-input' style={{ height: '6vw' }}/> <br/>
+        <textarea 
+        required
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        className='form-input' style={{ height: '6vw' }}/> <br/>
 
         <label className='form-label'>Start Date: </label>
-        <input type= "date" className='form-input'/> <br/>
+        <input 
+        required
+        type= "date"
+        value={startDate}
+        onChange={handleStartDateChange}
+        className='form-input'/> <br/>
 
         <label className='form-label'>End Date: </label>
-        <input type= "date" className='form-input'/> <br/>
+        <input type= "date"
+        required
+        value={endDate}
+        onChange={handleEndDateChange}
+        className='form-input'/> <br/>
       
         <div className="arrows-container">
           <img src={threeArrows} alt="three arrows" className="three-arrows-left"/>
           <button className="create-button">Create!</button>
           <img src={threeArrows} alt="three arrows" className="three-arrows-right"/>
         </div>
-
-        
 
       </form>
       
