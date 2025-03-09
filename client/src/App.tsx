@@ -1,12 +1,9 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import SignOut from './pages/SignOut';
-import Page404 from './pages/Page404';
+import LandingPage from './pages/LandingPage';
 import './styles/App.css';
-import './styles/global.css'
+import './styles/globalStyles.css'
 
 // Get publishable key from environment variables
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -46,7 +43,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* Public routes */}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LandingPage />} />
 
           {/* Protected route */}
           <Route

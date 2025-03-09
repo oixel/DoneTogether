@@ -1,0 +1,68 @@
+* {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: #F1F0E8;
+  }
+
+  .footer{
+    width: 100vw;
+    height:20vh;
+    position: absolute;
+    top:200vh;
+    background: light-green;
+    overflow: hidden;
+  }
+  
+  .navbar-logo {
+    width: 6.5vw;
+    height: auto;
+    position: absolute;
+    margin-right: 92vw;
+  }
+
+.navbar {
+    display: flex; 
+    justify-content: flex-end; 
+    align-items: center; 
+    padding: 0 20px;
+    background-color: #636B2F;
+    width: 100vw;
+    height: 4vw;
+  }
+  
+  .nav-button {
+    width: 8vw;
+    height: 2vw;
+    background: #F0F2DC;
+    border-radius: 30px;
+    color: black;
+    font-size: 1.2vw;
+    font-family: 'Adamina', serif;
+    font-family: 'Adamina', serif;
+    font-weight: 400;
+    margin: 0 5px;
+  
+    /* make TEXT within button aligned center */
+    display: flex;
+    justify-content: center;  
+    align-items: center; 
+    text-decoration: none;
+  }
+  
+  .home-page-navbar-logo {
+    width: 6.5vw;
+    height: auto;
+    position: absolute;
+    margin-right: 92vw;
+  }
+
+  
