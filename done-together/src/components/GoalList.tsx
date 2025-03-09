@@ -1,5 +1,6 @@
 import React from 'react';
 import { BsThreeDots } from "react-icons/bs";
+import elmo from '../assets/elmo-profile-picture.jpg';
 
 interface Goal { 
   title: string;
@@ -8,6 +9,7 @@ interface Goal {
   endDate: string;
   userID: number;
   goalID: number;
+  // collaborators = [userIDs]
 }
 
 interface GoalListProps {
@@ -26,12 +28,40 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
             <BsThreeDots onClick={() => handleDelete(goal.goalID)} className="edit-menu" />
             <h2 className='goal-title'>{goal.title}</h2>
 
+            <div className="users-container">
+              {/* iterate through collaborators = [userIDs], hard code for now*/}
+              <div className='collaborator-box'>
+                <img src={elmo} className="collaborator-image" alt="collaborator image" />
+                <p>Goal Owner</p>
+              </div>
+              <div className='collaborator-box'>
+                <img src={elmo} className="collaborator-image" alt="collaborator image" />
+                <p>Collaborator Name</p>
+              </div>
+              <div className='collaborator-box'>
+                <img src={elmo} className="collaborator-image" alt="collaborator image" />
+                <p>Collaborator Name</p>
+              </div>
+              <div className='collaborator-box'>
+                <img src={elmo} className="collaborator-image" alt="collaborator image" />
+                <p>Collaborator Name</p>
+              </div>
+              <div className='collaborator-box'>
+                <img src={elmo} className="collaborator-image" alt="collaborator image" />
+                <p>Collaborator Name</p>
+              </div>
+
+              
+            </div>
+
             <div className= 'date-display'>
               {/*use a button to allow users to change the dates as needed*/}
               <button className = 'date-button'>{goal.startDate}</button>
               <p>-</p>
               <button className = 'date-button'>{goal.endDate}</button>
             </div>
+
+            <button className="add-user-button">+ Add User</button>
 
           </div>
         ))}

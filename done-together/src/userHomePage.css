@@ -14,7 +14,7 @@
 .goal-box{
   position: relative;
   width: 28vw;
-  height: 20vw;
+  height: 23vw;
   padding: 10px 16px;
   margin: 20px 10px;
   border-radius: 20px;
@@ -84,6 +84,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
   }
 
+
   .profile-image {
     width: 100%; /* Ensure image fills the frame */
     height: 100%; /* Maintain aspect ratio */
@@ -124,5 +125,77 @@
   .create-goal-button:active {
     background: #ececec /* Change outline on hover */
   }
+
+  .users-container{
+    position: absolute;
+    width: 23vw;
+    height: 13vw;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 33%;
+
+    border-radius: 20px;
+    background: #F1F0E8;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+  }
+  
+  .collaborator-box{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    
+
+    font-family: Adamina;
+    font-size: 1.1vw;
+
+    background: #D9D9D9;
+    width: 21vw;
+    min-height: 3.5vw;
+    height: auto;
+    margin: 5px 10px;
+    overflow: auto;
+    padding: 5px 5px;
+
+    overflow: visible;       /* Allow overflow within the box */
+    word-wrap: break-word;   /* Ensure text content doesn't overflow the box */
+  }
+  
+  .collaborator-image{
+    width: 2.5vw;   /* Adjust to desired size */
+    height: 2.5vw;  /* Same as width to maintain the circle */
+    border-radius: 50%; /* This makes the image circular */
+    object-fit: cover; /* Ensures the image doesn't stretch or distort */
+    margin-right: 10px;  /* Space between image and text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
+    object-fit: cover; 
+  }
+
+  .add-user-button{
+    width: 10vw;
+    height: 2vw;
+    border: none;
+    border-radius: 40px;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(56, 55, 55, 0.25);
+    color: #636B2F;
+    font-size: 1vw;
+    font-family: Adamina;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0 5px;
+    position: absolute;
+    border-radius: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 4%;
+    z-index: 0;
+  }
+
 
   
