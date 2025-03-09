@@ -1,10 +1,13 @@
 import React from 'react';
 import { BsThreeDots } from "react-icons/bs";
 
-interface Goal {
-  goalID: number;
+interface Goal { 
   title: string;
-//   id: number;
+  description: string;
+  startDate: string;
+  endDate: string;
+  userID: number;
+  goalID: number;
 }
 
 interface GoalListProps {
@@ -22,7 +25,14 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
             {/* for now the Menu will delete the goal, will do more menu options later */}
             <BsThreeDots onClick={() => handleDelete(goal.goalID)} className="edit-menu" />
             <h2 className='goal-title'>{goal.title}</h2>
-            <p>{goal.goalID}</p>
+
+            <div className= 'date-display'>
+              {/*use a button to allow users to change the dates as needed*/}
+              <button className = 'date-button'>{goal.startDate}</button>
+              <p>-</p>
+              <button className = 'date-button'>{goal.endDate}</button>
+            </div>
+
           </div>
         ))}
       </div>
