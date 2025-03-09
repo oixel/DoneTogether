@@ -44,6 +44,8 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
+
+ 
 }
 
 .user-profile-frame{
@@ -102,4 +104,37 @@
     background: #ececec /* Change outline on hover */
   }
 
+  .users-container{
+    position: absolute;
+    width: 23vw;
+    height: 13vw;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 51%;
+
+    border-radius: 20px;
+    background: #F1F0E8;
+  }
+
+  .add-user-button{
+    width: 10vw;
+    height: 2vw;
+    border: none;
+    border-radius: 40px;
+    background: #FFF;
+    box-shadow: 0px 4px 4px 0px rgba(56, 55, 55, 0.25);
+    color: #636B2F;
+    font-size: 1vw;
+    font-family: Adamina;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0 5px;
+    position: absolute;
+    border-radius: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 4%;
+    z-index: 0;
+  }
   

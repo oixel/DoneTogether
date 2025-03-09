@@ -23,7 +23,12 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
             <BsThreeDots onClick={() => handleDelete(goal.goalID)} className="edit-menu" />
             <h2 className='goal-title'>{goal.title}</h2>
             <p>{goal.goalID}</p>
+
+            <div className="users-container"></div>
+
+            <button className="add-user-button">+ Add User</button>
           </div>
+
         ))}
       </div>
     </div>
