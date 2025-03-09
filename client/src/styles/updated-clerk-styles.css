@@ -1,0 +1,152 @@
+/* Add this file to your styles folder and import it in your main CSS or index file */
+
+/* Custom styles for Clerk authentication components */
+.cl-rootBox {
+  --cl-background: #f2f0e6 !important;
+  font-family: Georgia, serif !important;
+}
+
+/* Make the modal a bit more handcrafted looking and fix the disconnected footer */
+.cl-card {
+  border: none !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+  position: relative;
+  /* Remove any bottom margin that might be causing the gap */
+  margin-bottom: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+/* Style the footer to connect with the main card */
+.cl-footer {
+  background-color: #f2f0e6 !important;
+  border-top: 1px solid rgba(107, 126, 94, 0.1) !important;
+  margin-top: 0 !important;
+  padding: 20px 16px !important;
+  border-bottom-left-radius: 24px !important;
+  border-bottom-right-radius: 24px !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Fix the bottom "powered by" section */
+.cl-footerActionText, .cl-footerActionLink {
+  font-size: 16px !important;
+}
+
+/* This creates a container that wraps both the card and footer */
+.cl-component {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
+
+/* Style for the powered by clerk section */
+.cl-footer-powered {
+  background-color: #f2f0e6 !important;
+  padding: 10px 16px 20px !important;
+  border-bottom-left-radius: 24px !important;
+  border-bottom-right-radius: 24px !important;
+  margin-top: 0 !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Add a subtle hand-drawn style border to the modal that encompasses everything */
+.cl-component::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid #6B7E5E;
+  border-radius: 26px;
+  z-index: -1;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Increase the logo size */
+.cl-logoImage {
+  width: 80px !important;
+  height: 80px !important;
+  margin: 20px auto !important;
+}
+
+/* Style the primary buttons to match your Get Started button */
+.cl-formButtonPrimary {
+  border-radius: 30px !important;
+  font-weight: normal !important;
+  letter-spacing: 0.5px !important;
+  text-transform: none !important;
+  position: relative;
+  transition: all 0.3s ease !important;
+}
+
+/* Add a subtle hand-drawn underline effect for links */
+.cl-footerActionLink, 
+.cl-formButtonReset {
+  display: inline-block;
+  position: relative;
+  color: #6B7E5E !important;
+  font-weight: 500 !important;
+}
+
+.cl-footerActionLink::after,
+.cl-formButtonReset::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: #6B7E5E;
+  opacity: 0.6;
+  transform: scaleX(0.7);
+  transition: all 0.3s ease;
+}
+
+.cl-footerActionLink:hover::after,
+.cl-formButtonReset:hover::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* Style form inputs to better match your aesthetic */
+.cl-formFieldInput {
+  transition: all 0.2s ease-in-out !important;
+}
+
+.cl-formFieldInput:focus {
+  box-shadow: 0 0 0 2px rgba(107, 126, 94, 0.25) !important;
+}
+
+/* Make the header titles match your font style */
+.cl-headerTitle {
+  font-weight: normal !important;
+  letter-spacing: 0.5px !important;
+}
+
+.cl-headerSubtitle {
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Fix error messages to match theme */
+.cl-alert-error {
+  color: #B05D5D !important;
+  font-size: 14px !important;
+  margin-top: 4px !important;
+}
+
+/* Add some subtle texture to the background */
+.cl-rootBox::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%236b7e5e' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: -1;
+}

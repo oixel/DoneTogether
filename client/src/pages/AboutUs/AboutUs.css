@@ -1,0 +1,63 @@
+.container {
+    background-color: #f2f0e6;
+    min-height: 100vh;
+    padding: 0 0 40px 0;
+    color: #4e4e4e;
+  }
+  
+  .home-page-navbar-logo {
+    height: 40px;
+    width: auto;
+  }
+  
+
+  .about-us-content {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  
+  .about-us-content h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #6B7E5E;
+  }
+  
+  .about-section {
+    margin-bottom: 40px;
+  }
+  
+  .about-section h2 {
+    font-size: 1.8rem;
+    font-weight: normal;
+    color: #6B7E5E;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(107, 126, 94, 0.2);
+    padding-bottom: 8px;
+  }
+  
+  .about-section p {
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  
+  .about-section ul {
+    margin-left: 20px;
+    line-height: 1.6;
+  }
+  
+  .about-section li {
+    margin-bottom: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    .about-us-content h1 {
+      font-size: 2rem;
+    }
+    
+    .about-section h2 {
+      font-size: 1.5rem;
+    }
+  }
