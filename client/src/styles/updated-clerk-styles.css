@@ -1,4 +1,4 @@
-/* Add this file to your styles folder and import it in your main CSS or index file */
+/* Complete Clerk styling file with improved logo fix */
 
 /* Custom styles for Clerk authentication components */
 .cl-rootBox {
@@ -6,15 +6,45 @@
   font-family: Georgia, serif !important;
 }
 
+/* Fix for logo being cut off and prevent scrolling */
+.cl-component {
+  padding-top: 20px !important;
+  border-radius: 24px !important;
+  overflow: visible !important; /* Changed from hidden to visible */
+  box-shadow: none !important;
+  max-height: none !important; /* Prevent scroll constraints */
+}
+
 /* Make the modal a bit more handcrafted looking and fix the disconnected footer */
 .cl-card {
   border: none !important;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
   position: relative;
-  /* Remove any bottom margin that might be causing the gap */
   margin-bottom: 0 !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
+  margin-top: 20px !important;
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+/* Make the logo bigger and ensure it's fully visible without scrolling */
+.cl-logoImage {
+  width: 150!important;
+  height: 100px !important; 
+  margin:  40 auto 40px !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Logo container adjustments to prevent scrolling */
+.cl-logoBox {
+  height: auto !important;
+  min-height: 100px !important;
+  overflow: visible !important;
+  position: relative !important;
 }
 
 /* Style the footer to connect with the main card */
@@ -31,13 +61,6 @@
 /* Fix the bottom "powered by" section */
 .cl-footerActionText, .cl-footerActionLink {
   font-size: 16px !important;
-}
-
-/* This creates a container that wraps both the card and footer */
-.cl-component {
-  border-radius: 24px !important;
-  overflow: hidden !important;
-  box-shadow: none !important;
 }
 
 /* Style for the powered by clerk section */
@@ -65,13 +88,6 @@
   pointer-events: none;
 }
 
-/* Increase the logo size */
-.cl-logoImage {
-  width: 80px !important;
-  height: 80px !important;
-  margin: 20px auto !important;
-}
-
 /* Style the primary buttons to match your Get Started button */
 .cl-formButtonPrimary {
   border-radius: 30px !important;
@@ -80,6 +96,11 @@
   text-transform: none !important;
   position: relative;
   transition: all 0.3s ease !important;
+  background-color: #6B7E5E !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background-color: #5A6B4F !important;
 }
 
 /* Add a subtle hand-drawn underline effect for links */
@@ -114,21 +135,35 @@
 /* Style form inputs to better match your aesthetic */
 .cl-formFieldInput {
   transition: all 0.2s ease-in-out !important;
+  border: 2px solid #e0dfd5 !important;
+  background-color: white !important;
+  border-radius: 12px !important;
 }
 
 .cl-formFieldInput:focus {
   box-shadow: 0 0 0 2px rgba(107, 126, 94, 0.25) !important;
+  border-color: #6B7E5E !important;
+}
+
+/* Form field label styling */
+.cl-formFieldLabel {
+  color: #4e4e4e !important;
+  font-weight: 500 !important;
 }
 
 /* Make the header titles match your font style */
 .cl-headerTitle {
   font-weight: normal !important;
   letter-spacing: 0.5px !important;
+  margin-top: 10px !important;
+  font-size: 1.5rem !important;
+  color: #4e4e4e !important;
 }
 
 .cl-headerSubtitle {
   opacity: 0.8;
   font-style: italic;
+  color: #6B7E5E !important;
 }
 
 /* Fix error messages to match theme */
@@ -136,6 +171,17 @@
   color: #B05D5D !important;
   font-size: 14px !important;
   margin-top: 4px !important;
+}
+
+/* Add some additional space around the form */
+.cl-form {
+  padding-top: 10px !important;
+}
+
+/* Prevent any clipping of content */
+.cl-main {
+  overflow: visible !important;
+  max-height: none !important;
 }
 
 /* Add some subtle texture to the background */
