@@ -14,7 +14,7 @@
 .goal-box{
   position: relative;
   width: 28vw;
-  height: 20vw;
+  height: 23vw;
   padding: 10px 16px;
   margin: 20px 10px;
   border-radius: 20px;
@@ -22,7 +22,7 @@
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
-.goal-box .edit-menu {
+.edit-menu {
   position: absolute;  
   top: 10px;           
   right: 12px;         
@@ -30,12 +30,35 @@
   cursor: pointer;    
 }
 
-.goal-box .goal-title {   
+.goal-title {   
   color: #000;
   text-align: center;
   font-family: Adamina;
   font-size: 1.5vw;
   font-weight: 400; 
+}
+
+.date-display {   
+  display: flex;
+  flex-direction: row;         
+  justify-content: center;      
+  align-items: center;         
+  gap: 20px;
+  padding: 5px 10px;
+}
+
+.date-button{
+  background: #FFF;
+  color: #000;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 40px;
+  text-align: center;
+  font-family: Adamina;
+  font-size: 0.75vw;
+  font-weight: 400; 
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
 .goal-list{
@@ -62,6 +85,7 @@
     overflow: hidden; /* Ensure image fits within the circle */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
   }
+
 
   .profile-image {
     width: 100%; /* Ensure image fills the frame */
@@ -110,10 +134,47 @@
     height: 13vw;
     left: 50%;
     transform: translate(-50%, -50%);
-    top: 51%;
+    margin-top: 33%;
 
     border-radius: 20px;
     background: #F1F0E8;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+  }
+  
+  .collaborator-box{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    
+
+    font-family: Adamina;
+    font-size: 1.1vw;
+
+    background: #D9D9D9;
+    width: 21vw;
+    min-height: 3.5vw;
+    height: auto;
+    margin: 5px 10px;
+    overflow: auto;
+    padding: 5px 5px;
+
+    overflow: visible;       /* Allow overflow within the box */
+    word-wrap: break-word;   /* Ensure text content doesn't overflow the box */
+  }
+  
+  .collaborator-image{
+    width: 2.5vw;   /* Adjust to desired size */
+    height: 2.5vw;  /* Same as width to maintain the circle */
+    border-radius: 50%; /* This makes the image circular */
+    object-fit: cover; /* Ensures the image doesn't stretch or distort */
+    margin-right: 10px;  /* Space between image and text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
+    object-fit: cover; 
   }
 
   .add-user-button{
@@ -137,4 +198,6 @@
     bottom: 4%;
     z-index: 0;
   }
+
+
   
