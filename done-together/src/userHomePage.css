@@ -36,26 +36,34 @@
   font-family: Adamina;
   font-size: 1.5vw;
   font-weight: 400; 
+    position: relative;
+  top: 25px; /* Moves it down by 20px */
+
 }
 
 .date-display {   
   display: flex;
   flex-direction: row;         
-  justify-content: center;      
-  align-items: center;         
+  justify-content: left;      
+  align-items: top;         
   gap: 20px;
   padding: 5px 10px;
+  margin-top: -30px;
+  margin-left: -10px; 
+  
 }
 
 .date-button{
-  background: #FFF;
-  color: #000;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+  /* background: #FFF;
+  color: #000; */
+  /* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); */
   border: none;
   border-radius: 40px;
   text-align: center;
   font-family: Adamina;
-  font-size: 0.75vw;
+  font-size: 0.60vw;
   font-weight: 400; 
   padding: 5px 10px;
   cursor: pointer;
@@ -195,8 +203,50 @@
     border-radius: 40px;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 4%;
+    bottom: 6%;
     z-index: 0;
+  }
+
+  .menu-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .edit-menu {
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+  
+  .menu-options {
+    position: absolute;
+    top: 27px;
+    right: 5px;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-width: 80px;
+    z-index: 3;
+ 
+  }
+  
+  .menu-options button {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+
+    color: #49501e;
+    font-size: 1vw;
+    font-family: Adamina;
+  }
+  
+  .menu-options button:hover {
+    background: #e9e5e5b7;
   }
 
 
