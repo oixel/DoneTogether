@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import elmo from '../assets/elmo-profile-picture.jpg';
+import EditPopUp from './EditPopUp';
 
 interface Goal { 
   title: string;
@@ -20,14 +21,13 @@ interface GoalListProps {
 
 const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [editGoal, setEditGoal] = useState<Goal | null>(null);
+  
   return (
     <div>
       <div className="goal-list">
         {goals.map((goal) => (
           <div key={goal.goalID} className="goal-box">  
-            {/* changed to goalID */}
-            {/* for now the Menu will delete the goal, will do more menu options later */}
-            {/* <BsThreeDots onClick={() => handleDelete(goal.goalID)} className="edit-menu" /> */}
             <BsThreeDots
               onClick={() => setOpenMenuId(openMenuId === goal.goalID ? null : goal.goalID)}
               className="edit-menu"
@@ -36,7 +36,10 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
             {/* Dropdown Menu */}
             {openMenuId === goal.goalID && (
               <div className="menu-options">
-                <button onClick={() => alert("Edit feature coming soon!")}>Edit</button>
+
+                  <button onClick={() => setEditGoal(goal)}>Edit</button>
+                 
+
                 <button onClick={() => handleDelete(goal.goalID)}>Delete</button>
               </div>
             )}
@@ -77,11 +80,18 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
             </div>
 
             <button className="add-user-button">+ Add User</button>
-
+            
           </div>
 
         ))}
+
+        
+        
       </div>
+        {/* Show Edit Goal Pop-Up when a goal is being edited */}
+        {editGoal && (
+        <EditPopUp goal={editGoal} setGoalPopUpState={() => setEditGoal(null)} />)}
+
     </div>
   );
 };
