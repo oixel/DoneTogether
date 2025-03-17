@@ -2,8 +2,13 @@ const express = require('express');
 const { clerkMiddleware, clerkClient } = require('@clerk/express');
 const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
+
 // Import .env file
 require('dotenv').config();
+
+// Import HTTP request functionality from external scripts
+const { getUserByName, getUserById } = require('./api/userRequests.js');
+const { createGoal, getGoals, updateGoal, deleteGoal } = require('./api/goalRequests.cjs');
 
 // Create express app an ensure it utilizes JSON, CORS, and the Clerk middleware
 const app = express();
@@ -11,127 +16,32 @@ app.use(express.json());
 app.use(cors());
 app.use(clerkMiddleware());
 
+// Create a new instance of mongo client
 const mongoClient = new MongoClient(process.env.MONGODB_URI);
-let db;
 
+// Initialize database as a global variable
+let database;
+
+// Connect to the MongoDB database named in the .env file or default to "GoalData"
 async function connectToMongo() {
   await mongoClient.connect();
-  db = mongoClient.db(process.env.MONGODB_DB || 'GoalData');
+  database = mongoClient.db(process.env.MONGODB_DB_NAME || 'GoalData');
 }
 
-// Query for user from Clerk database by username
-app.get('/userByName/:username', async (req, res) => {
-  const { username } = req.params;
-  try {
-    // Query by username (will return array since some Clerk databases allow duplicate usernames)
-    const { data } = await clerkClient.users.getUserList({ username: username });
-    // Send successful status and return user information
-    res.status(200).json({ user: data[0] });  // Return [0] since data is naturally an array, but only one user exists
-  } catch (error) {
-    res.status(500).send("Server error while getting user by username.");
-  }
-});
+// Connect to all the different express routers for the different HTTP requests
+function connectRouters() {
+  // Handles HTTP requests for user information from the Clerk database
+  getUserByName(app, clerkClient);
+  getUserById(app, clerkClient);
 
-// Query for user from Clerk database by id
-app.get('/userById/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    // Query by id (returns a single user since ids are always unique in Clerk)
-    const user = await clerkClient.users.getUser(id);
-    // Send successful status and return user information
-    res.status(200).json({ user: user });
-  } catch (error) {
-    res.status(500).send("Server error while getting user by ID");
-  }
-});
+  // Handle HTTP requests for goals in MongoDB database
+  createGoal(app, database);
+  getGoals(app, database);
+  updateGoal(app, database);
+  deleteGoal(app, database);
+}
 
-// Queries all goals where the user is a participant
-// Updated to handle users as objects with userId property
-app.get('/getGoals/:userId', async (req, res) => {
-  const { userId } = req.params;
-  try {
-    // Updated query to find goals where userId appears in the users array as an object
-    const goals = await db.collection('goals').find({
-      $or: [
-        // Handle the new format (user objects with userId)
-        { "users.userId": userId },
-        // Handle the old format (array of user IDs as strings)
-        { users: userId }
-      ]
-    }).toArray();
 
-    // Return successful status and goals
-    res.status(200).json({ goals: goals });
-  } catch (error) {
-    console.error("Error getting goals:", error);
-    res.status(500).send("Server error while getting goals.");
-  }
-});
-
-// Creates goal with the passed in request
-app.post('/goal', async (req, res) => {
-  try {
-    const goal = {
-      name: req.body.name,
-      description: req.body.description,
-      ownerId: req.body.ownerId,
-      users: req.body.users
-    };
-
-    const result = await db.collection('goals').insertOne(goal);
-    res.send(`Goal has been created with the ID ${result.insertedId}!`);
-  } catch (error) {
-    console.error("Error creating goal:", error);
-    res.status(500).send("Server error while creating new goal.");
-  }
-});
-
-// Updates goal's users - modified to handle user objects
-app.put('/goal', async (req, res) => {
-  try {
-    // Define parameters of update request
-    const filter = { _id: new ObjectId(req.body._id) };
-
-    // Stores the update type / data
-    let update;
-
-    // If a new user is being added, push it to the end of the users array
-    if (req.body.newUserObject) {
-      update = { $push: { users: req.body.newUserObject } };
-    }
-    // If the users data is being updated, simply replace the users data with the updated version
-    else if (req.body.users) {
-      update = { $set: { users: req.body.users } };
-    }
-    // Otherwise, give an error
-    else {
-      return res.status(400).send("MISSING newUserObject/users in request.");
-    }
-
-    // Update goal with matching ID to match the new users array
-    const result = await db.collection('goals').updateOne(filter, update, { upsert: true });
-
-    // Return a message with how many documents were modified
-    res.send(`${result.modifiedCount} document(s) have been updated.`); // Fixed from result.modified to result.modifiedCount
-  } catch (error) {
-    console.error("Error updating goal:", error);
-    res.status(500).send("Server error while updating goal.");
-  }
-});
-
-// Delete goal with given ObjectId in MongoDB
-app.delete('/goal/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await db.collection('goals').deleteOne({ _id: new ObjectId(id) });
-    // Send back success or failure message
-    const message = (result.deletedCount === 1) ? "Successfully deleted goal." : "No goals were found with given ID. No goals were deleted.";
-    res.send(message);
-  } catch (error) {
-    console.error("Error deleting goal:", error);
-    res.status(500).send(`Ran into error ${error}.`);
-  }
-});
 
 const GoalRequestSchema = {
   goalId: String,       // ID of the goal
@@ -147,10 +57,9 @@ app.post('/goalRequest', async (req, res) => {
   try {
     const { goalId, goalName, userId, inviterId } = req.body;
 
-
     console.log("Received body", { goalId, goalName, userId, inviterId });
     // Check if a request already exists
-    const existingRequest = await db.collection('goalRequests').findOne({
+    const existingRequest = await database.collection('goalRequests').findOne({
       goalId,
       userId,
       status: 'pending'
@@ -169,7 +78,7 @@ app.post('/goalRequest', async (req, res) => {
       createdAt: new Date()
     };
 
-    const result = await db.collection('goalRequests').insertOne(request);
+    const result = await database.collection('goalRequests').insertOne(request);
     res.status(201).json({ requestId: result.insertedId });
   } catch (error) {
     console.error("Error creating goal request:", error);
@@ -181,7 +90,7 @@ app.post('/goalRequest', async (req, res) => {
 app.get('/goalRequests/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    const requests = await db.collection('goalRequests')
+    const requests = await database.collection('goalRequests')
       .find({ userId, status: 'pending' })
       .toArray();
 
@@ -199,14 +108,14 @@ app.put('/goalRequest/:requestId', async (req, res) => {
     const { status } = req.body; // 'accepted' or 'denied'
 
     // Update the request status
-    await db.collection('goalRequests').updateOne(
+    await database.collection('goalRequests').updateOne(
       { _id: new ObjectId(requestId) },
       { $set: { status } }
     );
 
     // If accepted, add the user to the goal
     if (status === 'accepted') {
-      const request = await db.collection('goalRequests').findOne({ _id: new ObjectId(requestId) });
+      const request = await database.collection('goalRequests').findOne({ _id: new ObjectId(requestId) });
 
       if (request) {
         const newUserObject = {
@@ -215,7 +124,7 @@ app.put('/goalRequest/:requestId', async (req, res) => {
           completed: false
         };
 
-        await db.collection('goals').updateOne(
+        await database.collection('goals').updateOne(
           { _id: new ObjectId(request.goalId) },
           { $push: { users: newUserObject } }
         );
@@ -231,10 +140,17 @@ app.put('/goalRequest/:requestId', async (req, res) => {
 
 
 
+// If a port is specified in the .env file, use it; otherwise, default to port 3001
 const PORT = process.env.PORT || 3001;
 
+// Start up server and log success message
 async function startServer() {
+  // 
   await connectToMongo();
+
+  // 
+  connectRouters();
+
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
