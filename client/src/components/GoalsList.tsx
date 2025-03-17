@@ -66,7 +66,7 @@ function GoalsList() {
         ownerId: user.id,
         users: [{
           userId: user.id,
-          joined: false,
+          joined: true,  // Owner does not need to accept an invitation
           completed: false
         }]
       });

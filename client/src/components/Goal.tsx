@@ -3,6 +3,9 @@ import axios from 'axios';
 import '../styles/Goal.css';
 import User from './User';
 
+import { getUserById, checkIfUserExists } from '../api/userRequests.ts';
+import { deleteGoal } from '../api/goalRequests.ts';
+
 // Define the interface for user objects (in MongoDB)
 interface UserObject {
     userId: string;
@@ -15,7 +18,6 @@ interface ClerkUser {
     id: string;
     username: string;
     imageUrl: string;
-    // [key: string]: any; // Allow for other properties that might come from Clerk
 }
 
 // Define the schema for goals with updated users type
@@ -39,23 +41,6 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
     // Check if current user is the owner
     const isOwner = currentUserId === ownerId;
 
-    // Send a DELETE request to server based on this goal's ObjectId in MongoDB
-    async function deleteGoal(): Promise<void> {
-        await axios.delete(`http://localhost:3001/goal/${id}`);
-        setGoalUpdated(true);
-    }
-
-    // Send a GET request to server with user's id
-    async function getUserById(id: string): Promise<ClerkUser | null> {
-        try {
-            const result = await axios.get(`http://localhost:3001/userById/${id}`);
-            return result.data.user;
-        } catch (error) {
-            console.error("Error fetching user:", error);
-            return null;
-        }
-    }
-
     // Loops through all user objects and grabs their profile information from Clerk database
     async function getClerkUsers(): Promise<void> {
         const newClerkUsers: ClerkUser[] = [];
@@ -77,8 +62,6 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
             }
         }
 
-        console.log(newClerkUsers);
-
         setClerkUsers(newClerkUsers);
     }
 
@@ -86,22 +69,6 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
     useEffect(() => {
         getClerkUsers();
     }, [users]);
-
-    // Verify whether inputted username exists in Clerk database
-    async function checkIfUserExists(username: string): Promise<void> {
-        if (username) {
-            try {
-                const result = await axios.get(`http://localhost:3001/userByName/${username}`);
-                setSearchedUser(result.data.user);
-                setRequestSent(false); // Reset request sent state when searching for a new user
-            } catch (error) {
-                console.error("Error checking if user exists:", error);
-                setSearchedUser(undefined);
-            }
-        } else {
-            setSearchedUser(undefined);
-        }
-    }
 
     // Send a goal invitation request instead of directly adding the user
     async function sendJoinRequest(): Promise<void> {
@@ -144,19 +111,6 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
         }
     }
 
-    // Update the completion status of the user with the given ID
-    async function updateUserCompletion(userId: string, completed: boolean) {
-        for (let i = 0; i < users.length; i++) {
-            if (users[i].userId == userId) {
-                users[i].completed = completed;
-                break;
-            }
-        }
-
-        // Send axios request to update this current goal with the newly updated users array (replacing the old data)
-        await axios.put('http://localhost:3001/goal', { _id: id, users: users });
-    }
-
     return (
         <div className="goalContainer">
             <div className="goalInfo">
@@ -165,7 +119,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                     <p>{description}</p>
                 </div>
                 {isOwner && (
-                    <button className="goalButton" onClick={() => deleteGoal()}>🗑️</button>
+                    <button className="goalButton" onClick={() => deleteGoal(id, setGoalUpdated)}>🗑️</button>
                 )}
             </div>
             <div className="usersSection">
@@ -174,11 +128,11 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                     {clerkUsers.map(currentUser => (
                         <User
                             key={currentUser.id}
+                            goalId={id}
                             clerkUserData={currentUser}
                             completed={currentUser.completed}
                             isReadOnly={currentUserId != currentUser.id}  // Prevents user from updating other users' completion status
                             storedCompletedState={currentUser.completed}  // Set checkbox's completion to reflect stored completion status
-                            updateUserCompletion={updateUserCompletion}
                         />
                     ))}
                 </div>
@@ -200,7 +154,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                         <input
                             id="searchInput"
                             type="text"
-                            onChange={(e) => checkIfUserExists(e.target.value)}
+                            onChange={(e) => checkIfUserExists(e.target.value, setSearchedUser, setRequestSent)}
                             placeholder="Search for a user by username"
                         />
 

@@ -2,12 +2,7 @@
 import '../styles/User.css';
 
 import { useState } from "react";
-
-// Define the interface for user objects
-// interface UserObject {
-//     userId: string;
-//     completed: boolean;
-// }
+import { updateGoalCompletion } from '../api/goalRequests.ts';
 
 interface UserPropTypes {
     userObject: any;
@@ -17,7 +12,7 @@ interface UserPropTypes {
     updateUserCompletion: CallableFunction;
 }
 
-function User({ clerkUserData, isReadOnly, storedCompletedState, updateUserCompletion }: UserPropTypes) {
+function User({ goalId, clerkUserData, isReadOnly, storedCompletedState }: UserPropTypes) {
     // Initialize completed state to what is currently stored in the database
     const [completed, setCompleted] = useState(storedCompletedState);
 
@@ -28,8 +23,8 @@ function User({ clerkUserData, isReadOnly, storedCompletedState, updateUserCompl
             // Update current completion state to reflect in the checkbox
             setCompleted(newCompletion);
 
-            // Send update up to Goal component to handle axios request
-            updateUserCompletion(clerkUserData.id, newCompletion);
+            // Call axios request in external API script (goalRequests.ts) to PATCH user's completion status
+            updateGoalCompletion(goalId, clerkUserData.id, newCompletion);
         }
     }
 

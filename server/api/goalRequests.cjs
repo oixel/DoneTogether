@@ -47,7 +47,7 @@ async function getGoals(app, database) {
 };
 
 // Updates goal's users
-async function updateGoal(app, database) {
+async function updateGoalUsers(app, database) {
     app.put('/goal', async (req, res) => {
         try {
             // Define parameters of update request
@@ -81,6 +81,22 @@ async function updateGoal(app, database) {
     });
 };
 
+// Send a patch request to update a specific user's goal completion
+async function updateGoalCompletion(app, database) {
+    app.patch('/goal', async (req, res) => {
+        try {
+            const filter = { _id: new ObjectId(req.body._id) };
+            var update = { $set: { 'users.$[user].completed': req.body.completed } };
+            const options = { arrayFilters: [{ 'user.userId': req.body.userId }] }
+
+            const result = await database.collection('goals').updateOne(filter, update, options);
+            res.status(200).send(result);
+        } catch (error) {
+            res.status(500).send(`Ran into error ${error} while updating goal completion.`);
+        }
+    });
+}
+
 // Delete goal with given ObjectId in MongoDB
 async function deleteGoal(app, database) {
     app.delete('/goal/:id', async (req, res) => {
@@ -98,4 +114,4 @@ async function deleteGoal(app, database) {
 };
 
 // Export all HTTP request router functions
-module.exports = { createGoal, getGoals, updateGoal, deleteGoal };
+module.exports = { createGoal, getGoals, updateGoalUsers, updateGoalCompletion, deleteGoal };
