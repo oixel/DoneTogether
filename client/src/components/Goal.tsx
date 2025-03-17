@@ -3,12 +3,11 @@ import axios from 'axios';
 import '../styles/Goal.css';
 import User from './User';
 
-// Define the interface for user objects
+// Define the interface for user objects (in MongoDB)
 interface UserObject {
     userId: string;
-    username?: string;
-    joinedAt?: Date;
-    role?: string;
+    joined: string;
+    completed: boolean;
 }
 
 // Define interface for user data from Clerk
@@ -16,7 +15,7 @@ interface ClerkUser {
     id: string;
     username: string;
     imageUrl: string;
-    [key: string]: any; // Allow for other properties that might come from Clerk
+    // [key: string]: any; // Allow for other properties that might come from Clerk
 }
 
 // Define the schema for goals with updated users type
@@ -32,7 +31,8 @@ interface GoalPropTypes {
 
 function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUserId }: GoalPropTypes) {
     const [searchedUser, setSearchedUser] = useState<ClerkUser | undefined>(undefined);
-    const [usersData, setUsersData] = useState<ClerkUser[]>([]);
+    const [clerkUsers, setClerkUsers] = useState<ClerkUser[]>([]);
+
     const [isRequesting, setIsRequesting] = useState(false);
     const [requestSent, setRequestSent] = useState(false);
 
@@ -56,30 +56,35 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
         }
     }
 
-    // Loops through all user objects and grabs their data from Clerk database
-    async function getUsers(): Promise<void> {
-        const newUsers: ClerkUser[] = [];
+    // Loops through all user objects and grabs their profile information from Clerk database
+    async function getClerkUsers(): Promise<void> {
+        const newClerkUsers: ClerkUser[] = [];
 
         // Check if users exists and is an array
         if (users && Array.isArray(users)) {
-            for (const userObj of users) {
-                if (typeof userObj === 'object' && userObj !== null && 'userId' in userObj) {
+            for (const userObject of users) {
+                if (typeof userObject === 'object' && userObject !== null && 'userId' in userObject) {
                     // Handle user object format
-                    const userId = userObj.userId;
-                    const newUser = await getUserById(userId);
-                    if (newUser) {
-                        newUsers.push(newUser);
+                    const userId = userObject.userId;
+                    const newClerkUser = await getUserById(userId);
+
+                    newClerkUser.completed = userObject.completed;
+
+                    if (newClerkUser) {
+                        newClerkUsers.push(newClerkUser);
                     }
-                } 
+                }
             }
         }
 
-        setUsersData(newUsers);
+        console.log(newClerkUsers);
+
+        setClerkUsers(newClerkUsers);
     }
 
     // Update the user data whenever there is a change in users array
     useEffect(() => {
-        getUsers();
+        getClerkUsers();
     }, [users]);
 
     // Verify whether inputted username exists in Clerk database
@@ -102,14 +107,14 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
     async function sendJoinRequest(): Promise<void> {
         if (searchedUser) {
             // Check if user is already part of this goal
-            const userExists = users.some(user => 
-                (typeof user === 'object' && user !== null && 'userId' in user && user.userId === searchedUser.id) || 
+            const userExists = users.some(user =>
+                (typeof user === 'object' && user !== null && 'userId' in user && user.userId === searchedUser.id) ||
                 (typeof user === 'string' && user === searchedUser.id)
             );
-            
+
             if (!userExists) {
                 setIsRequesting(true);
-                
+
                 try {
                     // Create a goal request instead of directly adding the user
                     await axios.post('http://localhost:3001/goalRequest', {
@@ -119,10 +124,10 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                         inviterId: currentUserId
                     });
                     console.log("Creating request with inviterId:", currentUserId);
-                    
+
                     // Show success state
                     setRequestSent(true);
-                    
+
                     // Wipe search bar
                     const searchInput = document.getElementById('searchInput') as HTMLInputElement;
                     if (searchInput) {
@@ -139,6 +144,19 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
         }
     }
 
+    // Update the completion status of the user with the given ID
+    async function updateUserCompletion(userId: string, completed: boolean) {
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].userId == userId) {
+                users[i].completed = completed;
+                break;
+            }
+        }
+
+        // Send axios request to update this current goal with the newly updated users array (replacing the old data)
+        await axios.put('http://localhost:3001/goal', { _id: id, users: users });
+    }
+
     return (
         <div className="goalContainer">
             <div className="goalInfo">
@@ -153,15 +171,18 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
             <div className="usersSection">
                 <h3>Members</h3>
                 <div className="usersList">
-                    {usersData.map(currentUser => (
+                    {clerkUsers.map(currentUser => (
                         <User
                             key={currentUser.id}
-                            imageUrl={currentUser.imageUrl}
-                            username={currentUser.username}
+                            clerkUserData={currentUser}
+                            completed={currentUser.completed}
+                            isReadOnly={currentUserId != currentUser.id}  // Prevents user from updating other users' completion status
+                            storedCompletedState={currentUser.completed}  // Set checkbox's completion to reflect stored completion status
+                            updateUserCompletion={updateUserCompletion}
                         />
                     ))}
                 </div>
-                
+
                 {isOwner && (
                     <div className="addUser">
                         <div className="searchStatus">
@@ -175,15 +196,15 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                                 <span className="requestSent">✓ Invitation sent</span>
                             )}
                         </div>
-                        
-                        <input 
-                            id="searchInput" 
-                            type="text" 
-                            onChange={(e) => checkIfUserExists(e.target.value)} 
+
+                        <input
+                            id="searchInput"
+                            type="text"
+                            onChange={(e) => checkIfUserExists(e.target.value)}
                             placeholder="Search for a user by username"
                         />
-                        
-                        <button 
+
+                        <button
                             onClick={sendJoinRequest}
                             disabled={!searchedUser || isRequesting || requestSent}
                             className={requestSent ? "button-success" : ""}

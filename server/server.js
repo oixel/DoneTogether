@@ -59,7 +59,7 @@ app.get('/getGoals/:userId', async (req, res) => {
         { users: userId }
       ]
     }).toArray();
-    
+
     // Return successful status and goals
     res.status(200).json({ goals: goals });
   } catch (error) {
@@ -77,7 +77,7 @@ app.post('/goal', async (req, res) => {
       ownerId: req.body.ownerId,
       users: req.body.users
     };
-    
+
     const result = await db.collection('goals').insertOne(goal);
     res.send(`Goal has been created with the ID ${result.insertedId}!`);
   } catch (error) {
@@ -90,23 +90,27 @@ app.post('/goal', async (req, res) => {
 app.put('/goal', async (req, res) => {
   try {
     // Define parameters of update request
-    const filter = { _id: new ObjectId(req.body._id) }; // Fixed typo from *id to _id
-    
-    // Check if newUserObj is provided (new format) or newUserId (old format)
+    const filter = { _id: new ObjectId(req.body._id) };
+
+    // Stores the update type / data
     let update;
-    if (req.body.newUserObj) {
-      // New format: add user object to users array
-      update = { $push: { users: req.body.newUserObj } };
-    } else if (req.body.newUserId) {
-      // Old format: add user ID string to users array
-      update = { $push: { users: req.body.newUserId } };
-    } else {
-      return res.status(400).send("Missing newUserObj or newUserId in request");
+
+    // If a new user is being added, push it to the end of the users array
+    if (req.body.newUserObject) {
+      update = { $push: { users: req.body.newUserObject } };
     }
-    
+    // If the users data is being updated, simply replace the users data with the updated version
+    else if (req.body.users) {
+      update = { $set: { users: req.body.users } };
+    }
+    // Otherwise, give an error
+    else {
+      return res.status(400).send("MISSING newUserObject/users in request.");
+    }
+
     // Update goal with matching ID to match the new users array
-    const result = await db.collection('goals').updateOne(filter, update);
-    
+    const result = await db.collection('goals').updateOne(filter, update, { upsert: true });
+
     // Return a message with how many documents were modified
     res.send(`${result.modifiedCount} document(s) have been updated.`); // Fixed from result.modified to result.modifiedCount
   } catch (error) {
@@ -142,20 +146,20 @@ const GoalRequestSchema = {
 app.post('/goalRequest', async (req, res) => {
   try {
     const { goalId, goalName, userId, inviterId } = req.body;
-    
 
-    console.log("Received body", {goalId, goalName, userId, inviterId});
+
+    console.log("Received body", { goalId, goalName, userId, inviterId });
     // Check if a request already exists
     const existingRequest = await db.collection('goalRequests').findOne({
       goalId,
       userId,
       status: 'pending'
     });
-    
+
     if (existingRequest) {
       return res.status(400).send("A request for this user to join this goal already exists.");
     }
-    
+
     const request = {
       goalId,
       goalName,
@@ -164,7 +168,7 @@ app.post('/goalRequest', async (req, res) => {
       status: 'pending',
       createdAt: new Date()
     };
-    
+
     const result = await db.collection('goalRequests').insertOne(request);
     res.status(201).json({ requestId: result.insertedId });
   } catch (error) {
@@ -180,7 +184,7 @@ app.get('/goalRequests/:userId', async (req, res) => {
     const requests = await db.collection('goalRequests')
       .find({ userId, status: 'pending' })
       .toArray();
-    
+
     res.status(200).json({ requests });
   } catch (error) {
     console.error("Error fetching goal requests:", error);
@@ -193,31 +197,31 @@ app.put('/goalRequest/:requestId', async (req, res) => {
   try {
     const { requestId } = req.params;
     const { status } = req.body; // 'accepted' or 'denied'
-    
+
     // Update the request status
     await db.collection('goalRequests').updateOne(
       { _id: new ObjectId(requestId) },
       { $set: { status } }
     );
-    
+
     // If accepted, add the user to the goal
     if (status === 'accepted') {
       const request = await db.collection('goalRequests').findOne({ _id: new ObjectId(requestId) });
-      
+
       if (request) {
-        const newUserObj = {
+        const newUserObject = {
           userId: request.userId,
-          role: 'member',
-          joinedAt: new Date()
+          joinedAt: new Date(),
+          completed: false
         };
-        
+
         await db.collection('goals').updateOne(
           { _id: new ObjectId(request.goalId) },
-          { $push: { users: newUserObj } }
+          { $push: { users: newUserObject } }
         );
       }
     }
-    
+
     res.status(200).send(`Request ${status}.`);
   } catch (error) {
     console.error("Error responding to goal request:", error);

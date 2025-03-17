@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import axios from 'axios';
 import Goal from './Goal';
@@ -9,14 +9,13 @@ interface GoalData {
   name: string;
   description: string;
   ownerId: string;
-  users: Array<UserObject | string>;
+  users: Array<UserObject>;
 }
 
 interface UserObject {
   userId: string;
-  username?: string;
-  joinedAt?: Date;
-  role?: string;
+  joined: boolean;
+  completed: boolean;
 }
 
 function GoalsList() {
@@ -42,7 +41,7 @@ function GoalsList() {
       setIsLoading(false);
       return;
     }
-   
+
     setIsLoading(true);
     try {
       const result = await axios.get(`http://localhost:3001/getGoals/${user.id}`);
@@ -59,7 +58,7 @@ function GoalsList() {
   // Function to create a new goal
   async function createGoal(): Promise<void> {
     if (!user || !name) return;
-   
+
     try {
       await axios.post('http://localhost:3001/goal', {
         name: name,
@@ -67,18 +66,17 @@ function GoalsList() {
         ownerId: user.id,
         users: [{
           userId: user.id,
-          username: user.username || user.firstName,
-          joinedAt: new Date(),
-          role: 'owner'
+          joined: false,
+          completed: false
         }]
       });
-     
+
       // Clear input fields
       const nameInput = document.getElementById('nameInput') as HTMLInputElement;
       const descInput = document.getElementById('descriptionInput') as HTMLInputElement;
       if (nameInput) nameInput.value = '';
       if (descInput) descInput.value = '';
-     
+
       // Update goals list
       setGoalsUpdated(true);
     } catch (err) {

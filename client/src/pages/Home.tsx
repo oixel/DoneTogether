@@ -8,7 +8,7 @@ import '../styles/Home.css';
 const Home = () => {
   const { user } = useUser();
   const [goalsUpdated, setGoalsUpdated] = useState(false);
-  
+
   // This will be used to refresh goals when notifications are handled
   const handleRequestsUpdate = () => {
     setGoalsUpdated(true);

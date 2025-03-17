@@ -12,3 +12,15 @@
     margin-left: 10px;
     margin-right: 10px;
 }
+
+.userInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 150px;
+    max-width: 150px;
+}
+
+.checkBox {
+    margin-left: 140px;
+}
