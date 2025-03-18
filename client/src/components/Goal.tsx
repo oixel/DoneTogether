@@ -4,7 +4,7 @@ import '../styles/Goal.css';
 import User from './User';
 
 import { getUserById, checkIfUserExists } from '../api/userRequests.ts';
-import { deleteGoal } from '../api/goalRequests.ts';
+import { addUserToGoal, deleteGoal } from '../api/goalRequests.ts';
 
 // Define the interface for user objects (in MongoDB)
 interface UserObject {
@@ -45,7 +45,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
     async function getClerkUsers(): Promise<void> {
         const newClerkUsers: ClerkUser[] = [];
 
-        // Check if users exists and is an array
+        // Check if users exists and is in array
         if (users && Array.isArray(users)) {
             for (const userObject of users) {
                 if (typeof userObject === 'object' && userObject !== null && 'userId' in userObject) {
@@ -71,7 +71,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
     }, [users]);
 
     // Send a goal invitation request instead of directly adding the user
-    async function sendJoinRequest(): Promise<void> {
+    async function inviteUser(): Promise<void> {
         if (searchedUser) {
             // Check if user is already part of this goal
             const userExists = users.some(user =>
@@ -83,17 +83,15 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                 setIsRequesting(true);
 
                 try {
-                    // Create a goal request instead of directly adding the user
-                    await axios.post('http://localhost:3001/goalRequest', {
-                        goalId: id,
-                        goalName: name,
+                    // Add user to goal with joined set to false
+                    const newUser = {
                         userId: searchedUser.id,
-                        inviterId: currentUserId
-                    });
-                    console.log("Creating request with inviterId:", currentUserId);
+                        joined: false,  // New user must accept invite to join goal
+                        completed: false
+                    }
 
-                    // Show success state
-                    setRequestSent(true);
+                    // Send PUT request to append new user to users array
+                    addUserToGoal(id, newUser);
 
                     // Wipe search bar
                     const searchInput = document.getElementById('searchInput') as HTMLInputElement;
@@ -101,9 +99,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                         searchInput.value = '';
                     }
                 } catch (error) {
-                    console.error("Error sending join request:", error);
-                } finally {
-                    setIsRequesting(false);
+                    console.error("Error sending inviting user:", error);
                 }
             } else {
                 console.log(`${searchedUser.username} is already in this goal.`);
@@ -159,7 +155,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                         />
 
                         <button
-                            onClick={sendJoinRequest}
+                            onClick={inviteUser}
                             disabled={!searchedUser || isRequesting || requestSent}
                             className={requestSent ? "button-success" : ""}
                         >

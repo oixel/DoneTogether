@@ -5,11 +5,10 @@ import { useState } from "react";
 import { updateGoalCompletion } from '../api/goalRequests.ts';
 
 interface UserPropTypes {
-    userObject: any;
-    completed: boolean;
+    goalId: string;
+    clerkUserData: any;
     isReadOnly: boolean;
     storedCompletedState: boolean;
-    updateUserCompletion: CallableFunction;
 }
 
 function User({ goalId, clerkUserData, isReadOnly, storedCompletedState }: UserPropTypes) {

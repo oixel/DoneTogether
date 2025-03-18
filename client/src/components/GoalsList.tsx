@@ -3,7 +3,16 @@ import { useUser } from '@clerk/clerk-react';
 import axios from 'axios';
 import Goal from './Goal';
 
-// Define interfaces for your data structures
+import { createGoal } from '../api/goalRequests';
+
+// Define interface for User objects in MongoDB
+interface UserObject {
+  userId: string;
+  joined: boolean;
+  completed: boolean;
+}
+
+// Define interface for Goal objects in MongoDB
 interface GoalData {
   _id: string;
   name: string;
@@ -12,64 +21,36 @@ interface GoalData {
   users: Array<UserObject>;
 }
 
-interface UserObject {
-  userId: string;
-  joined: boolean;
-  completed: boolean;
+// Defines types for the props of GoalsList component
+interface GoalsListProps {
+  goals: Array<GoalData>;
+  getGoalsAndInvitations: CallableFunction;
+  isLoading: boolean;
+  error: string;
+  setError: CallableFunction;
 }
 
-function GoalsList() {
+function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }: GoalsListProps) {
   const { user } = useUser();
-  const [goals, setGoals] = useState<GoalData[]>([]);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [goalsUpdated, setGoalsUpdated] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+
 
   // Fetch goals when component mounts or when goals are updated
   useEffect(() => {
-    getGoals();
     if (goalsUpdated) {
       setGoalsUpdated(false);
     }
   }, [goalsUpdated, user]);
 
-  // Function to fetch goals from the server
-  async function getGoals(): Promise<void> {
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const result = await axios.get(`http://localhost:3001/getGoals/${user.id}`);
-      setGoals(result.data.goals || []);
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching goals:", err);
-      setError("Failed to load goals. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   // Function to create a new goal
-  async function createGoal(): Promise<void> {
+  async function handleGoalCreation(): Promise<void> {
     if (!user || !name) return;
 
     try {
-      await axios.post('http://localhost:3001/goal', {
-        name: name,
-        description: description,
-        ownerId: user.id,
-        users: [{
-          userId: user.id,
-          joined: true,  // Owner does not need to accept an invitation
-          completed: false
-        }]
-      });
+      // 
+      createGoal(name, description, user);
 
       // Clear input fields
       const nameInput = document.getElementById('nameInput') as HTMLInputElement;
@@ -95,7 +76,7 @@ function GoalsList() {
     return (
       <div className="error">
         <p>{error}</p>
-        <button onClick={getGoals}>Try Again</button>
+        <button onClick={() => getGoalsAndInvitations()}>Try Again</button>
       </div>
     );
   }
@@ -140,14 +121,14 @@ function GoalsList() {
         </div>
         <div>
           <button
-            onClick={createGoal}
+            onClick={handleGoalCreation}
             disabled={!name}
           >
             Create Goal +
           </button>
           <button
             className="refreshButton"
-            onClick={getGoals}
+            onClick={() => getGoalsAndInvitations()}
           >
             🔃
           </button>
