@@ -99,6 +99,7 @@ const Home = () => {
           {user && (
             <>
               <NotificationsList
+                userId={user.id}
                 invitations={invitations}
               />
               <GoalsList

@@ -19,19 +19,19 @@ export async function getGoals(userId: string) {
     return await axios.get(`http://localhost:3001/getGoals/${userId}`);
 }
 
-// Send a PUT request to append a new user to the users array
-export async function addUserToGoal(goalId: string, newUserObject: object): Promise<void> {
-    await axios.put('http://localhost:3001/goal', { _id: goalId, newUserObject: newUserObject });
+// Send a PATCH request to add or remove a user from a goal
+export async function updateGoalUsers(goalId: string, userObject: object, updateType: 'add' | 'remove'): Promise<void> {
+    await axios.patch(`http://localhost:3001/updateGoalUsers/${updateType}`, { _id: goalId, userObject: userObject });
 }
 
-// Send a PATCH request to update the completion status of a user in a goal
-export async function updateGoalCompletion(goalId: string, userId: string, completed: boolean): Promise<void> {
+// Send a PATCH request to update the user's data in a goal
+export async function updateUserInGoal(updateData: any): Promise<void> {
     // Update the completion status of the user with the given ID
-    await axios.patch('http://localhost:3001/goal', { _id: goalId, userId: userId, completed: completed });
+    await axios.patch('http://localhost:3001/goal', updateData);
 }
 
 // Send a DELETE request to server based on this goal's ObjectId in MongoDB
-export async function deleteGoal(id: string, setGoalUpdated: CallableFunction): Promise<void> {
-    await axios.delete(`http://localhost:3001/goal/${id}`);
+export async function deleteGoal(goalId: string, setGoalUpdated: CallableFunction): Promise<void> {
+    await axios.delete(`http://localhost:3001/goal/${goalId}`);
     setGoalUpdated(true);
 }

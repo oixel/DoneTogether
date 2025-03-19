@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import '../styles/Notifications.css';
 
 import { getUserById } from '../api/userRequests';
+import { updateGoalUsers, updateUserInGoal } from '../api/goalRequests';
 
 // Define interface for User objects in MongoDB
 interface UserObject {
@@ -20,7 +21,7 @@ interface GoalData {
     users: Array<UserObject>;
 }
 
-function Notification({ invitation }: { invitation: GoalData }) {
+function Notification({ userId, invitation }: { userId: string, invitation: GoalData }) {
     const [ownerName, setOwnerName] = useState("");
 
     // On component's render, grab the owner's username
@@ -35,13 +36,22 @@ function Notification({ invitation }: { invitation: GoalData }) {
     }
 
     // Handle accepting or denying a request
-    const handleResponse = async (goalId: string, status: 'accepted' | 'denied') => {
+    const handleResponse = async (accepted: boolean) => {
         try {
-            //
-            // Handle acceptance / rejection of invitation requests
-            //
+            // On acceptance, change user's 'joined' boolean to true
+            if (accepted) {
+                // Sends PATCH request through axios
+                updateUserInGoal({
+                    _id: invitation._id,
+                    userId: userId,
+                    updateKey: 'users.$[user].joined',
+                    updateValue: true
+                });
+            } else {  // On deny, remove user from goal so the notification no longer shows up
+                updateGoalUsers(invitation._id, { userId: userId }, 'remove');
+            }
         } catch (error) {
-            console.error(`Error ${status === 'accepted' ? 'accepting' : 'denying'} request:`, error);
+            console.error(`ERROR ${accepted ? 'accepting' : 'denying'} request:`, error);
         }
     };
 
@@ -60,13 +70,13 @@ function Notification({ invitation }: { invitation: GoalData }) {
                     <div className="notification-actions">
                         <button
                             className="accept-button"
-                            onClick={() => handleResponse(invitation._id, 'accepted')}
+                            onClick={() => handleResponse(true)}
                         >
                             Accept
                         </button>
                         <button
                             className="deny-button"
-                            onClick={() => handleResponse(invitation._id, 'denied')}
+                            onClick={() => handleResponse(false)}
                         >
                             Decline
                         </button>

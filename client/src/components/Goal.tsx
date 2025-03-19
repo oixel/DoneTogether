@@ -4,7 +4,7 @@ import '../styles/Goal.css';
 import User from './User';
 
 import { getUserById, checkIfUserExists } from '../api/userRequests.ts';
-import { addUserToGoal, deleteGoal } from '../api/goalRequests.ts';
+import { updateGoalUsers, deleteGoal } from '../api/goalRequests.ts';
 
 // Define the interface for user objects (in MongoDB)
 interface UserObject {
@@ -91,7 +91,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                     }
 
                     // Send PUT request to append new user to users array
-                    addUserToGoal(id, newUser);
+                    updateGoalUsers(id, newUser, 'add');
 
                     // Wipe search bar
                     const searchInput = document.getElementById('searchInput') as HTMLInputElement;
@@ -155,7 +155,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                         />
 
                         <button
-                            onClick={inviteUser}
+                            onClick={() => inviteUser()}
                             disabled={!searchedUser || isRequesting || requestSent}
                             className={requestSent ? "button-success" : ""}
                         >
@@ -164,7 +164,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 }
 

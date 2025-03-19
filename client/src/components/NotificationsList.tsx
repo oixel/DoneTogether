@@ -19,7 +19,7 @@ interface GoalData {
   users: Array<UserObject>;
 }
 
-function NotificationsList({ invitations }: { invitations: Array<GoalData> }) {
+function NotificationsList({ userId, invitations }: { userId: string, invitations: Array<GoalData> }) {
   if (invitations.length === 0) {
     return <div className="notifications-empty">No pending invitations...</div>;
   }
@@ -31,6 +31,7 @@ function NotificationsList({ invitations }: { invitations: Array<GoalData> }) {
         {invitations.map(invitation => (
           <Notification
             key={invitation._id}
+            userId={userId}
             invitation={invitation}
           />
         ))}

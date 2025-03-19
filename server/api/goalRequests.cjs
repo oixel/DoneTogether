@@ -22,7 +22,7 @@ async function createGoal(app, database) {
 
 // Queries all goals where the user is a participant
 // Updated to handle users as objects with userId property
-async function getGoals(app, database) {
+function getGoals(app, database) {
     app.get('/getGoals/:userId', async (req, res) => {
         const { userId } = req.params;
 
@@ -47,8 +47,8 @@ async function getGoals(app, database) {
 };
 
 // Updates goal's users
-async function updateGoalUsers(app, database) {
-    app.put('/goal', async (req, res) => {
+function updateGoalUsers(app, database) {
+    app.patch('/updateGoalUsers/:type', async (req, res) => {
         try {
             // Define parameters of update request
             const filter = { _id: new ObjectId(req.body._id) };
@@ -57,23 +57,17 @@ async function updateGoalUsers(app, database) {
             let update;
 
             // If a new user is being added, push it to the end of the users array
-            if (req.body.newUserObject) {
-                update = { $push: { users: req.body.newUserObject } };
-            }
-            // If the users data is being updated, simply replace the users data with the updated version
-            else if (req.body.users) {
-                update = { $set: { users: req.body.users } };
-            }
-            // Otherwise, give an error
-            else {
-                return res.status(400).send("MISSING newUserObject/users in request.");
+            if (req.params.type === 'add') {
+                update = { $push: { users: req.body.userObject } };
+            } else {  // Otherwise (when removing), remove the user from the array of users by their userId
+                update = { $pull: { users: { userId: req.body.userObject.userId } } }
             }
 
             // Update goal with matching ID to match the new users array
             const result = await database.collection('goals').updateOne(filter, update, { upsert: true });
 
-            // Return a message with how many documents were modified
-            res.send(`${result.modifiedCount} document(s) have been updated.`); // Fixed from result.modified to result.modifiedCount
+            // Return a success message with result back
+            res.status(200).send(result);
         } catch (error) {
             console.error("Error updating goal:", error);
             res.status(500).send("Server error while updating goal.");
@@ -82,14 +76,22 @@ async function updateGoalUsers(app, database) {
 };
 
 // Send a patch request to update a specific user's goal completion
-async function updateGoalCompletion(app, database) {
+function updateUserInGoal(app, database) {
     app.patch('/goal', async (req, res) => {
         try {
+            // Ensures that the user being patched is in the goal with the passed-in id
             const filter = { _id: new ObjectId(req.body._id) };
-            var update = { $set: { 'users.$[user].completed': req.body.completed } };
+
+            // Specifies the user that needs to be patched by using the userId
             const options = { arrayFilters: [{ 'user.userId': req.body.userId }] }
 
+            // Passed as parameters in the PATCH request, updates the data under the specified key
+            var update = { $set: { [req.body.updateKey]: req.body.updateValue } };
+
+            // Send PATCH update to MongoDB!
             const result = await database.collection('goals').updateOne(filter, update, options);
+
+            // Send successful status and the data of the result back to request
             res.status(200).send(result);
         } catch (error) {
             res.status(500).send(`Ran into error ${error} while updating goal completion.`);
@@ -98,7 +100,7 @@ async function updateGoalCompletion(app, database) {
 }
 
 // Delete goal with given ObjectId in MongoDB
-async function deleteGoal(app, database) {
+function deleteGoal(app, database) {
     app.delete('/goal/:id', async (req, res) => {
         const { id } = req.params;
         try {
@@ -113,5 +115,5 @@ async function deleteGoal(app, database) {
     });
 };
 
-// Export all HTTP request router functions
-module.exports = { createGoal, getGoals, updateGoalUsers, updateGoalCompletion, deleteGoal };
+// Export all HTTP router functions
+module.exports = { createGoal, getGoals, updateGoalUsers, updateUserInGoal, deleteGoal };

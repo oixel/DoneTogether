@@ -8,7 +8,7 @@ require('dotenv').config();
 
 // Import HTTP request functionality from external scripts
 const { getUserByName, getUserById } = require('./api/userRequests.js');
-const { createGoal, getGoals, updateGoalUsers, updateGoalCompletion, deleteGoal } = require('./api/goalRequests.cjs');
+const { createGoal, getGoals, updateGoalUsers, updateGoalCompletion, deleteGoal, updateUserInGoal } = require('./api/goalRequests.cjs');
 
 // Create express app an ensure it utilizes JSON, CORS, and the Clerk middleware
 const app = express();
@@ -38,7 +38,7 @@ function connectRouters() {
   createGoal(app, database);
   getGoals(app, database);
   updateGoalUsers(app, database);
-  updateGoalCompletion(app, database);
+  updateUserInGoal(app, database);
   deleteGoal(app, database);
 }
 
@@ -47,10 +47,10 @@ const PORT = process.env.PORT || 3001;
 
 // Start up server and log success message
 async function startServer() {
-  // 
+  // Connect to MongoDB database on start up
   await connectToMongo();
 
-  // 
+  // Connect to all the HTTP routers from the external API scripts (userRequests.cjs and goalRequests.cjs)
   connectRouters();
 
   app.listen(PORT, () => {

@@ -2,7 +2,7 @@
 import '../styles/User.css';
 
 import { useState } from "react";
-import { updateGoalCompletion } from '../api/goalRequests.ts';
+import { updateUserInGoal } from '../api/goalRequests.ts';
 
 interface UserPropTypes {
     goalId: string;
@@ -23,7 +23,12 @@ function User({ goalId, clerkUserData, isReadOnly, storedCompletedState }: UserP
             setCompleted(newCompletion);
 
             // Call axios request in external API script (goalRequests.ts) to PATCH user's completion status
-            updateGoalCompletion(goalId, clerkUserData.id, newCompletion);
+            updateUserInGoal({
+                _id: goalId,
+                userId: clerkUserData.id,
+                updateKey: 'users.$[user].completed',
+                updateValue: newCompletion
+            });
         }
     }
 

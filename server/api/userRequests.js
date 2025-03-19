@@ -28,5 +28,5 @@ async function getUserById(app, clerkClient) {
   });
 };
 
-// Export functions so that server can call them
-export { getUserByName, getUserById };
+// Export all user HTTP router functions
+module.exports = { getUserByName, getUserById };
