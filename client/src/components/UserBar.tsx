@@ -1,7 +1,7 @@
 
 import '../styles/User.css';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { updateUserInGoal } from '../api/goalRequests.ts';
 
 // Import interface for UserData object
@@ -18,14 +18,14 @@ function UserBar({ goalId, userData, isReadOnly }: UserBarPropTypes) {
     const [completed, setCompleted] = useState(userData.completed);
 
     // Update completion status on current UI and in the database
-    function updateCompletion(newCompletion: boolean): void {
+    async function updateCompletion(newCompletion: boolean): Promise<void> {
         // Prevents updating other users' goals
         if (!isReadOnly) {
             // Update current completion state to reflect in the checkbox
             setCompleted(newCompletion);
 
             // Call axios request in external API script (goalRequests.ts) to PATCH user's completion status
-            updateUserInGoal({
+            await updateUserInGoal({
                 _id: goalId,
                 userId: userData.userId,
                 updateKey: 'users.$[user].completed',
@@ -33,6 +33,11 @@ function UserBar({ goalId, userData, isReadOnly }: UserBarPropTypes) {
             });
         }
     }
+
+    // Whenever the user's completed status is updated in the Goal database, update checkbox to reflect completion
+    useEffect(() => {
+        setCompleted(userData.completed);
+    }, [userData])
 
     return (
         <div className="userContainer">
