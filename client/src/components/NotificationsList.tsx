@@ -5,7 +5,14 @@ import Notification from './Notification';
 // Import interface for GoalData object
 import { GoalData } from '../types/goalData';
 
-function NotificationsList({ userId, invitations }: { userId: string, invitations: Array<GoalData> }) {
+// Define types of NotificationList component's props
+interface NotificationListPropTypes {
+  userId: string;
+  invitations: Array<GoalData>;
+  setNeedRefresh: CallableFunction;
+};
+
+function NotificationsList({ userId, invitations, setNeedRefresh }: NotificationListPropTypes) {
   if (invitations.length === 0) {
     return <div className="notifications-empty">No pending invitations...</div>;
   }
@@ -19,6 +26,7 @@ function NotificationsList({ userId, invitations }: { userId: string, invitation
             key={invitation._id}
             userId={userId}
             invitation={invitation}
+            setNeedRefresh={setNeedRefresh}
           />
         ))}
       </div>

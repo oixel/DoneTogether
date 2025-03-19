@@ -14,12 +14,12 @@ interface GoalPropTypes {
     name: string;
     description: string;
     ownerId: string;
-    setGoalUpdated: CallableFunction;
     mongoDBUserData: Array<UserData>;
     currentUserId: string; // Add the current user's ID
+    setNeedRefresh: CallableFunction;
 }
 
-function Goal({ id, name, description, ownerId, setGoalUpdated, mongoDBUserData, currentUserId }: GoalPropTypes) {
+function Goal({ id, name, description, ownerId, mongoDBUserData, currentUserId, setNeedRefresh }: GoalPropTypes) {
     const [searchedUser, setSearchedUser] = useState<UserData | null>(null);
     const [users, setUsers] = useState<UserData[]>([]);
 
@@ -68,8 +68,9 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, mongoDBUserData,
 
     // Store User object or null in 'searchedUser' based on search
     async function checkIfUserExists(usernameInput: string): Promise<void> {
-        // Reset isRequesting when a new username is input
+        // Resets usability of button when a new username is typed in
         setIsRequesting(false);
+        setRequestSent(false)
 
         // Update searched user to a User object (if a user is found) or null (if not)
         const user = await getUserByName(usernameInput);
@@ -97,7 +98,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, mongoDBUserData,
                     }
 
                     // Send PUT request to append new user to users array
-                    updateGoalUsers(id, newUser, 'add');
+                    await updateGoalUsers(id, newUser, 'add');
 
                     // Wipe search bar
                     const searchInput = document.getElementById('searchInput') as HTMLInputElement;
@@ -108,6 +109,9 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, mongoDBUserData,
                     // Update statuses to reflect successful send
                     setIsRequesting(false);
                     setRequestSent(true);
+
+                    // Triggers refresh of goals so that newly invited user shows up under goal (preventing > 1 invite)
+                    setNeedRefresh(true);
                 } catch (error) {
                     console.error("Error sending inviting user:", error);
                 }
@@ -124,8 +128,25 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, mongoDBUserData,
                     <h1>{name}</h1>
                     <p>{description}</p>
                 </div>
+                {/* If owner, show button to delete goal */}
                 {isOwner && (
-                    <button className="goalButton" onClick={() => deleteGoal(id, setGoalUpdated)}>🗑️</button>
+                    <button className="goalButton" onClick={async () => {
+                        // Send axios request to DELETE this goal
+                        await deleteGoal(id);
+
+                        // Triggers refresh of goals
+                        setNeedRefresh(true);
+                    }}>🗑️</button>
+                )}
+                {/* Otherwise, show button that leaves goal */}
+                {!isOwner && (
+                    <button className="goalButton" onClick={async () => {
+                        // Send axios request to remove this user from goal's users array
+                        await updateGoalUsers(id, { userId: currentUserId }, 'remove');
+
+                        // Triggers refresh of goals
+                        setNeedRefresh(true);
+                    }}>✖️</button>
                 )}
             </div>
             <div className="usersSection">

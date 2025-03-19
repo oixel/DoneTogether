@@ -31,7 +31,6 @@ export async function updateUserInGoal(updateData: object): Promise<void> {
 }
 
 // Send a DELETE request to server based on this goal's ObjectId in MongoDB
-export async function deleteGoal(goalId: string, setGoalUpdated: CallableFunction): Promise<void> {
+export async function deleteGoal(goalId: string): Promise<void> {
     await axios.delete(`http://localhost:3001/goal/${goalId}`);
-    setGoalUpdated(true);
 }

@@ -108,11 +108,12 @@ const Home = () => {
               <NotificationsList
                 userId={user.id}
                 invitations={invitations}
+                setNeedRefresh={setNeedRefresh}
               />
               <GoalsList
                 goals={goals}
-                getGoalsAndInvitations={getGoalsAndInvitations}
                 isLoading={isLoading}
+                setNeedRefresh={setNeedRefresh}
                 error={error}
                 setError={setError}
               />

@@ -8,7 +8,14 @@ import { updateGoalUsers, updateUserInGoal } from '../api/goalRequests';
 // Import interface for GoalData object
 import { GoalData } from '../types/goalData';
 
-function Notification({ userId, invitation }: { userId: string, invitation: GoalData }) {
+// Define types of Notification component's props
+interface NotificationPropTypes {
+    userId: string;
+    invitation: GoalData;
+    setNeedRefresh: CallableFunction;
+};
+
+function Notification({ userId, invitation, setNeedRefresh }: NotificationPropTypes) {
     // Store's the owner's name to use as invitation sender
     const [ownerName, setOwnerName] = useState("");
 
@@ -30,14 +37,20 @@ function Notification({ userId, invitation }: { userId: string, invitation: Goal
             // On acceptance, change user's 'joined' boolean to true
             if (accepted) {
                 // Sends PATCH request through axios
-                updateUserInGoal({
+                await updateUserInGoal({
                     _id: invitation._id,
                     userId: userId,
                     updateKey: 'users.$[user].joined',
                     updateValue: true
                 });
+
+                // Triggers refresh of goals
+                setNeedRefresh(true);
             } else {  // On deny, remove user from goal so the notification no longer shows up
-                updateGoalUsers(invitation._id, { userId: userId }, 'remove');
+                await updateGoalUsers(invitation._id, { userId: userId }, 'remove');
+
+                // Triggers refresh of goals
+                setNeedRefresh(true);
             }
         } catch (error) {
             console.error(`ERROR ${accepted ? 'accepting' : 'denying'} request:`, error);

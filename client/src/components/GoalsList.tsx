@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import Goal from './Goal';
 
@@ -10,25 +10,16 @@ import { GoalData } from '../types/goalData';
 // Defines types for the props of GoalsList component
 interface GoalsListProps {
   goals: Array<GoalData>;
-  getGoalsAndInvitations: CallableFunction;
   isLoading: boolean;
+  setNeedRefresh: CallableFunction;
   error: string | null;
   setError: CallableFunction;
 }
 
-function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }: GoalsListProps) {
+function GoalsList({ goals, isLoading, setNeedRefresh, error, setError }: GoalsListProps) {
   const { user } = useUser();
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [goalsUpdated, setGoalsUpdated] = useState<boolean>(false);
-
-
-  // Fetch goals when component mounts or when goals are updated
-  useEffect(() => {
-    if (goalsUpdated) {
-      setGoalsUpdated(false);
-    }
-  }, [goalsUpdated, user]);
 
   // Function to create a new goal
   async function handleGoalCreation(): Promise<void> {
@@ -36,7 +27,7 @@ function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }
 
     try {
       // Send an axios request with the goal's data and the user's id (to add the owner to the goal!)
-      createGoal(name, description, user.id);
+      await createGoal(name, description, user.id);
 
       // Clear input fields
       const nameInput = document.getElementById('nameInput') as HTMLInputElement;
@@ -44,8 +35,8 @@ function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }
       if (nameInput) nameInput.value = '';
       if (descInput) descInput.value = '';
 
-      // Update goals list
-      setGoalsUpdated(true);
+      // Refresh goals list
+      setNeedRefresh(true);
     } catch (err) {
       console.error("Error creating goal:", err);
       setError("Failed to create goal. Please try again.");
@@ -62,7 +53,7 @@ function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }
     return (
       <div className="error">
         <p>{error}</p>
-        <button onClick={() => getGoalsAndInvitations()}>Try Again</button>
+        <button onClick={() => setNeedRefresh(true)}>Try Again</button>
       </div>
     );
   }
@@ -79,9 +70,9 @@ function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }
               description={goal.description}
               ownerId={goal.ownerId}
               mongoDBUserData={goal.users}
-              setGoalUpdated={setGoalsUpdated}
               //@ts-expect-error user is not null cause this component will only be shown during a signed in state
               currentUserId={user.id}
+              setNeedRefresh={setNeedRefresh}
             />
           ))
         ) : (
@@ -114,7 +105,7 @@ function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }
           </button>
           <button
             className="refreshButton"
-            onClick={() => getGoalsAndInvitations()}
+            onClick={() => setNeedRefresh(true)}
           >
             🔃
           </button>
