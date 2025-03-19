@@ -12,7 +12,7 @@ interface GoalsListProps {
   goals: Array<GoalData>;
   getGoalsAndInvitations: CallableFunction;
   isLoading: boolean;
-  error: string;
+  error: string | null;
   setError: CallableFunction;
 }
 

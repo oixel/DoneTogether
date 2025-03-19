@@ -1,79 +1,86 @@
 import { Link } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton, useUser } from '@clerk/clerk-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import GoalsList from '../components/GoalsList';
 import NotificationsList from '../components/NotificationsList';
 import '../styles/Home.css';
 
 import { getGoals } from '../api/goalRequests';
 
-// Define interface for User objects in MongoDB
-interface UserObject {
-  userId: string;
-  joined: boolean;
-  completed: boolean;
-}
-
-// Define interface for Goal objects in MongoDB
-interface GoalData {
-  _id: string;
-  name: string;
-  description: string;
-  ownerId: string;
-  users: Array<UserObject>;
-}
+// Import interface for GoalData object
+import { GoalData } from '../types/goalData';
 
 const Home = () => {
   const { user } = useUser();
 
-  const [goals, setGoals] = useState([]);
-  const [invitations, setInvitations] = useState([]);
-
-  const [goalsUpdated, setGoalsUpdated] = useState(false);
+  const [goals, setGoals] = useState<GoalData[]>([]);
+  const [invitations, setInvitations] = useState<GoalData[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // This will be used to refresh goals when notifications are handled
-  // const handleRequestsUpdate = () => {
-  //   setGoalsUpdated(true);
-  // };
+  // Refreshes goals when set to true (in useEffect)
+  const [needRefresh, setNeedRefresh] = useState(false);
 
-  // Function to fetch goals/invitations from the server
-  async function getGoalsAndInvitations(): Promise<void> {
-    // 
+  // Function to fetch goals/invitations from the server;
+  // Using Callback to prevent unnecessarry re-renders from the useEffect call
+  const getGoalsAndInvitations = useCallback(async () => {
     setIsLoading(true);
 
-    // 
+    // Place in try/catch to prevent code breaking if an error arises
     try {
-      const result = await getGoals(user.id);
+      if (user) {
+        const result = await getGoals(user.id);
 
-      const newGoals: Array<GoalData> = [];
-      const newInvitations: Array<GoalData> = [];
+        // Temporarily stores the goals and invites being sifted through
+        const newGoals: Array<GoalData> = [];
+        const newInvitations: Array<GoalData> = [];
 
-      // Filter through users goals here and append to goals or invites array based on the joined boolean
-      result.data.goals.forEach(goalObject => {
-        const userData = goalObject.users.find(({ userId }) => userId === user.id);
-        if (userData.joined) newGoals.push(goalObject);
-        else newInvitations.push(goalObject);
-      });
+        // Filter through users goals here and append to goals or invites array based on the joined boolean
+        result.data.goals.forEach((goalObject: GoalData) => {
+          const userData = goalObject.users.find(({ userId }) => userId === user.id);
 
-      setGoals(newGoals);
-      setInvitations(newInvitations);
+          // Append data the current goal to goals if user has joined or invitations if user has yet to accept the invite
+          if (userData) {
+            if (userData.joined) newGoals.push(goalObject);
+            else newInvitations.push(goalObject);
+          } else {
+            setError("Error loading goals. Found goal without data.");
+          }
+        });
 
-      setError(null);
+        // When goals and invites and sifted through, place each in their respective arrays
+        setGoals(newGoals);
+        setInvitations(newInvitations);
+
+        // If goals and invites are loaded properly, wipe any errors that may have existed
+        setError(null);
+      }
+      else {
+        setError("Failed to find user.")
+      }
     } catch (err) {
+      // Output error if error comes up while loading goals
       console.error("Error fetching goals:", err);
       setError("Failed to load goals. Please try again.");
     } finally {
+      // When done loading goals/invites, remove the loading text
       setIsLoading(false);
     }
-  }
+  }, [user]);
 
-  // 
+  // Refresh Home page content when user is updated
   useEffect(() => {
-    if (user) getGoalsAndInvitations();
-  }, [user])
+    getGoalsAndInvitations();
+  }, [user, getGoalsAndInvitations]);
+
+  // Refresh Home page content when content is change and a refresh is needed
+  useEffect(() => {
+    if (needRefresh) {
+      getGoalsAndInvitations();
+      setNeedRefresh(false)
+    }
+  }, [needRefresh, getGoalsAndInvitations]);
 
   return (
     <div className="container">

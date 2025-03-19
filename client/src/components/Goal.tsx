@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import '../styles/Goal.css';
 import UserBar from './UserBar.tsx';
 
@@ -30,7 +30,8 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, mongoDBUserData,
     const isOwner = currentUserId === ownerId;
 
     // Loops through all user objects and grabs their profile information from Clerk database and combines it with their respective statuses from MongoDB
-    async function getUsers(): Promise<void> {
+    // Using Callback to prevent unnecessarry re-renders from the useEffect call
+    const getUsers = useCallback(async () => {
         // Initialize empty array to append all user data for this goal into
         const newUsers: Array<UserData> = [];
 
@@ -58,12 +59,12 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, mongoDBUserData,
         }
 
         setUsers(newUsers);
-    }
+    }, [mongoDBUserData]);
 
     // Update the user data whenever there is a change in this goal's user's array in MongoDB
     useEffect(() => {
         getUsers();
-    }, [mongoDBUserData]);
+    }, [mongoDBUserData, getUsers]);
 
     // Store User object or null in 'searchedUser' based on search
     async function checkIfUserExists(usernameInput: string): Promise<void> {
