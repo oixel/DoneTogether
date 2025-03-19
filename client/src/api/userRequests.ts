@@ -1,18 +1,17 @@
 import axios from 'axios';
 
-// Define interface for user data from Clerk
-interface ClerkUser {
-    id: string;
-    username: string;
-    imageUrl: string;
-    // [key: string]: any; // Allow for other properties that might come from Clerk
-}
+// Import interface for UserData object
+import { UserData } from '../types/userData';
 
 // Send a GET request to server with user's id
-export async function getUserById(id: string): Promise<ClerkUser | null> {
+export async function getUserById(id: string): Promise<UserData | null> {
     try {
+        // Fetch the user's profile data from Clerk
         const result = await axios.get(`http://localhost:3001/userById/${id}`);
-        return result.data.user;
+        const clerkUserData = result.data.user;
+
+        // Return a initialized User object with the profile data set from Clerk
+        return { userId: clerkUserData.id, username: clerkUserData.username, imageUrl: clerkUserData.imageUrl };
     } catch (error) {
         console.error("Error fetching user:", error);
         return null;
@@ -20,17 +19,23 @@ export async function getUserById(id: string): Promise<ClerkUser | null> {
 };
 
 // Verify whether inputted username exists in Clerk database
-export async function checkIfUserExists(username: string, setSearchedUser: CallableFunction, setRequestSent: CallableFunction): Promise<void> {
+export async function getUserByName(username: string): Promise<UserData | null> {
     if (username) {
         try {
             const result = await axios.get(`http://localhost:3001/userByName/${username}`);
-            setSearchedUser(result.data.user);
-            setRequestSent(false); // Reset request sent state when searching for a new user
+            const clerkUserData = result.data.user;
+
+            if (clerkUserData) {
+                // Return a initialized User object with the profile data set from Clerk
+                return { userId: clerkUserData.id, username: clerkUserData.username, imageUrl: clerkUserData.imageUrl };
+            } else {
+                return null;
+            }
         } catch (error) {
             console.error("Error checking if user exists:", error);
-            setSearchedUser(undefined);
+            return null;
         }
     } else {
-        setSearchedUser(undefined);
+        return null;
     }
 };

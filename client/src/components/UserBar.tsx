@@ -4,16 +4,18 @@ import '../styles/User.css';
 import { useState } from "react";
 import { updateUserInGoal } from '../api/goalRequests.ts';
 
-interface UserPropTypes {
+// Import interface for UserData object
+import { UserData } from '../types/userData';
+
+interface UserBarPropTypes {
     goalId: string;
-    clerkUserData: any;
+    userData: UserData;
     isReadOnly: boolean;
-    storedCompletedState: boolean;
 }
 
-function User({ goalId, clerkUserData, isReadOnly, storedCompletedState }: UserPropTypes) {
+function UserBar({ goalId, userData, isReadOnly }: UserBarPropTypes) {
     // Initialize completed state to what is currently stored in the database
-    const [completed, setCompleted] = useState(storedCompletedState);
+    const [completed, setCompleted] = useState(userData.completed);
 
     // Update completion status on current UI and in the database
     function updateCompletion(newCompletion: boolean): void {
@@ -25,7 +27,7 @@ function User({ goalId, clerkUserData, isReadOnly, storedCompletedState }: UserP
             // Call axios request in external API script (goalRequests.ts) to PATCH user's completion status
             updateUserInGoal({
                 _id: goalId,
-                userId: clerkUserData.id,
+                userId: userData.userId,
                 updateKey: 'users.$[user].completed',
                 updateValue: newCompletion
             });
@@ -36,16 +38,16 @@ function User({ goalId, clerkUserData, isReadOnly, storedCompletedState }: UserP
         <div className="userContainer">
             <div className="userInfo">
                 <img
-                    src={clerkUserData.imageUrl}
+                    src={userData.imageUrl}
                     alt="Profile image"
                     className="profilePicture"
                     width={35}
                 />
-                <p>{clerkUserData.username}</p>
+                <p>{userData.username}</p>
             </div>
             <input className="checkBox" type="checkbox" checked={completed} onChange={(e) => updateCompletion(e.target.checked)} />
         </div>
     );
 }
 
-export default User;
+export default UserBar;

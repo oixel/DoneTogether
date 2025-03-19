@@ -1,25 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
-import axios from 'axios';
 import Goal from './Goal';
 
 import { createGoal } from '../api/goalRequests';
 
-// Define interface for User objects in MongoDB
-interface UserObject {
-  userId: string;
-  joined: boolean;
-  completed: boolean;
-}
-
-// Define interface for Goal objects in MongoDB
-interface GoalData {
-  _id: string;
-  name: string;
-  description: string;
-  ownerId: string;
-  users: Array<UserObject>;
-}
+// Import interface for GoalData object
+import { GoalData } from '../types/goalData';
 
 // Defines types for the props of GoalsList component
 interface GoalsListProps {
@@ -49,8 +35,8 @@ function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }
     if (!user || !name) return;
 
     try {
-      // 
-      createGoal(name, description, user);
+      // Send an axios request with the goal's data and the user's id (to add the owner to the goal!)
+      createGoal(name, description, user.id);
 
       // Clear input fields
       const nameInput = document.getElementById('nameInput') as HTMLInputElement;
@@ -92,7 +78,7 @@ function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }
               name={goal.name}
               description={goal.description}
               ownerId={goal.ownerId}
-              users={goal.users as UserObject[]}
+              mongoDBUserData={goal.users}
               setGoalUpdated={setGoalsUpdated}
               //@ts-expect-error user is not null cause this component will only be shown during a signed in state
               currentUserId={user.id}
@@ -121,7 +107,7 @@ function GoalsList({ goals, getGoalsAndInvitations, isLoading, error, setError }
         </div>
         <div>
           <button
-            onClick={handleGoalCreation}
+            onClick={() => handleGoalCreation()}
             disabled={!name}
           >
             Create Goal +

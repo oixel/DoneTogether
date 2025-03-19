@@ -5,34 +5,23 @@ import '../styles/Notifications.css';
 import { getUserById } from '../api/userRequests';
 import { updateGoalUsers, updateUserInGoal } from '../api/goalRequests';
 
-// Define interface for User objects in MongoDB
-interface UserObject {
-    userId: string;
-    joined: boolean;
-    completed: boolean;
-}
-
-// Define interface for Goal objects in MongoDB
-interface GoalData {
-    _id: string;
-    name: string;
-    description: string;
-    ownerId: string;
-    users: Array<UserObject>;
-}
+// Import interface for GoalData object
+import { GoalData } from '../types/goalData';
 
 function Notification({ userId, invitation }: { userId: string, invitation: GoalData }) {
+    // Store's the owner's name to use as invitation sender
     const [ownerName, setOwnerName] = useState("");
 
     // On component's render, grab the owner's username
     useEffect(() => {
         getOwner(invitation.ownerId);
-    }, [])
-
+    })
 
     // Grab owner's username and store it in ownerName variable
     async function getOwner(ownerId: string) {
-        await getUserById(ownerId).then((owner) => setOwnerName(owner.username));
+        await getUserById(ownerId).then((owner) => {
+            if (owner) setOwnerName(owner.username)
+        });
     }
 
     // Handle accepting or denying a request

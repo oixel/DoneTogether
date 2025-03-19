@@ -1,24 +1,12 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import '../styles/Goal.css';
-import User from './User';
+import UserBar from './UserBar.tsx';
 
-import { getUserById, checkIfUserExists } from '../api/userRequests.ts';
+import { getUserById, getUserByName } from '../api/userRequests.ts';
 import { updateGoalUsers, deleteGoal } from '../api/goalRequests.ts';
 
-// Define the interface for user objects (in MongoDB)
-interface UserObject {
-    userId: string;
-    joined: string;
-    completed: boolean;
-}
-
-// Define interface for user data from Clerk
-interface ClerkUser {
-    id: string;
-    username: string;
-    imageUrl: string;
-}
+// Import interface for UserData object
+import { UserData } from '../types/userData';
 
 // Define the schema for goals with updated users type
 interface GoalPropTypes {
@@ -27,13 +15,13 @@ interface GoalPropTypes {
     description: string;
     ownerId: string;
     setGoalUpdated: CallableFunction;
-    users: Array<UserObject>;
+    mongoDBUserData: Array<UserData>;
     currentUserId: string; // Add the current user's ID
 }
 
-function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUserId }: GoalPropTypes) {
-    const [searchedUser, setSearchedUser] = useState<ClerkUser | undefined>(undefined);
-    const [clerkUsers, setClerkUsers] = useState<ClerkUser[]>([]);
+function Goal({ id, name, description, ownerId, setGoalUpdated, mongoDBUserData, currentUserId }: GoalPropTypes) {
+    const [searchedUser, setSearchedUser] = useState<UserData | null>(null);
+    const [users, setUsers] = useState<UserData[]>([]);
 
     const [isRequesting, setIsRequesting] = useState(false);
     const [requestSent, setRequestSent] = useState(false);
@@ -41,42 +29,59 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
     // Check if current user is the owner
     const isOwner = currentUserId === ownerId;
 
-    // Loops through all user objects and grabs their profile information from Clerk database
-    async function getClerkUsers(): Promise<void> {
-        const newClerkUsers: ClerkUser[] = [];
+    // Loops through all user objects and grabs their profile information from Clerk database and combines it with their respective statuses from MongoDB
+    async function getUsers(): Promise<void> {
+        // Initialize empty array to append all user data for this goal into
+        const newUsers: Array<UserData> = [];
 
         // Check if users exists and is in array
-        if (users && Array.isArray(users)) {
-            for (const userObject of users) {
-                if (typeof userObject === 'object' && userObject !== null && 'userId' in userObject) {
+        if (mongoDBUserData && Array.isArray(mongoDBUserData)) {
+            for (const userData of mongoDBUserData) {
+                if (userData !== null) {
                     // Handle user object format
-                    const userId = userObject.userId;
-                    const newClerkUser = await getUserById(userId);
+                    const userId = userData.userId;
 
-                    newClerkUser.completed = userObject.completed;
+                    // Initialize newUser to have all of the user's data from Clerk database
+                    const newUser = await getUserById(userId);
 
-                    if (newClerkUser) {
-                        newClerkUsers.push(newClerkUser);
+                    // Only continue if newUser is not null
+                    if (newUser) {
+                        // Append the user's statuses for this goal to the user's object
+                        newUser.joined = userData.joined;
+                        newUser.completed = userData.completed;
+
+                        // 
+                        newUsers.push(newUser);
                     }
                 }
             }
         }
 
-        setClerkUsers(newClerkUsers);
+        setUsers(newUsers);
     }
 
-    // Update the user data whenever there is a change in users array
+    // Update the user data whenever there is a change in this goal's user's array in MongoDB
     useEffect(() => {
-        getClerkUsers();
-    }, [users]);
+        getUsers();
+    }, [mongoDBUserData]);
+
+    // Store User object or null in 'searchedUser' based on search
+    async function checkIfUserExists(usernameInput: string): Promise<void> {
+        // Reset isRequesting when a new username is input
+        setIsRequesting(false);
+
+        // Update searched user to a User object (if a user is found) or null (if not)
+        const user = await getUserByName(usernameInput);
+        setSearchedUser(user);
+    }
 
     // Send a goal invitation request instead of directly adding the user
     async function inviteUser(): Promise<void> {
         if (searchedUser) {
             // Check if user is already part of this goal
-            const userExists = users.some(user =>
-                (typeof user === 'object' && user !== null && 'userId' in user && user.userId === searchedUser.id) ||
-                (typeof user === 'string' && user === searchedUser.id)
+            const userExists = mongoDBUserData.some(user =>
+                (typeof user === 'object' && user !== null && 'userId' in user && user.userId === searchedUser.userId) ||
+                (typeof user === 'string' && user === searchedUser.userId)
             );
 
             if (!userExists) {
@@ -85,7 +90,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                 try {
                     // Add user to goal with joined set to false
                     const newUser = {
-                        userId: searchedUser.id,
+                        userId: searchedUser.userId,
                         joined: false,  // New user must accept invite to join goal
                         completed: false
                     }
@@ -98,6 +103,10 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                     if (searchInput) {
                         searchInput.value = '';
                     }
+
+                    // Update statuses to reflect successful send
+                    setIsRequesting(false);
+                    setRequestSent(true);
                 } catch (error) {
                     console.error("Error sending inviting user:", error);
                 }
@@ -121,16 +130,19 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
             <div className="usersSection">
                 <h3>Members</h3>
                 <div className="usersList">
-                    {clerkUsers.map(currentUser => (
-                        <User
-                            key={currentUser.id}
-                            goalId={id}
-                            clerkUserData={currentUser}
-                            completed={currentUser.completed}
-                            isReadOnly={currentUserId != currentUser.id}  // Prevents user from updating other users' completion status
-                            storedCompletedState={currentUser.completed}  // Set checkbox's completion to reflect stored completion status
-                        />
-                    ))}
+                    {users.map(currentUser => {
+                        if (currentUser.joined) {
+                            return (
+                                <UserBar
+                                    key={currentUser.userId}
+                                    goalId={id}
+                                    userData={currentUser}
+                                    isReadOnly={currentUserId != currentUser.userId}  // Prevents user from updating other users' completion status
+                                />
+                            )
+                        }
+                    }
+                    )}
                 </div>
 
                 {isOwner && (
@@ -150,7 +162,7 @@ function Goal({ id, name, description, ownerId, setGoalUpdated, users, currentUs
                         <input
                             id="searchInput"
                             type="text"
-                            onChange={(e) => checkIfUserExists(e.target.value, setSearchedUser, setRequestSent)}
+                            onChange={(e) => checkIfUserExists(e.target.value)}
                             placeholder="Search for a user by username"
                         />
 
