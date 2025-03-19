@@ -9,9 +9,18 @@ interface Goal {
   description: string;
   startDate: string;
   endDate: string;
-  userID: number;
+  ownerID: number;
+  username: string; // owner's username
   goalID: number;
-  // collaborators = [userIDs]
+  //completed: boolean; -> need to discuss where owner's completion will be
+  collaborators: Collaborator[]
+}
+
+// make a collaborator object
+interface Collaborator {
+  userID: number;
+  username: string;
+  completion: boolean;
 }
 
 interface GoalListProps {
@@ -36,10 +45,7 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
             {/* Dropdown Menu */}
             {openMenuId === goal.goalID && (
               <div className="menu-options">
-
                   <button onClick={() => setEditGoal(goal)}>Edit</button>
-                 
-
                 <button onClick={() => handleDelete(goal.goalID)}>Delete</button>
               </div>
             )}
@@ -48,28 +54,33 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
 
             <div className="users-container">
               {/* iterate through collaborators = [userIDs], hard code for now*/}
-              <div className='collaborator-box'>
+              
+              <div className="collaborator-box">
                 <img src={elmo} className="collaborator-image" alt="collaborator image" />
-                <p>Goal Owner</p>
-              </div>
-              <div className='collaborator-box'>
-                <img src={elmo} className="collaborator-image" alt="collaborator image" />
-                <p>Collaborator Name</p>
-              </div>
-              <div className='collaborator-box'>
-                <img src={elmo} className="collaborator-image" alt="collaborator image" />
-                <p>Collaborator Name</p>
-              </div>
-              <div className='collaborator-box'>
-                <img src={elmo} className="collaborator-image" alt="collaborator image" />
-                <p>Collaborator Name</p>
-              </div>
-              <div className='collaborator-box'>
-                <img src={elmo} className="collaborator-image" alt="collaborator image" />
-                <p>Collaborator Name</p>
+                <p>{goal.username}</p>
+                <input
+                    type="checkbox"
+                    className="check-box"
+                    checked={true}
+                    onChange={() => {}}
+                    // You can add a handler to change completion status if needed
+                  />
               </div>
 
-              
+              {goal.collaborators.map((collaborator) => (
+                <div className="collaborator-box" key={collaborator.userID}>
+                  <img src={elmo} className="collaborator-image" alt="collaborator image" />
+                  <p>{collaborator.username}</p>
+                  <input
+                    type="checkbox"
+                    className="check-box"
+                    checked={collaborator.completion}
+                    onChange={() => {}}
+                    // You can add a handler to change completion status if needed
+                  />
+                </div>
+              ))}
+
             </div>
 
             <div className= 'date-display'>
@@ -84,8 +95,6 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
           </div>
 
         ))}
-
-        
         
       </div>
         {/* Show Edit Goal Pop-Up when a goal is being edited */}

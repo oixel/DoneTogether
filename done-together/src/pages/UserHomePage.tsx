@@ -13,22 +13,27 @@ interface Goal {
   description: string;
   startDate: string;
   endDate: string;
-  userID: number;
-  // use userID (e.g. UFID) to get username (e.g. kkondapalli)
+  ownerID: number; 
+  username: string;
   goalID: number;
-  // collaborators = [userIDs]
+  collaborators: Collaborator[];
+}
 
+interface Collaborator {
+  userID: number;
+  username: string;
+  completion: boolean;
 }
 
 const UserHomePage: React.FC = () => {
   const [goalPopUpState, setGoalPopUpState] = useState<boolean>(false);
   const [goals, setGoals] = useState<Goal[]>([
-    { title: "Drink More Water.", description: "lorem ipsum...", startDate: '03/08/2025', endDate: '03/15/2025', userID: 12345, goalID: 1 },
-    { title: "Drink More Water.", description: "lorem ipsum...", startDate: '00/00/0000', endDate: '00/00/0000', userID: 12345, goalID: 2 },
-    { title: "Drink More Water.", description: "lorem ipsum...", startDate: '00/00/0000', endDate: '00/00/0000', userID: 12345, goalID: 3 },
-    { title: "Drink More Water.", description: "lorem ipsum...", startDate: '00/00/0000', endDate: '00/00/0000', userID: 12345, goalID: 4 },
-    { title: "Drink More Water.", description: "lorem ipsum...", startDate: '00/00/0000', endDate: '00/00/0000', userID: 12345, goalID: 5 },
-    { title: "Drink More Water.", description: "lorem ipsum...", startDate: '00/00/0000', endDate: '00/00/0000', userID: 12345, goalID: 6 },
+    { title: "Exercise Regularly.", description: "Follow a daily workout routine.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_1", goalID: 1, collaborators: [{ userID: 2, username: "john_doe", completion: false }, { userID: 3, username: "jane_smith", completion: true }] },
+    { title: "Eat Healthier.", description: "Incorporate more vegetables into meals.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_2", goalID: 2, collaborators: [{ userID: 4, username: "emily_jones", completion: true }, { userID: 5, username: "mark_brown", completion: false }] },
+    { title: "Learn a New Language.", description: "Start learning Spanish with a daily lesson.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_3", goalID: 3, collaborators: [{ userID: 6, username: "lucas_martin", completion: true }, { userID: 7, username: "ella_white", completion: false }] },
+    { title: "Read More Books.", description: "Read 5 books this month.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_4", goalID: 4, collaborators: [{ userID: 8, username: "sophia_black", completion: true }] },
+    { title: "Meditate Daily.", description: "Meditate for 10 minutes every day.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_5", goalID: 5, collaborators: [{ userID: 9, username: "william_davis", completion: true }, { userID: 10, username: "chloe_harris", completion: true }] },
+    { title: "Save Money.", description: "Save $500 this month for future expenses.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_6", goalID: 6, collaborators: [] }
   ]);
 
   const handleClick = (): void => {
