@@ -37,6 +37,7 @@
     background-color: #636B2F;
     width: 100vw;
     height: 4vw;
+    overflow-y: hidden; 
   }
   
   .nav-button {
@@ -65,4 +66,9 @@
     margin-right: 92vw;
   }
 
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+  }
   

@@ -3,6 +3,7 @@ import "../globalStyles.css";
 import "../userHomePage.css";
 import "../popUp.css";
 import elmo from '../assets/elmo-profile-picture.jpg';
+import envelope from '../assets/icons/envelopeicon.svg';
 import { ReactComponent as BeigeLogo } from '../assets/icons/logo-beige.svg'; 
 import GoalList from '../components/GoalList.tsx';  
 import GoalPopUp from '../components/GoalPopUp.tsx'; 
@@ -31,6 +32,9 @@ const UserHomePage: React.FC = () => {
     { title: "Drink More Water.", description: "lorem ipsum...", startDate: '00/00/0000', endDate: '00/00/0000', userID: 12345, goalID: 6 },
   ]);
 
+  const [invitePopUp, setInvitePopUp] = useState<boolean>(false);
+  const collaborators = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank"];
+
   const handleClick = (): void => {
     setGoalPopUpState(!goalPopUpState);
   };
@@ -40,17 +44,53 @@ const UserHomePage: React.FC = () => {
     setGoals(newGoals);
   };
 
+  const handleInviteClick = (): void => {
+    setInvitePopUp(!invitePopUp);
+  };
+
+
+  const handleInviteResponse = (collaborator: string, response: boolean): void => {
+    console.log(`${collaborator} invite ${response ? 'accepted' : 'declined'}`);
+  };
+
   useEffect(() => {
     console.log("Use Effect Ran!");
   }, []);
 
+
   return (
     <div className="container">
       <div className="navbar">
-        <BeigeLogo className="home-page-navbar-logo" />
+      <BeigeLogo className="home-page-navbar-logo" />
+      <div className="nav-icons">
+        <button className="envelope-button"  onClick={handleInviteClick}>
+          <img src={envelope} className="envelope-icon" alt="Messages" />
+        </button>
+      
+        {invitePopUp && (
+            <div className="invite-popup">
+              <p>You have new invites. Accept?</p>
+              <div className="users-co">
+                {/* Iterate through collaborators and display them in individual rows */}
+                {collaborators.slice(0, collaborators.length).map((collaborator, index) => (
+                  <div className="collaborator-box" key={index}>
+                    <img src={elmo} className="collaborator-image" alt="collaborator image" />
+                    <p>{collaborator}</p>
+                    <div>
+                      <button onClick={() => handleInviteResponse(collaborator, true)}>Yes</button>
+                      <button onClick={() => handleInviteResponse(collaborator, false)}>No</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         <div className="user-profile-frame">
           <img src={elmo} className="profile-image" alt="Profile" />
         </div>
+      </div>
+
+        
       </div>
       
       <button onClick={handleClick} className="create-goal-button">+ Add Goal</button>
