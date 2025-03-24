@@ -12,12 +12,11 @@ interface Goal {
   ownerID: number;
   username: string; // owner's username
   goalID: number;
-  //completed: boolean; -> need to discuss where owner's completion will be
-  collaborators: Collaborator[]
+  users: User[]
 }
 
 // make a collaborator object
-interface Collaborator {
+interface User {
   userID: number;
   username: string;
   completion: boolean;
@@ -31,6 +30,14 @@ interface GoalListProps {
 const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [editGoal, setEditGoal] = useState<Goal | null>(null);
+  
+  const calculateDaysLeft = (endDate: string) => {
+    const currentDate = new Date();
+    const end = new Date(endDate);
+    const timeDiff = end.getTime() - currentDate.getTime();
+    const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
+    return daysLeft > 0 ? daysLeft : 0; // Ensure we don’t show negative days
+  };
   
   return (
     <div>
@@ -63,18 +70,19 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
                     className="check-box"
                     checked={true}
                     onChange={() => {}}
-                    // You can add a handler to change completion status if needed
+                    // add a handler to change completion status if needed 
+                    // how do I change a database based on this action?
                   />
               </div>
 
-              {goal.collaborators.map((collaborator) => (
-                <div className="collaborator-box" key={collaborator.userID}>
+              {goal.users.map((user) => (
+                <div className="collaborator-box" key={user.userID}>
                   <img src={elmo} className="collaborator-image" alt="collaborator image" />
-                  <p>{collaborator.username}</p>
+                  <p>{user.username}</p>
                   <input
                     type="checkbox"
                     className="check-box"
-                    checked={collaborator.completion}
+                    checked={user.completion}
                     onChange={() => {}}
                     // You can add a handler to change completion status if needed
                   />
@@ -84,10 +92,7 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
             </div>
 
             <div className= 'date-display'>
-              {/*use a button to allow users to change the dates as needed*/}
-              {/* <button className = 'date-button'>{goal.startDate}</button>
-              <p>-</p> */}
-              <button className = 'date-button'>{goal.endDate}</button>
+              <button className = 'date-button'>{calculateDaysLeft(goal.endDate)} Days Left</button>
             </div>
 
             <button className="add-user-button">+ Add User</button>
