@@ -37,8 +37,10 @@ const GoalList: React.FC<GoalListProps> = ({ goals, handleDelete }) => {
             {openMenuId === goal.goalID && (
               <div className="menu-options">
 
-                  <button onClick={() => setEditGoal(goal)}>Edit</button>
-                 
+                  <button onClick={() => {
+                    setEditGoal(goal);
+                    setOpenMenuId(null);}
+                  }>Edit</button>
 
                 <button onClick={() => handleDelete(goal.goalID)}>Delete</button>
               </div>
