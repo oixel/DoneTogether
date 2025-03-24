@@ -19,7 +19,7 @@ import beigeLogo from "../../assets/icons/logo-beige.svg";
 import greenLogo from "../../assets/icons/logo-dark-green.svg";
 import "./LandingPage.css";
 import "../../styles/globalStyles.css";
-import { SignedOut, SignInButton, SignUpButton, SignedIn } from '@clerk/clerk-react';
+import { SignedOut, SignInButton, SignUpButton, SignedIn, SignOutButton } from '@clerk/clerk-react';
 
 
 const LandingPage: React.FC = () => {
@@ -55,6 +55,9 @@ const LandingPage: React.FC = () => {
 
               <SignedIn>
                 <Link to="/dashboard" className="nav-button">Dashboard</Link>
+                <SignOutButton>
+                  <button className = "nav-button">Sign Out</button>
+                </SignOutButton>
               </SignedIn>
 
             </div>

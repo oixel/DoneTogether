@@ -3,17 +3,18 @@ import "../../styles/globalStyles.css";
 import "./Dashboard.css";
 import "../../styles/popUp.css";
 import elmo from '../../assets/elmo-profile-picture.jpg';
-import { ReactComponent as BeigeLogo } from '../../assets/icons/logo-beige.svg'; 
+// Changed from ReactComponent import to regular import
+import beigeLogo from '../../assets/icons/logo-beige.svg';
 import GoalList from '../../components/GoalList.tsx';  
-import GoalPopUp from '../../components/GoalPopUp.tsx'; 
+import GoalPopUp from '../../components/GoalPopUp.tsx';
 
 // define Goal object
-interface Goal { 
+interface Goal {
   title: string;
   description: string;
   startDate: string;
   endDate: string;
-  ownerID: number; 
+  ownerID: number;
   username: string;
   goalID: number;
   collaborators: Collaborator[];
@@ -52,12 +53,13 @@ const Dashboard: React.FC = () => {
   return (
     <div className="container">
       <div className="navbar">
-        <BeigeLogo className="home-page-navbar-logo" />
+        {/* Changed from BeigeLogo component to img tag */}
+        <img src={beigeLogo} alt="Beige Logo" className="home-page-navbar-logo" />
         <div className="user-profile-frame">
           <img src={elmo} className="profile-image" alt="Profile" />
         </div>
       </div>
-      
+     
       <button onClick={handleClick} className="create-goal-button">+ Add Goal</button>
 
       {goalPopUpState && <div className="overlay active"></div>}
