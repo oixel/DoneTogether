@@ -1,0 +1,148 @@
+/* GoalList.css */
+
+.goal-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+  }
+  
+  .goal-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s;
+  }
+  
+  .goal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .goal-card.expired {
+    border-left: 4px solid #e74c3c;
+  }
+  
+  .goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  
+  .goal-title {
+    color: #636B2F;
+    font-family: 'Adamina', serif;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  
+  .goal-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .action-button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  
+  .action-button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .edit-button {
+    color: #636B2F;
+  }
+  
+  .delete-button {
+    color: #e74c3c;
+  }
+  
+  .goal-description {
+    color: #555;
+    font-family: 'Adamina', serif;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
+  }
+  
+  .goal-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .goal-dates {
+    font-size: 0.8rem;
+  }
+  
+  .goal-dates p {
+    margin: 5px 0;
+  }
+  
+  .goal-status {
+    text-align: right;
+  }
+  
+  .days-left {
+    background-color: #636B2F;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+  
+  .expired-label {
+    background-color: #e74c3c;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+  
+  .goal-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .secondary-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background-color: #f0f0f0;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.2s;
+  }
+  
+  .secondary-button svg {
+    font-size: 0.9rem;
+  }
+  
+  .secondary-button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  @media (max-width: 768px) {
+    .goal-list {
+      grid-template-columns: 1fr;
+    }
+    
+    .goal-footer {
+      flex-direction: column;
+    }
+  }

@@ -1,0 +1,259 @@
+* {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.container {
+  background: rgba(99, 107, 47, 0.57);
+  min-height: 100vh;
+}
+
+.goal-box{
+position: relative;
+width: 28vw;
+height: 23vw;
+padding: 10px 16px;
+margin: 20px 10px;
+border-radius: 20px;
+background: #EDE8D0;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.edit-menu {
+position: absolute;  
+top: 10px;           
+right: 12px;         
+font-size: 1.5vw;     
+cursor: pointer;    
+}
+
+.goal-title {   
+color: #000;
+text-align: center;
+font-family: Adamina;
+font-size: 1.5vw;
+font-weight: 400; 
+  position: relative;
+top: 25px; /* Moves it down by 20px */
+
+}
+
+.date-display {   
+display: flex;
+flex-direction: row;         
+justify-content: left;      
+align-items: top;         
+gap: 20px;
+padding: 5px 10px;
+margin-top: -30px;
+margin-left: -10px; 
+
+}
+
+.date-button{
+background: rgba(255, 255, 255, 0.66);
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+/* background: #FFF;
+color: #000; */
+/* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); */
+border: none;
+border-radius: 40px;
+text-align: center;
+font-family: Adamina;
+font-size: 0.60vw;
+font-weight: 400; 
+padding: 5px 10px;
+cursor: pointer;
+}
+
+.goal-list{
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: center;
+gap: 10px;
+
+}
+
+.user-profile-frame{
+  position: fixed; /* Keep it in place while scrolling */
+  top: 20px;      /* Adjust vertical position */
+  right: 20px;    /* Adjust horizontal position */
+  width: 60px;    /* Frame width */
+  height: 60px;   /* Frame height */
+  border-radius: 50%; /* Makes it circular */
+  background-color: #636B2F; /* Frame background color */
+  display: flex; /* Center the image inside the frame */
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Ensure image fits within the circle */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
+}
+
+
+.profile-image {
+  width: 100%; /* Ensure image fills the frame */
+  height: 100%; /* Maintain aspect ratio */
+  object-fit: cover;
+}
+
+.create-goal-button{
+  width: 25vw;
+  height: 4.5vw;
+
+  background: #EDE8D0;
+  border: none;
+  border-radius: 40px;
+  color: #636B2F;
+  outline: 3px solid black;
+  font-size: 1.6vw;
+  font-family: Adamina;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0 5px;
+  position: absolute;
+  border-radius: 40px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 7%;
+  z-index: 1;
+  
+
+/* make TEXT within button aligned center */
+  display: flex;
+  justify-content: center;  
+  align-items: center; 
+  text-decoration: none;
+}
+
+.create-goal-button:active {
+  background: #ececec /* Change outline on hover */
+}
+
+.users-container{
+  position: absolute;
+  width: 23vw;
+  height: 13vw;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 33%;
+
+  border-radius: 20px;
+  background: #F1F0E8;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.collaborator-box{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  
+
+  font-family: Adamina;
+  font-size: 1.1vw;
+
+  background: #D9D9D9;
+  width: 21vw;
+  min-height: 3.5vw;
+  height: auto;
+  margin: 5px 10px;
+  overflow: auto;
+  padding: 5px 5px;
+
+  overflow: visible;       /* Allow overflow within the box */
+  word-wrap: break-word;   /* Ensure text content doesn't overflow the box */
+}
+
+.collaborator-image{
+  width: 2.5vw;   /* Adjust to desired size */
+  height: 2.5vw;  /* Same as width to maintain the circle */
+  border-radius: 50%; /* This makes the image circular */
+  object-fit: cover; /* Ensures the image doesn't stretch or distort */
+  margin-right: 10px;  /* Space between image and text */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Optional shadow effect */
+  object-fit: cover; 
+}
+
+.check-box{
+  margin-left: 10px;
+  position: absolute;
+  right: 10%;
+  width: 1.5vw;
+  height: 1.5vw;
+}
+
+.add-user-button{
+  width: 10vw;
+  height: 2vw;
+  border: none;
+  border-radius: 40px;
+  background: #FFF;
+  box-shadow: 0px 4px 4px 0px rgba(56, 55, 55, 0.25);
+  color: #636B2F;
+  font-size: 1vw;
+  font-family: Adamina;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0 5px;
+  position: absolute;
+  border-radius: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 6%;
+  z-index: 0;
+}
+
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.edit-menu {
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.menu-options {
+  position: absolute;
+  top: 27px;
+  right: 5px;
+  background: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 80px;
+  z-index: 3;
+
+}
+
+.menu-options button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+
+  color: #49501e;
+  font-size: 1vw;
+  font-family: Adamina;
+}
+
+.menu-options button:hover {
+  background: #e9e5e5b7;
+}
+
+

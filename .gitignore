@@ -1,0 +1,48 @@
+# Environment variables
+client/.env
+.env
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node dependencies
+node_modules/
+
+# Build directories
+/dist
+/build
+/.next
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE and editor folders
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+/coverage
+
+# Clerk dev files (if any)
+.clerk/
+
+# MongoDB data (if running locally)
+/data/db
+
+# Temp
+client/.env
+.env
+.env
+client/.env
+.env
+.env
+.env

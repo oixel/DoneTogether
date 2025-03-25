@@ -1,0 +1,122 @@
+/* CustomProfileButton.css */
+.custom-profile {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .profile-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #6a702e;
+    transition: all 0.2s ease;
+  }
+  
+  .profile-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #6a702e;
+    color: #f5f5dc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 2px solid #6a702e;
+    transition: all 0.2s ease;
+  }
+  
+  .profile-button:hover .profile-image,
+  .profile-button:hover .profile-placeholder {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+  
+  .profile-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 240px;
+    background-color: #f5f5dc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 1000;
+    animation: menuFadeIn 0.2s ease;
+  }
+  
+  @keyframes menuFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .menu-header {
+    padding: 16px;
+    background-color: #e6e6c9;
+  }
+  
+  .menu-user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  
+  .user-email {
+    font-size: 0.8rem;
+    color: #666;
+  }
+  
+  .menu-divider {
+    height: 1px;
+    background-color: #ddd;
+    margin: 0;
+  }
+  
+  .menu-items {
+    padding: 8px 0;
+  }
+  
+  .menu-item {
+    display: block;
+    padding: 10px 16px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    font-size: 0.9rem;
+    text-align: left;
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .menu-item:hover {
+    background-color: #e6e6c9;
+  }
+  
+  .sign-out {
+    color: #a83232;
+  }
