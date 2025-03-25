@@ -3,11 +3,12 @@ import "../../styles/globalStyles.css";
 import "./Dashboard.css";
 import "../../styles/popUp.css";
 import elmo from '../../assets/elmo-profile-picture.jpg';
-import { useUser } from '@clerk/clerk-react';
+import { useUser, UserProfile, UserButton } from '@clerk/clerk-react';
 // Changed from ReactComponent import to regular import
 import beigeLogo from '../../assets/icons/logo-beige.svg';
 import GoalList from '../../components/GoalList.tsx';  
 import GoalPopUp from '../../components/GoalPopUp.tsx';
+import { User } from '@clerk/nextjs/server';
 
 // define Goal object
 interface Goal {
@@ -54,6 +55,7 @@ const Dashboard: React.FC = () => {
       {/* you can add more user info here */}
       <div className="user-card">{userInfo.email}</div>
       <div className="user-card">User ID: {user?.id}</div>
+      <UserButton />
 
 
 
