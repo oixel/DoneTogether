@@ -3,10 +3,12 @@ import "../../styles/globalStyles.css";
 import "./Dashboard.css";
 import "../../styles/popUp.css";
 import elmo from '../../assets/elmo-profile-picture.jpg';
+import { useUser, UserProfile, UserButton } from '@clerk/clerk-react';
 // Changed from ReactComponent import to regular import
 import beigeLogo from '../../assets/icons/logo-beige.svg';
 import GoalList from '../../components/GoalList.tsx';  
 import GoalPopUp from '../../components/GoalPopUp.tsx';
+import { User } from '@clerk/nextjs/server';
 
 // define Goal object
 interface Goal {
@@ -37,6 +39,31 @@ const Dashboard: React.FC = () => {
     { title: "Save Money.", description: "Save $500 this month for future expenses.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_6", goalID: 6, collaborators: [] }
   ]);
 
+
+  const {isLoaded, user} = useUser();
+
+  const userInfo = {
+    email: user?.primaryEmailAddress?.emailAddress,
+    username: user?.username,
+    profileImageUrl: user?.imageUrl,
+  };
+
+  const userComponent = (
+    <div className="user-card">
+      <img src={userInfo.profileImageUrl} />
+      <div className="user-card">{userInfo.username}</div>
+      {/* you can add more user info here */}
+      <div className="user-card">{userInfo.email}</div>
+      <div className="user-card">User ID: {user?.id}</div>
+      <UserButton />
+
+
+
+
+    </div>
+  );
+  
+
   const handleClick = (): void => {
     setGoalPopUpState(!goalPopUpState);
   };
@@ -52,14 +79,20 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="container">
+
       <div className="navbar">
         {/* Changed from BeigeLogo component to img tag */}
         <img src={beigeLogo} alt="Beige Logo" className="home-page-navbar-logo" />
         <div className="user-profile-frame">
           <img src={elmo} className="profile-image" alt="Profile" />
         </div>
+
+
+        
       </div>
      
+      {userComponent}
+
       <button onClick={handleClick} className="create-goal-button">+ Add Goal</button>
 
       {goalPopUpState && <div className="overlay active"></div>}
@@ -69,6 +102,11 @@ const Dashboard: React.FC = () => {
         </div>
       )}
       <GoalList goals={goals} handleDelete={handleDelete} />
+
+      
+
+
+
     </div>
   );
 };
