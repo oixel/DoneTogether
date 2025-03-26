@@ -11,34 +11,32 @@ import GoalPopUp from '../../components/GoalPopUp.tsx';
 import { User } from '@clerk/nextjs/server';
 
 // define Goal object
-interface Goal {
-  title: string;
+interface Goal {  
+  name: string;
   description: string;
+  ownerID: string; 
+  users: goalUser[];
+  
   startDate: string;
   endDate: string;
-  ownerID: number;
-  username: string;
-  goalID: number;
-  collaborators: Collaborator[];
 }
 
-interface Collaborator {
-  userID: number;
-  username: string;
+interface goalUser {
+  userID: string;
+  joined: boolean;
   completion: boolean;
 }
 
 const Dashboard: React.FC = () => {
   const [goalPopUpState, setGoalPopUpState] = useState<boolean>(false);
   const [goals, setGoals] = useState<Goal[]>([
-    { title: "Exercise Regularly.", description: "Follow a daily workout routine.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_1", goalID: 1, collaborators: [{ userID: 2, username: "john_doe", completion: false }, { userID: 3, username: "jane_smith", completion: true }] },
-    { title: "Eat Healthier.", description: "Incorporate more vegetables into meals.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_2", goalID: 2, collaborators: [{ userID: 4, username: "emily_jones", completion: true }, { userID: 5, username: "mark_brown", completion: false }] },
-    { title: "Learn a New Language.", description: "Start learning Spanish with a daily lesson.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_3", goalID: 3, collaborators: [{ userID: 6, username: "lucas_martin", completion: true }, { userID: 7, username: "ella_white", completion: false }] },
-    { title: "Read More Books.", description: "Read 5 books this month.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_4", goalID: 4, collaborators: [{ userID: 8, username: "sophia_black", completion: true }] },
-    { title: "Meditate Daily.", description: "Meditate for 10 minutes every day.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_5", goalID: 5, collaborators: [{ userID: 9, username: "william_davis", completion: true }, { userID: 10, username: "chloe_harris", completion: true }] },
-    { title: "Save Money.", description: "Save $500 this month for future expenses.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: 12345, username: "goal_owner_6", goalID: 6, collaborators: [] }
+    { name: "Complete a Full Marathon", description: "Train for and run a full marathon in three months.", startDate: '03/01/2025', endDate: '05/31/2025', ownerID: "john_doe_54321", users: [{ userID: "john_doe_54321", completion: false, joined: true }, { userID: "david_lee_11", completion: false, joined: true }, { userID: "sarah_kim_12", completion: true, joined: true }] },
+    { name: "Launch a Personal Blog", description: "Create and publish 10 blog posts within a month.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: "jane_smith_54322", users: [{ userID: "jane_smith_54322", completion: true, joined: true }, { userID: "mike_jones_13", completion: true, joined: true }] },
+    { name: "Master Cooking Skills", description: "Learn and prepare 20 new recipes over the next two months.", startDate: '03/01/2025', endDate: '04/30/2025', ownerID: "lucy_brown_54323", users: [{ userID: "lucy_brown_54323", completion: false, joined: true }, { userID: "mark_white_14", completion: false, joined: true }] },
+    { name: "Read 12 Books This Year", description: "Read 12 books, one every month, and keep a journal of each book.", startDate: '03/01/2025', endDate: '12/31/2025', ownerID: "alice_green_54324", users: [{ userID: "alice_green_54324", completion: false, joined: true }, { userID: "charles_davis_15", completion: false, joined: true }] },
+    { name: "Save $1000 This Quarter", description: "Set aside $1000 over the next 3 months for future financial goals.", startDate: '03/01/2025', endDate: '05/31/2025', ownerID: "robert_clark_54325", users: [{ userID: "robert_clark_54325", completion: false, joined: true }] },
+    { name: "Learn to Play Guitar", description: "Complete 30 practice sessions over the next two months to learn basic chords and songs.", startDate: '03/01/2025', endDate: '04/30/2025', ownerID: "emma_lee_54326", users: [{ userID: "emma_lee_54326", completion: true, joined: true }, { userID: "will_taylor_16", completion: false, joined: true }] }
   ]);
-
 
   const {isLoaded, user} = useUser();
 
@@ -56,10 +54,6 @@ const Dashboard: React.FC = () => {
       <div className="user-card">{userInfo.email}</div>
       <div className="user-card">User ID: {user?.id}</div>
       <UserButton />
-
-
-
-
     </div>
   );
   
@@ -68,10 +62,6 @@ const Dashboard: React.FC = () => {
     setGoalPopUpState(!goalPopUpState);
   };
 
-  const handleDelete = (goalID: number): void => {
-    const newGoals = goals.filter(goal => goal.goalID !== goalID);
-    setGoals(newGoals);
-  };
 
   useEffect(() => {
     console.log("Use Effect Ran!");
@@ -87,7 +77,6 @@ const Dashboard: React.FC = () => {
           <img src={elmo} className="profile-image" alt="Profile" />
         </div>
 
-
         
       </div>
      
@@ -101,7 +90,7 @@ const Dashboard: React.FC = () => {
           <GoalPopUp setGoalPopUpState={setGoalPopUpState} />
         </div>
       )}
-      <GoalList goals={goals} handleDelete={handleDelete} />
+      <GoalList goals={goals} />
 
       
 
