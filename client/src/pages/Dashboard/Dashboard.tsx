@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import "../../styles/globalStyles.css";
 import "./Dashboard.css";
 import "../../styles/popUp.css";
-import elmo from '../../assets/elmo-profile-picture.jpg';
 import { useUser, UserProfile, UserButton } from '@clerk/clerk-react';
 // Changed from ReactComponent import to regular import
 import beigeLogo from '../../assets/icons/logo-beige.svg';
 import GoalList from '../../components/GoalList.tsx';  
 import GoalPopUp from '../../components/GoalPopUp.tsx';
 import { User } from '@clerk/nextjs/server';
+import CustomProfileButton from '../../components/CustomProfileButton.tsx';
 
 // define Goal object
 interface Goal {  
@@ -28,7 +28,9 @@ interface goalUser {
 }
 
 const Dashboard: React.FC = () => {
-  const [goalPopUpState, setGoalPopUpState] = useState<boolean>(false);
+  const [addGoalPopUpState, setGoalPopUpState] = useState<boolean>(false);
+  const [profilePopUpState, setProfilePopUpState] = useState<boolean>(false);
+
   const [goals, setGoals] = useState<Goal[]>([
     { name: "Complete a Full Marathon", description: "Train for and run a full marathon in three months.", startDate: '03/01/2025', endDate: '05/31/2025', ownerID: "john_doe_54321", users: [{ userID: "john_doe_54321", completion: false, joined: true }, { userID: "david_lee_11", completion: false, joined: true }, { userID: "sarah_kim_12", completion: true, joined: true }] },
     { name: "Launch a Personal Blog", description: "Create and publish 10 blog posts within a month.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: "jane_smith_54322", users: [{ userID: "jane_smith_54322", completion: true, joined: true }, { userID: "mike_jones_13", completion: true, joined: true }] },
@@ -57,9 +59,12 @@ const Dashboard: React.FC = () => {
     </div>
   );
   
+  const handleCreateClick = (): void => {
+    setGoalPopUpState(!addGoalPopUpState);
+  };
 
-  const handleClick = (): void => {
-    setGoalPopUpState(!goalPopUpState);
+  const handleProfileClick = (): void => {
+    setProfilePopUpState(!profilePopUpState);
   };
 
 
@@ -69,33 +74,25 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="container">
-
       <div className="navbar">
         {/* Changed from BeigeLogo component to img tag */}
-        <img src={beigeLogo} alt="Beige Logo" className="home-page-navbar-logo" />
-        <div className="user-profile-frame">
-          <img src={elmo} className="profile-image" alt="Profile" />
-        </div>
-
-        
+        <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" onClick={handleProfileClick} />
+        <CustomProfileButton/>
       </div>
-     
+
       {userComponent}
 
-      <button onClick={handleClick} className="create-goal-button">+ Add Goal</button>
+      <button onClick={handleCreateClick} className="create-goal-button">+ Add Goal</button>
 
-      {goalPopUpState && <div className="overlay active"></div>}
-      {goalPopUpState && (
+
+      {addGoalPopUpState && <div className="overlay active"></div>}
+      {addGoalPopUpState && (
         <div>
           <GoalPopUp setGoalPopUpState={setGoalPopUpState} />
         </div>
       )}
       <GoalList goals={goals} />
-
       
-
-
-
     </div>
   );
 };

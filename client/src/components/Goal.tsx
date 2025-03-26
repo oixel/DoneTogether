@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import elmo from '../assets/elmo-profile-picture.jpg';
+import "../styles/popUp.css";
 import EditPopUp from './EditPopUp';
 
 interface Goal {  
@@ -27,6 +28,7 @@ interface GoalProps {
 const Goal: React.FC<GoalProps> = ({ goal }) => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [editGoal, setEditGoal] = useState<Goal | null>(null);
+    const [editGoalPopUpState, setEditGoalState] = useState<boolean>(false);
     
     const handleMenuClick = () => {
         setIsMenuOpen((prev) => !prev);
@@ -34,6 +36,7 @@ const Goal: React.FC<GoalProps> = ({ goal }) => {
      
     const handleEditMenuClick = (goal: Goal) => {
         setIsMenuOpen(false);
+        setEditGoalState(true);
         setEditGoal(goal);
     };
 
@@ -86,7 +89,8 @@ const Goal: React.FC<GoalProps> = ({ goal }) => {
         </div> 
 
         {/* render the popup if the state is opened */}
-        {editGoal && (<EditPopUp goal={editGoal} setGoalPopUpState={() => setEditGoal(null)} />)}
+        {editGoalPopUpState && <div className="overlay active"></div>}
+        {editGoalPopUpState && editGoal && (<EditPopUp goal={editGoal} setEditGoalState={setEditGoalState} />)}
     </div>
     );
   };

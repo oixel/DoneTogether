@@ -8,10 +8,10 @@ import Goal from './Goal';
 
 interface EditPopUpProps {
   goal: Goal;  // Accept Goal type
-  setGoalPopUpState: (state: boolean) => void;
+  setEditGoalState: (state: boolean) => void;
 }
 
-const EditPopUp: React.FC<EditPopUpProps> = ({ goal, setGoalPopUpState }) => {
+const EditPopUp: React.FC<EditPopUpProps> = ({ goal, setEditGoalState }) => {
   const [title, setTitle] = useState(goal.name);
   const [description, setDescription] = useState(goal.description);
   const [startDate, setStartDate] = useState(goal.startDate);
@@ -19,14 +19,14 @@ const EditPopUp: React.FC<EditPopUpProps> = ({ goal, setGoalPopUpState }) => {
 
   const handleSave = () => {
     // Logic to save the edited goal
-    setGoalPopUpState(false); // Close the pop-up after saving
+    setEditGoalState(false); // Close the pop-up after saving
   };
 
   return (
     <div className="pop-up">
     <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-left"/>
       <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-right"/>
-      <CgClose onClick={() => setGoalPopUpState(false)} className= "exit-icon"/>
+      <CgClose onClick={() => setEditGoalState(false)} className= "exit-icon"/>
       <h2 className="create-goal-title">Edit Goal</h2>
 
      <form className="form-container">

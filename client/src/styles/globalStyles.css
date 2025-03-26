@@ -23,10 +23,10 @@
   }
   
   .navbar-logo {
-    width: 6.5vw;
+    width: 5.5vw;
     height: auto;
     position: absolute;
-    margin-right: 92vw;
+    margin-right: 93vw;
   }
 
 .navbar {
@@ -58,11 +58,5 @@
     text-decoration: none;
   }
   
-  .home-page-navbar-logo {
-    width: 6.5vw;
-    height: auto;
-    position: absolute;
-    margin-right: 92vw;
-  }
-
+ 
   
