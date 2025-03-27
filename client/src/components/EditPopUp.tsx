@@ -3,29 +3,30 @@ import { CgClose } from "react-icons/cg";
 import "../styles/popUp.css";
 import swirlyDoodle from "../assets/icons/swirlydoodle.svg";
 import threeArrows from "../assets/icons/threearrowsPopUp.svg";
+import Goal from './Goal';
 
 
 interface EditPopUpProps {
-  goal: { title: string; description: string; startDate: string; endDate: string; goalID: number };
-  setGoalPopUpState: (state: boolean) => void;
+  goal: Goal;  // Accept Goal type
+  setEditGoalState: (state: boolean) => void;
 }
 
-const EditPopUp: React.FC<EditPopUpProps> = ({ goal, setGoalPopUpState }) => {
-  const [title, setTitle] = useState(goal.title);
+const EditPopUp: React.FC<EditPopUpProps> = ({ goal, setEditGoalState }) => {
+  const [title, setTitle] = useState(goal.name);
   const [description, setDescription] = useState(goal.description);
   const [startDate, setStartDate] = useState(goal.startDate);
   const [endDate, setEndDate] = useState(goal.endDate);
 
   const handleSave = () => {
     // Logic to save the edited goal
-    setGoalPopUpState(false); // Close the pop-up after saving
+    setEditGoalState(false); // Close the pop-up after saving
   };
 
   return (
     <div className="pop-up">
     <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-left"/>
       <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-right"/>
-      <CgClose onClick={() => setGoalPopUpState(false)} className= "exit-icon"/>
+      <CgClose onClick={() => setEditGoalState(false)} className= "exit-icon"/>
       <h2 className="create-goal-title">Edit Goal</h2>
 
      <form className="form-container">
@@ -59,7 +60,7 @@ const EditPopUp: React.FC<EditPopUpProps> = ({ goal, setGoalPopUpState }) => {
       
       <div className="arrows-container">
           <img src={threeArrows} alt="three arrows" className="three-arrows-left"/>
-          <button className="create-button">Save!</button>
+          <button className="create-button" onClick = { handleSave }>Save!</button>
           <img src={threeArrows} alt="three arrows" className="three-arrows-right"/>
         </div>
      
