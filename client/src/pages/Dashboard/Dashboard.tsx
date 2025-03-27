@@ -7,6 +7,9 @@ import { useUser, UserButton } from '@clerk/clerk-react';
 import beigeLogo from '../../assets/icons/logo-beige.svg';
 import GoalList from '../../components/GoalList.tsx';  
 import GoalPopUp from '../../components/GoalPopUp.tsx';
+import LandingPage from '../LandingPage/LandingPage';
+import { useNavigate } from 'react-router-dom';
+
 
 // define Goal object
 interface Goal {  
@@ -27,7 +30,7 @@ interface goalUser {
 
 const Dashboard: React.FC = () => {
   const [addGoalPopUpState, setGoalPopUpState] = useState<boolean>(false);
-  const [profilePopUpState, setProfilePopUpState] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const [goals, setGoals] = useState<Goal[]>([
     { name: "Complete a Full Marathon", description: "Train for and run a full marathon in three months.", startDate: '03/01/2025', endDate: '05/31/2025', ownerID: "john_doe_54321", users: [{ userID: "john_doe_54321", completion: false, joined: true }, { userID: "david_lee_11", completion: false, joined: true }, { userID: "sarah_kim_12", completion: true, joined: true }] },
@@ -61,8 +64,13 @@ const Dashboard: React.FC = () => {
     setGoalPopUpState(!addGoalPopUpState);
   };
 
-  const handleProfileClick = (): void => {
-    setProfilePopUpState(!profilePopUpState);
+  const handleLogoClick = (): void => {
+    navigate('/');
+  };
+
+  const customAppearance = {
+    elements: {
+    },
   };
 
 
@@ -74,8 +82,8 @@ const Dashboard: React.FC = () => {
     <div className="container">
       <div className="navbar">
         {/* Changed from BeigeLogo component to img tag */}
-        <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" onClick={handleProfileClick} />
-        <UserButton/>
+        <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" onClick={handleLogoClick} />
+        <UserButton appearance={customAppearance}/>
       </div>
 
       {userComponent}

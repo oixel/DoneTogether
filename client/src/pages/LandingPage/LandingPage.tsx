@@ -43,7 +43,7 @@ const LandingPage: React.FC = () => {
 
             <div className="navbar">
               {/* Replace ReactComponent with regular img tag */}
-              <img src={beigeLogo} alt="Beige Logo" className='home-page-navbar-logo'/>
+              <img src={beigeLogo} alt="Beige Logo" className='navbar-logo'/>
               
               <Link to="/aboutUs" className="nav-button">About Us</Link>
 
