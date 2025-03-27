@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import "../../styles/globalStyles.css";
 import "./Dashboard.css";
 import "../../styles/popUp.css";
-import { useUser, UserProfile, UserButton } from '@clerk/clerk-react';
+import { useUser, UserButton } from '@clerk/clerk-react';
 // Changed from ReactComponent import to regular import
 import beigeLogo from '../../assets/icons/logo-beige.svg';
 import GoalList from '../../components/GoalList.tsx';  
 import GoalPopUp from '../../components/GoalPopUp.tsx';
-import { User } from '@clerk/nextjs/server';
-import CustomProfileButton from '../../components/CustomProfileButton.tsx';
 
 // define Goal object
 interface Goal {  
@@ -77,7 +75,7 @@ const Dashboard: React.FC = () => {
       <div className="navbar">
         {/* Changed from BeigeLogo component to img tag */}
         <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" onClick={handleProfileClick} />
-        <CustomProfileButton/>
+        <UserButton/>
       </div>
 
       {userComponent}
