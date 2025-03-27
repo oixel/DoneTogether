@@ -250,3 +250,12 @@ gap: 10px;
   background: #e9e5e5b7;
 }
 
+
+.username-text {
+  font-family: Adamina;
+  font-size: 1.2vw;
+  font-weight: 400;
+  color: #dbcece;
+  margin-right: 10px;
+}
+

@@ -70,7 +70,15 @@ const Dashboard: React.FC = () => {
 
   const customAppearance = {
     elements: {
-    },
+      userButtonAvatarBox: {
+        width: "2.5rem",
+        height: "2.5rem",
+      },
+      userButtonAvatarImage: {
+        width: "2.5rem",
+        height: "2.5rem",
+      },
+    }
   };
 
 
@@ -83,7 +91,8 @@ const Dashboard: React.FC = () => {
       <div className="navbar">
         {/* Changed from BeigeLogo component to img tag */}
         <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" onClick={handleLogoClick} />
-        <UserButton appearance={customAppearance}/>
+        <p className='username-text'> Welcome back, {user?.username}.</p>
+        <UserButton appearance={customAppearance} />
       </div>
 
       {userComponent}
