@@ -40,6 +40,10 @@ const LandingPage: React.FC = () => {
             </SignUpButton>
             </SignedOut>
 
+            <SignedIn>
+              <Link to="/dashboard" className="get-started-button">Dashboard</Link>
+            </SignedIn>
+
 
             <div className="navbar">
               {/* Replace ReactComponent with regular img tag */}
