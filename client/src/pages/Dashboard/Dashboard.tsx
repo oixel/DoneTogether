@@ -7,7 +7,6 @@ import { useUser, UserButton } from '@clerk/clerk-react';
 import beigeLogo from '../../assets/icons/logo-beige.svg';
 import GoalList from '../../components/GoalList.tsx';  
 import GoalPopUp from '../../components/GoalPopUp.tsx';
-import LandingPage from '../LandingPage/LandingPage';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -33,7 +32,7 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
 
   const [goals, setGoals] = useState<Goal[]>([
-    { name: "Complete a Full Marathon", description: "Train for and run a full marathon in three months.", startDate: '03/01/2025', endDate: '05/31/2025', ownerID: "john_doe_54321", users: [{ userID: "john_doe_54321", completion: false, joined: true }, { userID: "david_lee_11", completion: false, joined: true }, { userID: "sarah_kim_12", completion: true, joined: true }] },
+    { name: "Complete a Full Marathon", description: "Train for and run a full marathon in three months.", startDate: '03/01/2025', endDate: '05/31/2025', ownerID: "john_doe_54321", users: [{ userID: "john_doe_54321", completion: false, joined: true }, { userID: "jane_doe_54321", completion: false, joined: true }, { userID: "david_lee_11", completion: false, joined: true }, { userID: "sarah_kim_12", completion: true, joined: true }] },
     { name: "Launch a Personal Blog", description: "Create and publish 10 blog posts within a month.", startDate: '03/01/2025', endDate: '03/31/2025', ownerID: "jane_smith_54322", users: [{ userID: "jane_smith_54322", completion: true, joined: true }, { userID: "mike_jones_13", completion: true, joined: true }] },
     { name: "Master Cooking Skills", description: "Learn and prepare 20 new recipes over the next two months.", startDate: '03/01/2025', endDate: '04/30/2025', ownerID: "lucy_brown_54323", users: [{ userID: "lucy_brown_54323", completion: false, joined: true }, { userID: "mark_white_14", completion: false, joined: true }] },
     { name: "Read 12 Books This Year", description: "Read 12 books, one every month, and keep a journal of each book.", startDate: '03/01/2025', endDate: '12/31/2025', ownerID: "alice_green_54324", users: [{ userID: "alice_green_54324", completion: false, joined: true }, { userID: "charles_davis_15", completion: false, joined: true }] },
@@ -81,7 +80,6 @@ const Dashboard: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
     console.log("Use Effect Ran!");
   }, []);
@@ -90,7 +88,7 @@ const Dashboard: React.FC = () => {
     <div className="container">
       <div className="navbar">
         {/* Changed from BeigeLogo component to img tag */}
-        <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" onClick={handleLogoClick} />
+        <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" style={{cursor: 'pointer'}} onClick={handleLogoClick} />
         <p className='username-text'> Welcome back, {user?.username}.</p>
         <UserButton appearance={customAppearance} />
       </div>
@@ -98,7 +96,6 @@ const Dashboard: React.FC = () => {
       {userComponent}
 
       <button onClick={handleCreateClick} className="create-goal-button">+ Add Goal</button>
-
 
       {addGoalPopUpState && <div className="overlay active"></div>}
       {addGoalPopUpState && (
