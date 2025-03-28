@@ -4,7 +4,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import elmo from '../assets/elmo-profile-picture.jpg';
 import "../styles/popUp.css";
 import EditPopUp from './EditPopUp';
-import AddUserPopUp from './AddUserPopUp';
+import AddUserComponent from './AddUser';
 
 interface Goal {  
     name: string;
@@ -30,7 +30,6 @@ const Goal: React.FC<GoalProps> = ({ goal }) => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false); // three dots menu 
     const [editGoal, setEditGoal] = useState<Goal | null>(null); // edit goal popup (actual goal information)
     const [editGoalPopUpState, setEditGoalState] = useState<boolean>(false); // edit goal popup
-    const [addUserPopUpState, setAddUserState] = useState<boolean>(false); // add collaborator popup
     
     const handleMenuClick = () => {
         setIsMenuOpen((prev) => !prev);
@@ -45,10 +44,6 @@ const Goal: React.FC<GoalProps> = ({ goal }) => {
     const handleDelete = () => {
         setIsMenuOpen(false);
         // implement deletion here
-    }
-
-    const handleAddUserClick = () => {
-      setAddUserState((prev) => !prev);
     }
 
     const calculateDaysLeft = (endDate: string) => {
@@ -91,14 +86,7 @@ const Goal: React.FC<GoalProps> = ({ goal }) => {
               <button className = 'date-button'>{calculateDaysLeft(goal.endDate)} Days Left</button>
             </div>
 
-            <button className="add-user-button" onClick={handleAddUserClick}>+ Add User</button>
-            {/* render the add user popup if the state is opened */}
-            {addUserPopUpState && (
-                   <AddUserPopUp 
-                   addUserPopUpState={addUserPopUpState} 
-                    setAddUserState={setAddUserState} 
-                  />
-            )}
+            <AddUserComponent/>
 
         </div> 
 
