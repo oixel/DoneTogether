@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import beigeLogo from '../assets/icons/logo-beige.svg';
 import GoalList from '../components/GoalList.tsx';
 import GoalPopUp from '../components/GoalPopUp.tsx';
-import envelope from '../../assets/icons/inboxdoodle.svg';
+import envelope from '../assets/icons/inboxdoodle.svg';
 
 import "../styles/globalStyles.css";
 import "../styles/Dashboard.css";
