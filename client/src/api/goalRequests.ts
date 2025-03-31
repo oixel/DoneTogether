@@ -22,8 +22,8 @@ export async function getGoals(userId: string) {
 }
 
 // Send a PATCH request to add or remove a user from a goal
-export async function updateGoalUsers(goalId: string, userObject: object, updateType: 'add' | 'remove'): Promise<void> {
-    await axios.patch(`http://localhost:3001/updateGoalUsers/${updateType}`, { _id: goalId, userObject: userObject });
+export async function updateUsersList(goalId: string, userObject: object, updateType: 'add' | 'remove'): Promise<void> {
+    await axios.patch(`http://localhost:3001/updateUsersList/${updateType}`, { _id: goalId, userObject: userObject });
 }
 
 // Send a PATCH request to update the user's data in a goal

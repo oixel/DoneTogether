@@ -9,7 +9,7 @@ import User from './User';
 import "../styles/popUp.css";
 
 import { getUserById } from '../api/userRequests.ts';
-import { updateGoalUsers, deleteGoal } from '../api/goalRequests.ts';
+import { updateUsersList, deleteGoal } from '../api/goalRequests.ts';
 
 // Import custom interfaces from respective scripts
 import { GoalData } from '../types/goalData';
@@ -48,7 +48,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
     }
     else {
       // (Leave goal) Send axios request to remove this user from goal's users array
-      await updateGoalUsers(goal._id, { userId: currentUserId }, 'remove');
+      await updateUsersList(goal._id, { userId: currentUserId }, 'remove');
     }
 
     // Triggers refresh of goals
