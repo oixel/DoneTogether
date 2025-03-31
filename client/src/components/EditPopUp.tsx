@@ -6,8 +6,11 @@ import { CgClose } from "react-icons/cg";
 
 import "../styles/popUp.css";
 
+import { updateGoal } from '../api/goalRequests';
+
 // Import interface for GoalData object
 import { GoalData } from '../types/goalData';
+
 
 interface EditPopUpPropTypes {
   goal: GoalData;
@@ -31,19 +34,27 @@ function EditPopUp({ goal, setEditGoalState, setNeedRefresh }: EditPopUpPropType
   }
 
   // Convert input into a proper date and update start date!
-  async function handleStartDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleStartDateChange(e: React.ChangeEvent<HTMLInputElement>): Promise<void> {
     const selectedDate = await parseDate(e.target.value);
     setStartDate(selectedDate);
   };
 
   // Convert input into a proper date and update end date!
-  async function handleEndDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleEndDateChange(e: React.ChangeEvent<HTMLInputElement>): Promise<void> {
     const selectedDate = await parseDate(e.target.value);
     setEndDate(selectedDate);
   };
 
-  const handleSubmit = () => {
-    // Logic to save the edited goal with new information
+  // Gets called when the save button is pressed! Updates the goal's information in the MongoDB database
+  async function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> {
+    // Prevents page from refreshing on submit
+    e.preventDefault();
+
+    // Calls PATCH request for goal data
+    await updateGoal(goal._id, title, description, startDate, (useEndDate) ? endDate : undefined);
+
+    // Ensures that goals are refreshed to reflect changes
+    setNeedRefresh(true);
 
     // Close the pop-up after saving
     setEditGoalState(false);
@@ -108,7 +119,7 @@ function EditPopUp({ goal, setEditGoalState, setNeedRefresh }: EditPopUpPropType
 
         <div className="arrows-container">
           <img src={threeArrows} alt="three arrows" className="three-arrows-left" />
-          <button className="create-button" onClick={handleSubmit}>Save!</button>
+          <button className="create-button" onClick={(e) => handleSubmit(e)}>Save!</button>
           <img src={threeArrows} alt="three arrows" className="three-arrows-right" />
         </div>
 

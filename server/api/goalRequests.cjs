@@ -22,6 +22,36 @@ async function createGoal(app, database) {
     });
 };
 
+// Update goal's basic information with new data
+async function updateGoal(app, database) {
+    app.patch('/goal', async (req, res) => {
+        try {
+            // Filter by the goal's unique id
+            const filter = { _id: new ObjectId(req.body._id) };
+
+            // Define attributes of update request
+            const newInfo = {
+                "$set": {
+                    name: req.body.name,
+                    description: req.body.description,
+                    startDate: new Date(req.body.startDate),
+                    endDate: new Date(req.body.endDate)
+                }
+            };
+
+            // Update goal with matching ID to reflect changed information
+            const result = await database.collection('goals').updateOne(filter, newInfo);
+
+
+            // Return a success message with the updated result back
+            res.status(200).send(result);
+        } catch (error) {
+            console.error("Error updating goal:", error);
+            res.status(500).send("Server error while updating a goal.");
+        }
+    });
+};
+
 // Queries all goals where the user is a participant
 // Updated to handle users as objects with userId property
 function getGoals(app, database) {
@@ -79,7 +109,7 @@ function updateUsersList(app, database) {
 
 // Send a patch request to update a specific user's goal completion
 function updateUserInGoal(app, database) {
-    app.patch('/goal', async (req, res) => {
+    app.patch('/updateUserInGoal', async (req, res) => {
         try {
             // Ensures that the user being patched is in the goal with the passed-in id
             const filter = { _id: new ObjectId(req.body._id) };
@@ -118,4 +148,4 @@ function deleteGoal(app, database) {
 };
 
 // Export all HTTP router functions
-module.exports = { createGoal, getGoals, updateUsersList, updateUserInGoal, deleteGoal };
+module.exports = { createGoal, updateGoal, getGoals, updateUsersList, updateUserInGoal, deleteGoal };
