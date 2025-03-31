@@ -30,16 +30,14 @@ function EditPopUp({ goal, setEditGoalState, setNeedRefresh }: EditPopUpPropType
     return new Date(parseInt(val[0]), parseInt(val[1]) - 1, parseInt(val[2]));
   }
 
-  // 
+  // Convert input into a proper date and update start date!
   async function handleStartDateChange(e: React.ChangeEvent<HTMLInputElement>) {
-    // Convert input into a proper date and update start date!
     const selectedDate = await parseDate(e.target.value);
     setStartDate(selectedDate);
   };
 
-  // 
+  // Convert input into a proper date and update end date!
   async function handleEndDateChange(e: React.ChangeEvent<HTMLInputElement>) {
-    // Convert input into a proper date and update end date!
     const selectedDate = await parseDate(e.target.value);
     setEndDate(selectedDate);
   };
@@ -51,7 +49,8 @@ function EditPopUp({ goal, setEditGoalState, setNeedRefresh }: EditPopUpPropType
     setEditGoalState(false);
   };
 
-  // 
+  // If you change the start date while the end date is disabled, it can make the end date BEFORE the start date
+  // This prevents that from occurring
   useEffect(() => {
     if (!useEndDate && endDate && startDate > endDate) setEndDate(startDate);
   }, [startDate, endDate, useEndDate])
