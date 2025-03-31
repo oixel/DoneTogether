@@ -1,11 +1,13 @@
 import axios from 'axios';
 
 // Send a POST request to create a goal under the user who sent the creation request
-export async function createGoal(name: string, description: string, userId: string): Promise<void> {
+export async function createGoal(name: string, description: string, userId: string, /*startDate: Date, endDate?: Date*/): Promise<void> {
     await axios.post('http://localhost:3001/goal', {
         name: name,
         description: description,
         ownerId: userId,
+        // startDate: startDate,
+        // endDate: endDate,
         users: [{
             userId: userId,
             joined: true,  // Owner does not need to accept an invitation

@@ -9,6 +9,6 @@ export interface GoalData {
     ownerId: string;
     users: Array<UserData>;
 
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate?: Date;
 }

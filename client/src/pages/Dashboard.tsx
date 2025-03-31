@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
     </div>
   );
 
-  const handleCreateClick = (): void => {
+  const toggleCreationPopUp = (): void => {
     setGoalPopUpState(!addGoalPopUpState);
   };
 
@@ -151,8 +151,6 @@ const Dashboard: React.FC = () => {
         <p className='username-text'> Welcome back, {user?.username}.</p>
         {/* Envelope icon for invites */}
 
-
-
         <img
           src={envelope}
           alt="Invites"
@@ -181,7 +179,11 @@ const Dashboard: React.FC = () => {
             {addGoalPopUpState && <div className="overlay active"></div>}
             {addGoalPopUpState && (
               <div>
-                <GoalPopUp setGoalPopUpState={setGoalPopUpState} />
+                <GoalPopUp
+                  setGoalPopUpState={setGoalPopUpState}
+                  setNeedRefresh={setNeedRefresh}
+                  ownerId={user.id}
+                />
               </div>
             )}
             <GoalList
@@ -193,7 +195,7 @@ const Dashboard: React.FC = () => {
             />
             <div className="overlay-buttons">
               <button
-                onClick={handleCreateClick}
+                onClick={toggleCreationPopUp}
                 className="create-goal-button"
               >
                 + Add Goal

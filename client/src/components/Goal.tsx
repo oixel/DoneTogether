@@ -42,12 +42,16 @@ const Goal = ({ goal, currentUserId }: GoalPropTypes) => {
     // implement deletion here
   }
 
-  const calculateDaysLeft = (endDate: string) => {
-    const currentDate = new Date();
-    const end = new Date(endDate);
-    const timeDiff = end.getTime() - currentDate.getTime();
-    const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
-    return daysLeft > 0 ? daysLeft : 0; // Ensure we don’t show negative days
+  const calculateDaysLeft = (endDate: Date) => {
+    if (endDate) {
+      const currentDate = new Date();
+      const timeDiff = endDate.getTime() - currentDate.getTime();
+      const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
+      return daysLeft > 0 ? daysLeft : 0; // Ensure we don’t show negative days
+    }
+    else {
+      return "No End Date";
+    }
   };
 
   // Loops through all user objects and grabs their profile information from Clerk database and combines it with their respective statuses from MongoDB
@@ -111,7 +115,7 @@ const Goal = ({ goal, currentUserId }: GoalPropTypes) => {
         </div>
 
         <div className='date-display'>
-          <button className='date-button'>{calculateDaysLeft(goal.endDate)} Days Left</button>
+          <button className='date-button'>{/*calculateDaysLeft(goal.endDate)*/ "FIX DATE STUFF"} Days Left</button>
         </div>
 
         <AddUserComponent />
