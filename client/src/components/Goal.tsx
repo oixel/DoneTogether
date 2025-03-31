@@ -116,7 +116,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
   return (
     <div>
       <div className="goal-box">
-        <BsThreeDots className="edit-menu" onClick={handleMenuClick} />
+        <BsThreeDots className="edit-menu" size = "1.5vw" onClick={handleMenuClick} />
         {isMenuOpen && (
           <div className="menu-options">
             <button onClick={() => handleEditMenuClick(goal)}>Edit</button>
