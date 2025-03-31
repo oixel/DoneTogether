@@ -42,12 +42,17 @@ const Goal = ({ goal, currentUserId }: GoalPropTypes) => {
     // implement deletion here
   }
 
-  const calculateDaysLeft = (endDate: Date) => {
-    if (endDate) {
-      const currentDate = new Date();
-      const timeDiff = endDate.getTime() - currentDate.getTime();
-      const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
-      return daysLeft > 0 ? daysLeft : 0; // Ensure we don’t show negative days
+  // Takes the start and end date and determines how many days are left for this goal.
+  function calculateDaysLeft() {
+    if (goal.endDate && goal.endDate >= goal.startDate) {
+      // Get the time difference between the goal's end date and today
+      const timeDiff = new Date(goal.endDate).getTime() - new Date().getTime();
+
+      let daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
+      daysLeft = (daysLeft > 0) ? daysLeft : 0; // Ensure we don’t show negative days
+
+      // Return number of days left
+      return `${daysLeft} Days Left`;
     }
     else {
       return "No End Date";
@@ -115,7 +120,7 @@ const Goal = ({ goal, currentUserId }: GoalPropTypes) => {
         </div>
 
         <div className='date-display'>
-          <button className='date-button'>{/*calculateDaysLeft(goal.endDate)*/ "FIX DATE STUFF"} Days Left</button>
+          <button className='date-button'>{calculateDaysLeft()}</button>
         </div>
 
         <AddUserComponent />

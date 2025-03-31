@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CgClose } from "react-icons/cg";
 
 import { createGoal } from '../api/goalRequests';
@@ -21,47 +21,27 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
 
   const today = new Date();
   const [startDate, setStartDate] = useState<Date>(today);
-  const [endDate, setEndDate] = useState<Date | undefined>();
+  const [useEndDate, setUseEndDate] = useState<boolean>(false);
+  const [endDate, setEndDate] = useState<Date>(today);  // Initialized to today, but can still be set to not be used
 
-  function parseDate(newDate: string): Date {
+  async function parseDate(newDate: string): Promise<Date> {
     const val = newDate.split(/\D/);
     return new Date(parseInt(val[0]), parseInt(val[1]) - 1, parseInt(val[2]));
   }
 
   // 
-  function handleStartDateChange(e: React.ChangeEvent<HTMLInputElement>) {
-    e.preventDefault();
-
-    const selectedDate = parseDate(e.target.value);
-
-    // Calculate yesterday for preventing days before today
-    const yesterday = new Date(today.getDate() - 1);
-
-    // Display error if selected start date is not valid
-    if (selectedDate < yesterday) {
-      alert("Start date cannot be in the past.");
-    } else if (endDate && selectedDate > endDate) {
-      alert("Start date cannot be after the end date.")
-    } else {
-      console.log(`New start date is: ${selectedDate.toLocaleDateString("en-US")}`);
-      setStartDate(selectedDate);
-    }
+  async function handleStartDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    // Convert input into a proper date and update start date!
+    const selectedDate = await parseDate(e.target.value);
+    setStartDate(selectedDate);
   };
 
-  // // 
-  // function handleEndDateChange(e: React.ChangeEvent<HTMLInputElement>) {
-  //   // Convert input into a type of date
-  //   const selectedDate = new Date(e.target.value);
-
-  //   // Display error if selected end date is not valid
-  //   if (selectedDate < today) {
-  //     alert("End date cannot be in the past.");
-  //   } else if (selectedDate < startDate) {
-  //     alert("End date cannot be before the start date.")
-  //   } else {
-  //     setEndDate(selectedDate);
-  //   }
-  // };
+  // 
+  async function handleEndDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    // Convert input into a proper date and update end date!
+    const selectedDate = await parseDate(e.target.value);
+    setEndDate(selectedDate);
+  };
 
   // Function to create a new goal
   async function handleGoalCreation(): Promise<void> {
@@ -69,7 +49,8 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
 
     try {
       // Send an axios request with the goal's data and the user's id (to add the owner to the goal!)
-      await createGoal(title, description, ownerId, startDate /*, endDate*/);
+      const goalEndDate = useEndDate ? endDate : undefined;
+      await createGoal(title, description, ownerId, startDate, goalEndDate);
 
       // Refresh goals list
       setNeedRefresh(true);
@@ -84,11 +65,6 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
 
     if (!title.trim()) {
       alert("Please enter a goal name");
-      return;
-    }
-
-    if (!description.trim()) {
-      alert("Please enter a description");
       return;
     }
 
@@ -108,6 +84,12 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
   function handlePopupClick(e: React.MouseEvent) {
     e.stopPropagation();
   };
+
+  // 
+  useEffect(() => {
+    if (!useEndDate && startDate > endDate) setEndDate(startDate);
+  }, [startDate, endDate, useEndDate])
+
 
   return (
     <div className="pop-up" onClick={handlePopupClick}>
@@ -129,7 +111,6 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
 
         <label className='form-label'>Description: </label>
         <textarea
-          required
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className='form-input'
@@ -145,16 +126,27 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
           onChange={(e) => handleStartDateChange(e)}
           className='form-input'
           min={today.toLocaleDateString("en-CA")}
+          max={(useEndDate) ? endDate.toLocaleDateString("en-CA") : undefined}
         /><br />
 
-        {/* <label className='form-label'>End Date: </label>
-        <input
-          type="date"
-          value={"5/22/2025"}
-          onChange={(e) => handleEndDateChange(e)}
-          className='form-input'
-          min={startDate.toString() || today.toString()}
-        /><br /> */}
+        <div>
+          <label className='form-label'>Use End Date</label>
+          <input type="checkbox" checked={useEndDate} onChange={(e) => setUseEndDate(e.target.checked)} />
+        </div>
+
+        {/* Only display end date input if useEndDate is set to true (allows goals without end dates to exist */}
+        {useEndDate && (
+          <>
+            <label className='form-label'>End Date: </label>
+            <input
+              type="date"
+              value={endDate?.toLocaleDateString("en-CA")}
+              onChange={(e) => handleEndDateChange(e)}
+              className='form-input'
+              min={startDate.toLocaleDateString("en-CA")}
+            /><br />
+          </>
+        )}
 
         <div className="arrows-container">
           <img src={threeArrows} alt="three arrows" className="three-arrows-left" />
@@ -164,7 +156,7 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
           <img src={threeArrows} alt="three arrows" className="three-arrows-right" />
         </div>
       </form>
-    </div>
+    </div >
   );
 };
 

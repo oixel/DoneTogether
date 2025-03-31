@@ -8,8 +8,8 @@ async function createGoal(app, database) {
                 name: req.body.name,
                 description: req.body.description,
                 ownerId: req.body.ownerId,
-                startDate: req.body.startDate,
-                endDate: req.body.endDate,
+                startDate: new Date(req.body.startDate),
+                endDate: new Date(req.body.endDate),
                 users: req.body.users
             };
 

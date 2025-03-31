@@ -29,7 +29,7 @@ const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { isLoaded, user } = useUser();
+  const { user } = useUser();
 
   // Refreshes goals list when set to true (in useEffect)
   const [needRefresh, setNeedRefresh] = useState(false);
@@ -44,23 +44,6 @@ const Dashboard: React.FC = () => {
   const handleInviteResponse = (collaborator: string, response: boolean): void => {
     console.log(`${collaborator} invite ${response ? 'accepted' : 'declined'}`);
   };
-
-  const userInfo = {
-    email: user?.primaryEmailAddress?.emailAddress,
-    username: user?.username,
-    profileImageUrl: user?.imageUrl,
-  };
-
-  const userComponent = (
-    <div className="user-card">
-      <img src={userInfo.profileImageUrl} />
-      <div className="user-card">{userInfo.username}</div>
-      {/* you can add more user info here */}
-      <div className="user-card">{userInfo.email}</div>
-      <div className="user-card">User ID: {user?.id}</div>
-      <UserButton />
-    </div>
-  );
 
   const toggleCreationPopUp = (): void => {
     setGoalPopUpState(!addGoalPopUpState);
