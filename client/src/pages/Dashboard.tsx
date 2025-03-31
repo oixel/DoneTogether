@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import beigeLogo from '../assets/icons/logo-beige.svg';
 import GoalList from '../components/GoalList.tsx';
 import GoalPopUp from '../components/GoalPopUp.tsx';
-import envelope from '../assets/icons/inboxdoodle.svg';
 import { FaInbox } from 'react-icons/fa';
 
 import "../styles/globalStyles.css";
@@ -14,6 +13,7 @@ import "../styles/Dashboard.css";
 import "../styles/popUp.css";
 
 import { getGoals } from '../api/goalRequests';
+
 
 // Import interface for GoalData object
 import { GoalData } from '../types/goalData';
