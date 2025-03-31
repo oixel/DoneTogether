@@ -10,9 +10,9 @@ import threeArrows from "../assets/icons/threearrowsPopUp.svg";
 import "../styles/popUp.css";
 
 interface GoalPopUpPropTypes {
+  ownerId: string;
   setGoalPopUpState: CallableFunction;
   setNeedRefresh: CallableFunction;
-  ownerId: string;
 }
 
 function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpPropTypes) {
@@ -24,6 +24,7 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
   const [useEndDate, setUseEndDate] = useState<boolean>(false);
   const [endDate, setEndDate] = useState<Date>(today);  // Initialized to today, but can still be set to not be used
 
+  // Takes in date input string and ensures that it is properly accurate regardless of time zone
   async function parseDate(newDate: string): Promise<Date> {
     const val = newDate.split(/\D/);
     return new Date(parseInt(val[0]), parseInt(val[1]) - 1, parseInt(val[2]));
@@ -60,7 +61,7 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
   }
 
   // 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
 
     if (!title.trim()) {
@@ -81,13 +82,13 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
   };
 
   // Stop propagation to prevent click events from being blocked
-  function handlePopupClick(e: React.MouseEvent) {
+  function handlePopupClick(e: React.MouseEvent): void {
     e.stopPropagation();
   };
 
   // 
   useEffect(() => {
-    if (!useEndDate && startDate > endDate) setEndDate(startDate);
+    if (!useEndDate && endDate && startDate > endDate) setEndDate(startDate);
   }, [startDate, endDate, useEndDate])
 
 

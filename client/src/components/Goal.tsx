@@ -145,7 +145,13 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
 
       {/* Render the edit PopUp if the state is opened */}
       {editGoalPopUpState && <div className="overlay active"></div>}
-      {editGoalPopUpState && editGoal && (<EditPopUp goal={editGoal} setEditGoalState={setEditGoalState} />)}
+      {editGoalPopUpState && editGoal && (
+        <EditPopUp
+          goal={editGoal}
+          setEditGoalState={setEditGoalState}
+          setNeedRefresh={setNeedRefresh}
+        />
+      )}
     </div>
   );
 };
