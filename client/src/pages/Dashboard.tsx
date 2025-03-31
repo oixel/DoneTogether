@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import beigeLogo from '../assets/icons/logo-beige.svg';
 import GoalList from '../components/GoalList.tsx';
 import GoalPopUp from '../components/GoalPopUp.tsx';
+import envelope from '../../assets/icons/inboxdoodle.svg';
 
 import "../styles/globalStyles.css";
 import "../styles/Dashboard.css";
@@ -32,6 +33,17 @@ const Dashboard: React.FC = () => {
 
   // Refreshes goals list when set to true (in useEffect)
   const [needRefresh, setNeedRefresh] = useState(false);
+  const [invitePopUp, setInvitePopUp] = useState<boolean>(false);
+
+  const collaborators = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank"];
+
+  const handleInviteClick = (): void => {
+    setInvitePopUp(!invitePopUp);
+  };
+
+  const handleInviteResponse = (collaborator: string, response: boolean): void => {
+    console.log(`${collaborator} invite ${response ? 'accepted' : 'declined'}`);
+  };
 
   const userInfo = {
     email: user?.primaryEmailAddress?.emailAddress,
@@ -137,6 +149,29 @@ const Dashboard: React.FC = () => {
         {/* Changed from BeigeLogo component to img tag */}
         <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" style={{ cursor: 'pointer' }} onClick={handleLogoClick} />
         <p className='username-text'> Welcome back, {user?.username}.</p>
+        {/* Envelope icon for invites */}
+
+
+
+        <img
+          src={envelope}
+          alt="Invites"
+          className="envelope-icon"
+          onClick={handleInviteClick}
+        />
+
+        {invitePopUp && (
+          <div className="invite-popup">
+            <p>You have new invites. Accept?</p>
+            {collaborators.map((collaborator) => (
+              <div key={collaborator} className="invite-row">
+                <span>{collaborator}</span>
+                <button onClick={() => handleInviteResponse(collaborator, true)}>Yes</button>
+                <button onClick={() => handleInviteResponse(collaborator, false)}>No</button>
+              </div>
+            ))}
+          </div>
+        )}
         <UserButton appearance={customAppearance} />
       </div>
 
