@@ -4,6 +4,7 @@ import "./Dashboard.css";
 import "../../styles/popUp.css";
 import { useUser, UserButton } from '@clerk/clerk-react';
 // Changed from ReactComponent import to regular import
+import envelope from '../../assets/icons/inboxdoodle.svg';
 import beigeLogo from '../../assets/icons/logo-beige.svg';
 import GoalList from '../../components/GoalList.tsx';  
 import GoalPopUp from '../../components/GoalPopUp.tsx';
@@ -58,6 +59,20 @@ const Dashboard: React.FC = () => {
       <UserButton />
     </div>
   );
+
+  const [invitePopUp, setInvitePopUp] = useState<boolean>(false);
+  const collaborators = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank"];
+
+
+  const handleInviteClick = (): void => {
+    setInvitePopUp(!invitePopUp);
+  };
+
+
+  const handleInviteResponse = (collaborator: string, response: boolean): void => {
+    console.log(`${collaborator} invite ${response ? 'accepted' : 'declined'}`);
+  };
+
   
   const handleCreateClick = (): void => {
     setGoalPopUpState(!addGoalPopUpState);
@@ -85,11 +100,32 @@ const Dashboard: React.FC = () => {
   }, []);
 
   return (
+
+
     <div className="container">
       <div className="navbar">
         {/* Changed from BeigeLogo component to img tag */}
         <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" style={{cursor: 'pointer'}} onClick={handleLogoClick} />
-        <p className='username-text'> Welcome back, {user?.username}.</p>
+        {/* <p className='username-text'> Welcome back, {user?.username}.</p> */}
+        {/* Envelope icon for invites */}
+        <img 
+          src={envelope} 
+          alt="Invites" 
+          className="envelope-icon" 
+          onClick={handleInviteClick} 
+        />
+        {invitePopUp && (
+          <div className="invite-popup">
+            <p>You have new invites. Accept?</p>
+            {collaborators.map((collaborator) => (
+              <div key={collaborator} className="invite-row">
+                <span>{collaborator}</span>
+                <button onClick={() => handleInviteResponse(collaborator, true)}>Yes</button>
+                <button onClick={() => handleInviteResponse(collaborator, false)}>No</button>
+              </div>
+            ))}
+          </div>
+        )}
         <UserButton appearance={customAppearance} />
       </div>
 

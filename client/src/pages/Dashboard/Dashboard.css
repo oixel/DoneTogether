@@ -265,3 +265,87 @@ gap: 10px;
   margin-right: 10px;
 }
 
+/*envelope stuff*/
+.envelope-icon {
+  width: 5vw; /* Adjust size as needed */
+  height: 3vw;
+  cursor: pointer;
+  margin-left: 15px; /* Space between icons */
+}
+ 
+.envelope-button {
+  width: 3vw;
+  height: 3vw;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 6vw; /* Adjust this value to move it more or less */
+}
+
+
+.envelope-button:active .envelope-icon {
+  opacity: 0.7; /* Reduces the opacity to 70% when clicked */
+}
+
+
+
+.invite-popup {
+  background: #F0F2DC;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.invite-popup button {
+  background-color: #636B2F;
+  opacity: 57%;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1.2vw;  /* You can adjust the font size */
+}
+
+.invite-popup {
+  position: fixed;  /* Fixed position to keep it above the page content */
+  top: 3.5vw;  /* Adjust this value to position it lower or higher */
+  left: 75vw;
+  transform: translateX(-50%);  /* Center it horizontally */
+  padding: 20px;
+  background: #F1F0E8;
+  border-radius: 15px;
+  width: 30vw;  /* Adjust width as needed */
+  height: 50vh;  /* Adjust height as needed */
+ 
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;  /* Ensure it is above other content */
+}
+
+.users-co {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+ 
+  width: 100%;
+   /* Ensures it's spaced below the 'You have new invites' text */
+}
+
+
+.collaborator-image {
+  width: 3vw;
+  height: 3vw;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}

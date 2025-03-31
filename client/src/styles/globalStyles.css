@@ -57,6 +57,12 @@
     align-items: center; 
     text-decoration: none;
   }
+
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 1vw;
+  }
   
  
   
