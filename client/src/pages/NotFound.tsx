@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../../styles/globalStyles.css';
-import './NotFound.css'; // You'll need to create this CSS file
+
+import '../styles/globalStyles.css';
+import '../styles/NotFound.css'; // You'll need to create this CSS file
 
 const NotFound: React.FC = () => {
   return (
