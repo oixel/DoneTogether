@@ -19,8 +19,8 @@
   position: relative;
   width: 28vw;
   height: 23vw;
-  padding: 10px 16px;
-  margin: 20px 10px;
+  padding: 0.75vw 0.75vw;
+  margin: 3vw 1vw;
   border-radius: 20px;
   background: #EDE8D0;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -41,8 +41,21 @@
   font-size: 1.5vw;
   font-weight: 400;
   position: relative;
-  top: 25px;
+  top: 1.8vw; 
 }
+
+/* Media query for screens smaller than 500px */
+@media (max-width: 400px) {
+  .goal-list {
+    flex-direction: column; /* Change to vertical orientation */
+    align-items: center; /* Center items horizontally in the column layout */
+  }
+  .goal-box{
+     margin-left: 1vw;
+     margin-right: 1vw;
+  }
+}
+    
 
 .date-display {
   display: flex;
@@ -117,7 +130,7 @@ color: #000; */
 
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 1.5vw;
 }
 
 .create-goal-button,
@@ -126,7 +139,7 @@ color: #000; */
   border: none;
   border-radius: 40px;
   color: #636B2F;
-  outline: 3px solid black;
+  outline: 0.25vw solid black;
   font-size: 1.6vw;
   font-family: Adamina;
   font-style: normal;
@@ -134,11 +147,11 @@ color: #000; */
   line-height: normal;
   border-radius: 40px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  height: 8vh;
+  height: 4vw;
 }
 
 .create-goal-button {
-  width: 12vw;
+  width: 16vw;
 }
 
 .refresh-button {
@@ -298,12 +311,13 @@ color: #000; */
 
 /*envelope stuff*/
 .envelope-icon {
-  width: 5vw;
+  width: 2vw;
   /* Adjust size as needed */
-  height: 3vw;
+  height: 2vw;
   cursor: pointer;
-  margin-left: 15px;
-  /* Space between icons */
+  margin-right: 1vw;
+  margin-left: 0vw;
+  color: #EDE8D0;
 }
 
 .envelope-button {

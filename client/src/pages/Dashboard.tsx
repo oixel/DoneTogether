@@ -7,6 +7,7 @@ import beigeLogo from '../assets/icons/logo-beige.svg';
 import GoalList from '../components/GoalList.tsx';
 import GoalPopUp from '../components/GoalPopUp.tsx';
 import envelope from '../assets/icons/inboxdoodle.svg';
+import { FaInbox } from 'react-icons/fa';
 
 import "../styles/globalStyles.css";
 import "../styles/Dashboard.css";
@@ -56,12 +57,12 @@ const Dashboard: React.FC = () => {
   const customAppearance = {
     elements: {
       userButtonAvatarBox: {
-        width: "2.5rem",
-        height: "2.5rem",
+        width: "2.5vw",
+        height: "2.5vw",
       },
       userButtonAvatarImage: {
-        width: "2.5rem",
-        height: "2.5rem",
+        width: "2.5vw",
+        height: "2.5vw",
       },
     }
   };
@@ -134,12 +135,7 @@ const Dashboard: React.FC = () => {
         <p className='username-text'> Welcome back, {user?.username}.</p>
         {/* Envelope icon for invites */}
 
-        <img
-          src={envelope}
-          alt="Invites"
-          className="envelope-icon"
-          onClick={handleInviteClick}
-        />
+        <FaInbox className="envelope-icon" onClick={handleInviteClick}/>
 
         {invitePopUp && (
           <div className="invite-popup">
@@ -187,7 +183,7 @@ const Dashboard: React.FC = () => {
                 className="refresh-button"
                 onClick={() => setNeedRefresh(true)}
               >
-                🔃
+                 ⟳ 
               </button>
             </div>
           </>
