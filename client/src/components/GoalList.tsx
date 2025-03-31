@@ -38,6 +38,7 @@ const GoalList = ({ goals, currentUserId, setNeedRefresh, isLoading, error }: Go
             key={goal._id}
             goal={goal}
             currentUserId={currentUserId}
+            setNeedRefresh={setNeedRefresh}
           />
         ))}
       </div>

@@ -9,6 +9,7 @@ import User from './User';
 import "../styles/popUp.css";
 
 import { getUserById } from '../api/userRequests.ts';
+import { updateGoalUsers, deleteGoal } from '../api/goalRequests.ts';
 
 // Import custom interfaces from respective scripts
 import { GoalData } from '../types/goalData';
@@ -18,9 +19,10 @@ import { UserData } from '../types/userData';
 interface GoalPropTypes {
   goal: GoalData;
   currentUserId: string;
+  setNeedRefresh: CallableFunction;
 }
 
-const Goal = ({ goal, currentUserId }: GoalPropTypes) => {
+const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false); // three dots menu 
   const [editGoal, setEditGoal] = useState<GoalData | null>(null); // edit goal popup (actual goal information)
   const [editGoalPopUpState, setEditGoalState] = useState<boolean>(false); // edit goal popup
@@ -31,15 +33,29 @@ const Goal = ({ goal, currentUserId }: GoalPropTypes) => {
     setIsMenuOpen((prev) => !prev);
   };
 
+  // 
   const handleEditMenuClick = (goal: GoalData) => {
     setIsMenuOpen(false);
     setEditGoalState(true);
     setEditGoal(goal);
   };
 
-  const handleDelete = () => {
+  // Handles deleting / leaving goals
+  async function handleDelete() {
+    if (currentUserId == goal.ownerId) {
+      // (Delete goal) Send axios request to DELETE this goal
+      await deleteGoal(goal._id);
+    }
+    else {
+      // (Leave goal) Send axios request to remove this user from goal's users array
+      await updateGoalUsers(goal._id, { userId: currentUserId }, 'remove');
+    }
+
+    // Triggers refresh of goals
+    setNeedRefresh(true);
+
+    // Close settings menu
     setIsMenuOpen(false);
-    // implement deletion here
   }
 
   // Takes the start and end date and determines how many days are left for this goal.
@@ -88,6 +104,7 @@ const Goal = ({ goal, currentUserId }: GoalPropTypes) => {
       }
     }
 
+    // Update the users list to reflect the new users
     setUsers(newUsers);
   }, [goal.users]);
 
@@ -103,7 +120,7 @@ const Goal = ({ goal, currentUserId }: GoalPropTypes) => {
         {isMenuOpen && (
           <div className="menu-options">
             <button onClick={() => handleEditMenuClick(goal)}>Edit</button>
-            <button onClick={handleDelete}>Delete</button>
+            <button onClick={handleDelete}>{(currentUserId == goal.ownerId) ? "Delete" : "Leave"}</button>
           </div>
         )}
 
@@ -124,14 +141,11 @@ const Goal = ({ goal, currentUserId }: GoalPropTypes) => {
         </div>
 
         <AddUserComponent />
-
       </div>
 
-      {/* render the edit popup if the state is opened */}
+      {/* Render the edit PopUp if the state is opened */}
       {editGoalPopUpState && <div className="overlay active"></div>}
       {editGoalPopUpState && editGoal && (<EditPopUp goal={editGoal} setEditGoalState={setEditGoalState} />)}
-
-
     </div>
   );
 };
