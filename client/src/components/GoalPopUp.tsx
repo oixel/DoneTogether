@@ -42,7 +42,7 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
     setEndDate(selectedDate);
   };
 
-  // Function to create a new goal
+  // Creates a new goal in the MongoDB database
   async function handleGoalCreation(): Promise<void> {
     if (!ownerId) return;
 
@@ -58,7 +58,7 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
     }
   }
 
-  // 
+  // Called when the create button is pressed. Checks that required parameters are filled before creating a new goal.
   async function handleSubmit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
 
@@ -72,7 +72,7 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
       return;
     }
 
-    // 
+    // Creates a new goal in the MongoDB database
     await handleGoalCreation();
 
     // Close the popup
