@@ -19,26 +19,37 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
-  // const [startDate, setStartDate] = useState<Date>(new Date());
-  // const [endDate, setEndDate] = useState<Date>(new Date());
-  // const today = new Date();
+  const today = new Date();
+  const [startDate, setStartDate] = useState<Date>(today);
+  const [endDate, setEndDate] = useState<Date | undefined>();
 
-  // const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  // Convert input into a type of date
-  // const selectedDate = new Date(e.target.value);
+  function parseDate(newDate: string): Date {
+    const val = newDate.split(/\D/);
+    return new Date(parseInt(val[0]), parseInt(val[1]) - 1, parseInt(val[2]));
+  }
 
-  // setStartDate(selectedDate);
-  // // Display error if selected start date is not valid
-  // if (selectedDate < today) {
-  //   alert("Start date cannot be in the past.");
-  // } else if (endDate && selectedDate > endDate) {
-  //   alert("Start date cannot be after the end date.")
-  // } else {
-  //   setStartDate(selectedDate);
-  // }
-  // };
+  // 
+  function handleStartDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
 
-  // const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = parseDate(e.target.value);
+
+    // Calculate yesterday for preventing days before today
+    const yesterday = new Date(today.getDate() - 1);
+
+    // Display error if selected start date is not valid
+    if (selectedDate < yesterday) {
+      alert("Start date cannot be in the past.");
+    } else if (endDate && selectedDate > endDate) {
+      alert("Start date cannot be after the end date.")
+    } else {
+      console.log(`New start date is: ${selectedDate.toLocaleDateString("en-US")}`);
+      setStartDate(selectedDate);
+    }
+  };
+
+  // // 
+  // function handleEndDateChange(e: React.ChangeEvent<HTMLInputElement>) {
   //   // Convert input into a type of date
   //   const selectedDate = new Date(e.target.value);
 
@@ -58,7 +69,7 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
 
     try {
       // Send an axios request with the goal's data and the user's id (to add the owner to the goal!)
-      await createGoal(title, description, ownerId, /*startDate, endDate*/);
+      await createGoal(title, description, ownerId, startDate /*, endDate*/);
 
       // Refresh goals list
       setNeedRefresh(true);
@@ -81,15 +92,10 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
       return;
     }
 
-    // if (!startDate) {
-    //   alert("Please select a start date");
-    //   return;
-    // }
-
-    // if (!endDate) {
-    //   alert("Please select an end date");
-    //   return;
-    // }
+    if (!startDate) {
+      alert("Please select a start date");
+      return;
+    }
 
     // 
     await handleGoalCreation();
@@ -99,7 +105,7 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
   };
 
   // Stop propagation to prevent click events from being blocked
-  const handlePopupClick = (e: React.MouseEvent) => {
+  function handlePopupClick(e: React.MouseEvent) {
     e.stopPropagation();
   };
 
@@ -131,21 +137,21 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
           placeholder="Describe your goal"
         /><br />
 
-        {/* <label className='form-label'>Start Date: </label> */}
-        {/* <input
+        <label className='form-label'>Start Date: </label>
+        <input
           required
           type="date"
-          // value={startDate.toString()}
-          onChange={handleStartDateChange}
+          value={startDate.toLocaleDateString("en-CA")}
+          onChange={(e) => handleStartDateChange(e)}
           className='form-input'
-        // min={today.toString()}
+          min={today.toLocaleDateString("en-CA")}
         /><br />
 
-        <label className='form-label'>End Date: </label>
+        {/* <label className='form-label'>End Date: </label>
         <input
           type="date"
-          value={endDate.toString()}
-          onChange={handleEndDateChange}
+          value={"5/22/2025"}
+          onChange={(e) => handleEndDateChange(e)}
           className='form-input'
           min={startDate.toString() || today.toString()}
         /><br /> */}
