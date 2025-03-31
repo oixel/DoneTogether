@@ -8,7 +8,7 @@ require('dotenv').config();
 
 // Import HTTP request functionality from external scripts
 const { getUserByName, getUserById } = require('./api/userRequests.js');
-const { createGoal, getGoals, updateGoalUsers, updateGoalCompletion, deleteGoal, updateUserInGoal } = require('./api/goalRequests.cjs');
+const { createGoal, getGoals, updateUsersList, updateGoalCompletion, deleteGoal, updateUserInGoal } = require('./api/goalRequests.cjs');
 
 // Create express app an ensure it utilizes JSON, CORS, and the Clerk middleware
 const app = express();
@@ -37,7 +37,7 @@ function connectRouters() {
   // Handle HTTP requests for goals in MongoDB database
   createGoal(app, database);
   getGoals(app, database);
-  updateGoalUsers(app, database);
+  updateUsersList(app, database);
   updateUserInGoal(app, database);
   deleteGoal(app, database);
 }

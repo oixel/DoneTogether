@@ -49,8 +49,8 @@ function getGoals(app, database) {
 };
 
 // Updates goal's users
-function updateGoalUsers(app, database) {
-    app.patch('/updateGoalUsers/:type', async (req, res) => {
+function updateUsersList(app, database) {
+    app.patch('/updateUsersList/:type', async (req, res) => {
         try {
             // Define parameters of update request
             const filter = { _id: new ObjectId(req.body._id) };
@@ -118,4 +118,4 @@ function deleteGoal(app, database) {
 };
 
 // Export all HTTP router functions
-module.exports = { createGoal, getGoals, updateGoalUsers, updateUserInGoal, deleteGoal };
+module.exports = { createGoal, getGoals, updateUsersList, updateUserInGoal, deleteGoal };
