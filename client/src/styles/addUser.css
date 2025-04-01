@@ -9,7 +9,7 @@
   left: 50%;
   transform: translateX(-50%);
 
-  background: #D9D9D9;
+  background: rgba(99, 107, 47, 0.57);
   width: 22vw;
   min-height: 3.5vw;
   height: auto;
@@ -22,13 +22,16 @@
   position: absolute;
   left: 4%;
   font-family: 'Adamina';  
-  font-size: 1vw;                     
+  font-size: 1vw;   
+  outline: none; 
+  color: #636B2F;  
+  background-color: #F1F0E8;             
 }
 
 .confirm-button{
   position: absolute;
   font-size: 1.5vw;
   right: 4%;
-  color: #636B2F;
+  color: #F1F0E8;  
 }
 
