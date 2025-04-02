@@ -12,7 +12,7 @@ import "../styles/globalStyles.css";
 import "../styles/Dashboard.css";
 import "../styles/popUp.css";
 
-import { getGoals } from '../api/goalRequests';
+import { getGoals, updateUserInGoal, updateGoalUsers } from '../api/goalRequests';
 
 
 // Import interface for GoalData object
@@ -40,11 +40,27 @@ const Dashboard: React.FC = () => {
     setInvitePopUp(!invitePopUp);
   };
 
-  const handleInviteResponse = (goalId: string, response: boolean): void => {
+  const handleInviteResponse = async (goalId: string, response: boolean): Promise<void> => {
     console.log(`Invitation for goal ${goalId} ${response ? 'accepted' : 'declined'}`);
     // Here you would add the API call to accept/decline the invitation
     // After successful API call, you'd want to refresh the goals
-    
+    if (response) {
+      await updateUserInGoal({
+        _id: goalId,
+        userId: user?.id,
+        updateKey: 'users.$[user].joined',
+        updateValue: true,
+      });
+
+      setNeedRefresh(true);
+    } else {
+      await updateGoalUsers(goalId, {
+        userId: user?.id,
+        joined: response
+      }, 'remove');
+      setNeedRefresh(true);
+    }
+
     setNeedRefresh(true);
     // Close the popup if there are no more invitations
     if (invitations.length <= 1) {
