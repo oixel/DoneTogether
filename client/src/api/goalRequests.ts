@@ -55,7 +55,3 @@ export async function updateUserInGoal(updateData: object): Promise<void> {
 export async function deleteGoal(goalId: string): Promise<void> {
     await axios.delete(`http://localhost:3001/goal/${goalId}`);
 }
-
-export async function updateGoalUsers(goalId: string, userObject: object, updateType: 'add' | 'remove'): Promise<void> {
-    await axios.patch(`http://localhost:3001/updateGoalUsers/${updateType}`, { _id: goalId, userObject: userObject });
-}

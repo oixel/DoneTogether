@@ -12,7 +12,7 @@ import "../styles/globalStyles.css";
 import "../styles/Dashboard.css";
 import "../styles/popUp.css";
 
-import { getGoals, updateUserInGoal, updateGoalUsers } from '../api/goalRequests';
+import { getGoals, updateUserInGoal, updateUsersList } from '../api/goalRequests';
 
 
 // Import interface for GoalData object
@@ -54,7 +54,7 @@ const Dashboard: React.FC = () => {
 
       setNeedRefresh(true);
     } else {
-      await updateGoalUsers(goalId, {
+      await updateUsersList(goalId, {
         userId: user?.id,
         joined: response
       }, 'remove');

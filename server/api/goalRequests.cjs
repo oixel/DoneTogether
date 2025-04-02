@@ -148,33 +148,5 @@ function deleteGoal(app, database) {
 };
 
 
-function updateGoalUsers(app, database) {
-    app.patch('/updateGoalUsers/:type', async (req, res) => {
-        try {
-            // Define parameters of update request
-            const filter = { _id: new ObjectId(req.body._id) };
-
-            // Stores the update type / data
-            let update;
-
-            // If a new user is being added, push it to the end of the users array
-            if (req.params.type === 'add') {
-                update = { $push: { users: req.body.userObject } };
-            } else {  // Otherwise (when removing), remove the user from the array of users by their userId
-                update = { $pull: { users: { userId: req.body.userObject.userId } } }
-            }
-
-            // Update goal with matching ID to match the new users array
-            const result = await database.collection('goals').updateOne(filter, update, { upsert: true });
-
-            // Return a success message with result back
-            res.status(200).send(result);
-        } catch (error) {
-            console.error("Error updating goal:", error);
-            res.status(500).send("Server error while updating goal.");
-        }
-    });
-};
-
 // Export all HTTP router functions
-module.exports = { createGoal, updateGoal, getGoals, updateUsersList, updateUserInGoal, deleteGoal, updateGoalUsers };
+module.exports = { createGoal, updateGoal, getGoals, updateUsersList, updateUserInGoal, deleteGoal };
