@@ -1,132 +1,103 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CgClose } from "react-icons/cg";
-import "../styles/popUp.css";
+
+import { createGoal } from '../api/goalRequests';
+
 import swirlyDoodle from "../assets/icons/swirlydoodle.svg";
 import threeArrows from "../assets/icons/threearrowsPopUp.svg";
 
-interface Goal {
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  userID: number;
-  goalID?: number;
+import "../styles/popUp.css";
+
+interface GoalPopUpPropTypes {
+  ownerId: string;
+  setGoalPopUpState: CallableFunction;
+  setNeedRefresh: CallableFunction;
 }
 
-interface GoalPopUpProps {
-  setGoalPopUpState: (state: boolean) => void;
-  onAddGoal?: (newGoal: Omit<Goal, 'goalID'>) => void;
-  isEdit?: boolean;
-  existingGoal?: Omit<Goal, 'goalID'>;
-}
+function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpPropTypes) {
+  const [title, setTitle] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
 
-const GoalPopUp: React.FC<GoalPopUpProps> = ({ 
-  setGoalPopUpState, 
-  onAddGoal,
-  isEdit = false,
-  existingGoal 
-}) => {
-  const [title, setTitle] = useState<string>(existingGoal?.title || '');
-  const [description, setDescription] = useState<string>(existingGoal?.description || '');
-  const [startDate, setStartDate] = useState<string>(existingGoal?.startDate || '');
-  const [endDate, setEndDate] = useState<string>(existingGoal?.endDate || '');
-  const today = new Date().toISOString().split('T')[0];
-  
-  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDate = e.target.value;
-    if (selectedDate < today) {
-      alert("Start date cannot be in the past.");
-    } else if(endDate && selectedDate > endDate) {
-      alert("Start date cannot be after the end date.")
-    } else{
-      setStartDate(selectedDate);
-    }
-  };
-  
-  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDate = e.target.value;
-    if (selectedDate < today) {
-      alert("End date cannot be in the past.");
-    } else if(selectedDate < startDate) {
-      alert("End date cannot be before the start date.")
-    } else{
-      setEndDate(selectedDate);
-    }
+  const today = new Date();
+  const [startDate, setStartDate] = useState<Date>(today);
+  const [useEndDate, setUseEndDate] = useState<boolean>(false);
+  const [endDate, setEndDate] = useState<Date>(today);  // Initialized to today, but can still be set to not be used
+
+  // Takes in date input string and ensures that it is properly accurate regardless of time zone
+  async function parseDate(newDate: string): Promise<Date> {
+    const val = newDate.split(/\D/);
+    return new Date(parseInt(val[0]), parseInt(val[1]) - 1, parseInt(val[2]));
+  }
+
+  // Convert input into a proper date and update start date!
+  async function handleStartDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const selectedDate = await parseDate(e.target.value);
+    setStartDate(selectedDate);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Convert input into a proper date and update end date!
+  async function handleEndDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const selectedDate = await parseDate(e.target.value);
+    setEndDate(selectedDate);
+  };
+
+  // Creates a new goal in the MongoDB database
+  async function handleGoalCreation(): Promise<void> {
+    if (!ownerId) return;
+
+    try {
+      // Send an axios request with the goal's data and the user's id (to add the owner to the goal!)
+      const goalEndDate = useEndDate ? endDate : undefined;
+      await createGoal(title, description, ownerId, startDate, goalEndDate);
+
+      // Refresh goals list
+      setNeedRefresh(true);
+    } catch (err) {
+      console.error("Error creating goal:", err);
+    }
+  }
+
+  // Called when the create button is pressed. Checks that required parameters are filled before creating a new goal.
+  async function handleSubmit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
-    
+
     if (!title.trim()) {
       alert("Please enter a goal name");
       return;
     }
-    
-    if (!description.trim()) {
-      alert("Please enter a description");
-      return;
-    }
-    
+
     if (!startDate) {
       alert("Please select a start date");
       return;
     }
-    
-    if (!endDate) {
-      alert("Please select an end date");
-      return;
-    }
-    
-    // Create the new goal
-    const newGoal = {
-      title,
-      description,
-      startDate,
-      endDate,
-      userID: existingGoal?.userID || 12345, // This would come from the authenticated user
-    };
-    
-    // Call the onAddGoal callback if it exists
-    if (onAddGoal) {
-      onAddGoal(newGoal);
-    }
-    
+
+    // Creates a new goal in the MongoDB database
+    await handleGoalCreation();
+
     // Close the popup
     setGoalPopUpState(false);
   };
-  
-  // Format date to YYYY-MM-DD for input[type="date"]
-  const formatDateForInput = (dateString: string): string => {
-    if (!dateString) return '';
-    
-    // Check if date is already in YYYY-MM-DD format
-    if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-      return dateString;
-    }
-    
-    // If the date is in MM/DD/YYYY format, convert it
-    const parts = dateString.split('/');
-    if (parts.length === 3) {
-      const [month, day, year] = parts;
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-    }
-    
-    return dateString;
-  };
 
   // Stop propagation to prevent click events from being blocked
-  const handlePopupClick = (e: React.MouseEvent) => {
+  function handlePopupClick(e: React.MouseEvent): void {
     e.stopPropagation();
   };
-  
+
+  // If you change the start date while the end date is disabled, it can make the end date BEFORE the start date
+  // This prevents that from occurring
+  useEffect(() => {
+    if (!useEndDate && endDate && startDate > endDate) setEndDate(startDate);
+  }, [startDate, endDate, useEndDate])
+
+
   return (
     <div className="pop-up" onClick={handlePopupClick}>
-      <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-left"/>
-      <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-right"/>
-      <CgClose onClick={() => setGoalPopUpState(false)} className="exit-icon"/>
-      <h2 className="create-goal-title">{isEdit ? 'Edit Goal' : 'Create Goal'}</h2>
-      
+      <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-left" />
+      <img src={swirlyDoodle} alt="curly swirls" className="swirly-doodle-right" />
+      <CgClose onClick={() => setGoalPopUpState(false)} className="exit-icon" />
+      <h2 className="create-goal-title">Create Goal</h2>
+
       <form className="form-container" onSubmit={handleSubmit}>
         <label className='form-label'>Goal Name: </label>
         <input
@@ -136,47 +107,56 @@ const GoalPopUp: React.FC<GoalPopUpProps> = ({
           onChange={(e) => setTitle(e.target.value)}
           className='form-input'
           placeholder="Enter your goal"
-        /><br/>
-        
+        /><br />
+
         <label className='form-label'>Description: </label>
-        <textarea 
-          required
+        <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className='form-input' 
+          className='form-input'
           style={{ height: '6vw' }}
           placeholder="Describe your goal"
-        /><br/>
-        
+        /><br />
+
         <label className='form-label'>Start Date: </label>
-        <input 
+        <input
           required
           type="date"
-          value={formatDateForInput(startDate)}
-          onChange={handleStartDateChange}
+          value={startDate.toLocaleDateString("en-CA")}
+          onChange={(e) => handleStartDateChange(e)}
           className='form-input'
-          min={today}
-        /><br/>
-        
-        <label className='form-label'>End Date: </label>
-        <input 
-          type="date"
-          required
-          value={formatDateForInput(endDate)}
-          onChange={handleEndDateChange}
-          className='form-input'
-          min={startDate || today}
-        /><br/>
-      
+          min={today.toLocaleDateString("en-CA")}
+          max={(useEndDate) ? endDate.toLocaleDateString("en-CA") : undefined}
+        /><br />
+
+        <div>
+          <label className='form-label'>Use End Date</label>
+          <input type="checkbox" checked={useEndDate} onChange={(e) => setUseEndDate(e.target.checked)} />
+        </div>
+
+        {/* Only display end date input if useEndDate is set to true (allows goals without end dates to exist */}
+        {useEndDate && (
+          <>
+            <label className='form-label'>End Date: </label>
+            <input
+              type="date"
+              value={endDate?.toLocaleDateString("en-CA")}
+              onChange={(e) => handleEndDateChange(e)}
+              className='form-input'
+              min={startDate.toLocaleDateString("en-CA")}
+            /><br />
+          </>
+        )}
+
         <div className="arrows-container">
-          <img src={threeArrows} alt="three arrows" className="three-arrows-left"/>
-          <button type="submit" className="create-button">
-            {isEdit ? 'Finished!' : 'Create!'}
+          <img src={threeArrows} alt="three arrows" className="three-arrows-left" />
+          <button type="submit" className="create-button" onSubmit={handleSubmit}>
+            Create!
           </button>
-          <img src={threeArrows} alt="three arrows" className="three-arrows-right"/>
+          <img src={threeArrows} alt="three arrows" className="three-arrows-right" />
         </div>
       </form>
-    </div>
+    </div >
   );
 };
 

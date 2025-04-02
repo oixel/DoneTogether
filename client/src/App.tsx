@@ -1,11 +1,11 @@
 // src/App.tsx - Simplified with minimal styling in the file
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
-import LandingPage from './pages/LandingPage/LandingPage';
-import AboutUs from './pages/AboutUs/AboutUs';
-import NotFound from './pages/404 Page/NotFound';
+import LandingPage from './pages/LandingPage';
+import AboutUs from './pages/AboutUs';
+import NotFound from './pages/NotFound';
 import './styles/updated-clerk-styles.css'; // Import the Clerk styling
-import Dashboard from './pages/Dashboard/Dashboard';
+import Dashboard from './pages/Dashboard';
 
 // Get publishable key from environment variables
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -15,7 +15,7 @@ if (!clerkPubKey) {
 
 function App() {
   return (
-    <ClerkProvider 
+    <ClerkProvider
       publishableKey={clerkPubKey}
       afterSignOutUrl={'/signout'}
       appearance={{
@@ -39,7 +39,7 @@ function App() {
           {/* Public routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/aboutUs" element={<AboutUs />} />
-          
+
           {/* Protected route */}
           <Route
             path="/dashboard"
@@ -54,7 +54,7 @@ function App() {
               </>
             }
           />
-          
+
           {/* 404 route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
