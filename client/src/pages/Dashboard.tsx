@@ -36,14 +36,20 @@ const Dashboard: React.FC = () => {
   const [needRefresh, setNeedRefresh] = useState(false);
   const [invitePopUp, setInvitePopUp] = useState<boolean>(false);
 
-  const collaborators = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank"];
-
   const handleInviteClick = (): void => {
     setInvitePopUp(!invitePopUp);
   };
 
-  const handleInviteResponse = (collaborator: string, response: boolean): void => {
-    console.log(`${collaborator} invite ${response ? 'accepted' : 'declined'}`);
+  const handleInviteResponse = (goalId: string, response: boolean): void => {
+    console.log(`Invitation for goal ${goalId} ${response ? 'accepted' : 'declined'}`);
+    // Here you would add the API call to accept/decline the invitation
+    // After successful API call, you'd want to refresh the goals
+    
+    setNeedRefresh(true);
+    // Close the popup if there are no more invitations
+    if (invitations.length <= 1) {
+      setInvitePopUp(false);
+    }
   };
 
   const toggleCreationPopUp = (): void => {
@@ -134,19 +140,38 @@ const Dashboard: React.FC = () => {
         <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" style={{ cursor: 'pointer' }} onClick={handleLogoClick} />
         <p className='username-text'> Welcome back, {user?.username}.</p>
         {/* Envelope icon for invites */}
-
         <FaInbox className="envelope-icon" onClick={handleInviteClick}/>
 
         {invitePopUp && (
           <div className="invite-popup">
-            <p>You have new invites. Accept?</p>
-            {collaborators.map((collaborator) => (
-              <div key={collaborator} className="invite-row">
-                <span>{collaborator}</span>
-                <button onClick={() => handleInviteResponse(collaborator, true)}>Yes</button>
-                <button onClick={() => handleInviteResponse(collaborator, false)}>No</button>
-              </div>
-            ))}
+            <h3>Goal Invitations</h3>
+            {invitations.length === 0 ? (
+              <p>You have no pending invitations.</p>
+            ) : (
+              <>
+                <p>You have {invitations.length} pending invitation(s):</p>
+                {invitations.map((invitation) => (
+                  <div key={invitation._id} className="invite-row">
+                    <span className="invite-goal-name">{invitation.name}</span>
+                    <div className="invite-buttons">
+                      <button className="accept-button" 
+                        onClick={() => handleInviteResponse(invitation._id, true)}
+                      >
+                        Accept
+                      </button>
+                      <button className="decline-button" 
+                        onClick={() => handleInviteResponse(invitation._id, false)}
+                      >
+                        Decline
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
+            <button className="close-popup-button" onClick={() => setInvitePopUp(false)}>
+              Close
+            </button>
           </div>
         )}
         <UserButton appearance={customAppearance} />
