@@ -140,7 +140,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
           <button className='date-button'>{calculateDaysLeft()}</button>
         </div>
 
-        <AddUserComponent />
+        <AddUserComponent goalId={goal._id}/>
       </div>
 
       {/* Render the edit PopUp if the state is opened */}
@@ -152,6 +152,8 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
           setNeedRefresh={setNeedRefresh}
         />
       )}
+          <div>{goal._id}</div>
+
     </div>
   );
 };
