@@ -424,7 +424,11 @@
   flex-direction: column;
 }
 
-
+.goal-title {
+  font-size: 1.5vw;
+  font-weight: bold;
+  margin-bottom: 1vw;
+}
 
 .invite-popup-footer {
   margin-top: 55%;
@@ -448,5 +452,41 @@
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
+}
+
+.invite-row {
+  display: flex; /* Enables a flex layout */
+  justify-content: space-between; /* Aligns goal name and buttons to opposite ends */
+  align-items: center; /* Vertically center the content */
+  margin-bottom: 1vw;
+  padding-bottom: 1vw;
+  border-bottom: 0.25vw solid rgb(207, 207, 207); /* Bottom border */
+}
+
+.goal-title {
+  font-size: 1.5vw;
+  font-weight: bold;
+  margin-bottom: 0; /* No space below goal name */
+  flex-grow: 1; /* Ensures the goal name takes up available space */
+}
+
+.invite-buttons {
+  display: flex; /* Align buttons in a row */
+  gap: 0.5vw; /* Space between buttons */
+}
+
+.accept-button, .decline-button {
+  background-color: #636B2F;
+  opacity: 57%;
+  border: none;
+  color: white;
+  padding: 0.5vw 1vw;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.accept-button:hover, .decline-button:hover {
+  opacity: 1;
 }
 
