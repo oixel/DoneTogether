@@ -29,3 +29,14 @@
     width: 1.15vw;
     height: 1.15vw;
 }
+
+.pendingUser {
+    background-color: rgba(176, 176, 176, 0.651);
+    opacity: 75%;
+}
+
+.pendingText {
+    font-size: 1vw;
+    position: absolute;
+    margin-left: 18vw;
+}
