@@ -4,7 +4,7 @@
     width: 25vw;
     height: 4vw;
     align-items: center;
-    border-bottom: 3px solid rgb(207, 207, 207);
+    border-bottom: 0.25vw solid rgb(207, 207, 207);
 }
 
 .profilePicture {
@@ -24,7 +24,8 @@
 }
 
 .checkBox {
-    margin-left: 11vw;
+    position: absolute;
+    margin-left: 21vw;
     width: 1.15vw;
     height: 1.15vw;
 }

@@ -358,12 +358,19 @@
   /* You can adjust the font size */
 }
 
+.invite-popup h3 {
+  font-family: 'Rubik Doodle Shadow', sans-serif;
+  color: #636B2F;
+  font-size: 2.5vw; /* or 28px if you want a fixed size */
+  margin-bottom: 1vw; /* optional: adds space below */
+}
+
 .invite-popup {
   position: fixed;
   /* Fixed position to keep it above the page content */
-  top: 3.5vw;
+  top: 4vw;
   /* Adjust this value to position it lower or higher */
-  left: 75vw;
+  left: 78vw;
   transform: translateX(-50%);
   /* Center it horizontally */
   padding: 20px;
@@ -390,6 +397,54 @@
   /* Ensures it's spaced below the 'You have new invites' text */
 }
 
+.invite-box {
+  position: absolute;
+  width: 23vw;
+  height: 13vw;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 22%;
+  overflow-y: auto; /* Enables scrolling if content overflows */
+
+  border-radius: 20px;
+  background: #EDE8D0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+ 
+ 
+}
+
+.invite-row {
+  margin-bottom: 1vw;
+  border-bottom: 0.25vw solid rgb(207, 207, 207); /* Bottom border for each goal */
+  padding-bottom: 1vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.goal-title {
+  font-size: 1.5vw;
+  font-weight: bold;
+  margin-bottom: 1vw;
+}
+
+.invite-popup-footer {
+  margin-top: 55%;
+  flex-grow: 1;
+}
+
+.close-popup-button {
+  background-color: #636B2F;
+  opacity: 57%;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1.2vw;
+  cursor: pointer;
+}
 
 .collaborator-image {
   width: 3vw;
@@ -397,5 +452,41 @@
   border-radius: 50%;
   object-fit: cover;
   margin-right: 10px;
+}
+
+.invite-row {
+  display: flex; /* Enables a flex layout */
+  justify-content: space-between; /* Aligns goal name and buttons to opposite ends */
+  align-items: center; /* Vertically center the content */
+  margin-bottom: 1vw;
+  padding-bottom: 1vw;
+  border-bottom: 0.25vw solid rgb(207, 207, 207); /* Bottom border */
+}
+
+.goal-title {
+  font-size: 1.5vw;
+  font-weight: bold;
+  margin-bottom: 0; /* No space below goal name */
+  flex-grow: 1; /* Ensures the goal name takes up available space */
+}
+
+.invite-buttons {
+  display: flex; /* Align buttons in a row */
+  gap: 0.5vw; /* Space between buttons */
+}
+
+.accept-button, .decline-button {
+  background-color: #636B2F;
+  opacity: 57%;
+  border: none;
+  color: white;
+  padding: 0.5vw 1vw;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.accept-button:hover, .decline-button:hover {
+  opacity: 1;
 }
 

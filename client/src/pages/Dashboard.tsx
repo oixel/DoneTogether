@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { SignedIn, SignedOut, useUser, UserButton } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
+
 
 // Changed from ReactComponent import to regular import
 import beigeLogo from '../assets/icons/logo-beige.svg';
@@ -160,12 +162,14 @@ const Dashboard: React.FC = () => {
 
         {invitePopUp && (
           <div className="invite-popup">
-            <h3>Goal Invitations</h3>
+            <h3 style={{ fontFamily: "'Rubik Doodle Shadow', sans-serif" }}>Your Invites</h3>
+            <div className='invite-box'>
             {invitations.length === 0 ? (
               <p>You have no pending invitations.</p>
             ) : (
               <>
-                <p>You have {invitations.length} pending invitation(s):</p>
+                
+                {/* <p>You have {invitations.length} pending invitation(s):</p> */}
                 {invitations.map((invitation) => (
                   <div key={invitation._id} className="invite-row">
                     <span className="invite-goal-name">{invitation.name}</span>
@@ -173,21 +177,30 @@ const Dashboard: React.FC = () => {
                       <button className="accept-button" 
                         onClick={() => handleInviteResponse(invitation._id, true)}
                       >
-                        Accept
+                        O
                       </button>
                       <button className="decline-button" 
                         onClick={() => handleInviteResponse(invitation._id, false)}
                       >
-                        Decline
+                        X
                       </button>
                     </div>
                   </div>
                 ))}
+                
+              
               </>
             )}
-            <button className="close-popup-button" onClick={() => setInvitePopUp(false)}>
+
+            </div>
+            <div className="invite-popup-footer">
+            <button
+              className="close-popup-button"
+              onClick={() => setInvitePopUp(false)}
+            >
               Close
             </button>
+          </div>
           </div>
         )}
         <UserButton appearance={customAppearance} />
