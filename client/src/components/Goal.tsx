@@ -116,7 +116,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
   return (
     <div>
       <div className="goal-box">
-        <BsThreeDots className="edit-menu" size = "1.5vw" onClick={handleMenuClick} />
+        <BsThreeDots className="edit-menu" size="1.5vw" onClick={handleMenuClick} />
         {isMenuOpen && (
           <div className="menu-options">
             <button onClick={() => handleEditMenuClick(goal)}>Edit</button>
@@ -140,7 +140,10 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
           <button className='date-button'>{calculateDaysLeft()}</button>
         </div>
 
-        <AddUserComponent goalId={goal._id}/>
+        {/* Only show option to add user if you are the owner of this goal */}
+        {currentUserId == goal.ownerId && (
+          <AddUserComponent goalId={goal._id} />
+        )}
       </div>
 
       {/* Render the edit PopUp if the state is opened */}
@@ -152,8 +155,6 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
           setNeedRefresh={setNeedRefresh}
         />
       )}
-          <div>{goal._id}</div>
-
     </div>
   );
 };
