@@ -49,7 +49,7 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
     try {
       // Send an axios request with the goal's data and the user's id (to add the owner to the goal!)
       const goalEndDate = useEndDate ? endDate : undefined;
-      await createGoal(title, description, ownerId, startDate, goalEndDate);
+      await createGoal(title, description, "daily", ownerId, startDate, goalEndDate);
 
       // Refresh goals list
       setNeedRefresh(true);

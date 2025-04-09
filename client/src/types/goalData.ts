@@ -6,6 +6,7 @@ export interface GoalData {
     _id: string;
     name: string;
     description: string;
+    resetType: string;
     ownerId: string;
     users: Array<UserData>;
 

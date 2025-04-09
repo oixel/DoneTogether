@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 // Send a POST request to create a goal under the user who sent the creation request
-export async function createGoal(name: string, description: string, userId: string, startDate: Date, endDate?: Date): Promise<void> {
+export async function createGoal(name: string, description: string, resetType: string, userId: string, startDate: Date, endDate?: Date): Promise<void> {
     try {
         await axios.post('http://localhost:3001/goal', {
             name: name,
             description: description,
+            resetType: resetType,
             ownerId: userId,
             startDate: startDate,
             endDate: endDate,
@@ -21,12 +22,13 @@ export async function createGoal(name: string, description: string, userId: stri
 }
 
 // Send a PATCH request to update the basic information about a goal
-export async function updateGoal(_id: string, name: string, description: string, startDate: Date, endDate?: Date): Promise<void> {
+export async function updateGoal(_id: string, name: string, description: string, resetType: string, startDate: Date, endDate?: Date): Promise<void> {
     try {
         await axios.patch('http://localhost:3001/goal', {
             _id: _id,
             name: name,
             description: description,
+            resetType: resetType,
             startDate: startDate,
             endDate: endDate
         });
