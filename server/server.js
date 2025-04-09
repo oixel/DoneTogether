@@ -10,7 +10,7 @@ require('dotenv').config();
 // Import HTTP request functionality from external scripts
 const { getUserByName, getUserById } = require('./api/userRequests.js');
 const { createGoal, updateGoal, getGoals, updateUsersList, deleteGoal, updateUserInGoal, resetCompletion } = require('./api/goalRequests.js');
-const { updatePreviousResetDate, initializeCompletionReset, handleCompletionReset } = require('./api/completionReset.js');
+const { initializeCompletionReset, handleCompletionReset } = require('./api/completionReset.js');
 
 // Create express app an ensure it utilizes JSON, CORS, and the Clerk middleware
 const app = express();
@@ -45,8 +45,7 @@ function connectRouters() {
   deleteGoal(app, database);
 }
 
-// 
-// Every five seconds, check whether it is a new day. If it is, reset completion status on goals
+// Calls handleCompletionReset every five seconds
 setInterval(async function () { handleCompletionReset(database) }, 5000);
 
 // If a port is specified in the .env file, use it; otherwise, default to port 3001
