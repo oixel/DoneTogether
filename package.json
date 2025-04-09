@@ -9,7 +9,7 @@
     "install-all": "npm install && cd server && npm install && cd ../client && npm install"
   },
   "devDependencies": {
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.0.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.8",
