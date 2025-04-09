@@ -22,7 +22,7 @@ function getDayOfWeek(): string {
 
 // 
 function getDayOfMonth(): string {
-
+  return new Date().getUTCDate().toString().padStart(2, '0');
 }
 
 function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpPropTypes) {
@@ -64,7 +64,14 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
       // Send an axios request with the goal's data and the user's id (to add the owner to the goal!)
       const goalEndDate = useEndDate ? endDate : undefined;
 
-      // 
+      // Determines the value that will be stored as the goal's "resetType" based on the different inputs
+      /*
+        Never: will be stored as "never"
+        Daily: will be stored as "daily"
+        Weekly: will be a string of a number representing the day of the week (0 = Sunday, 6 = Saturday)
+        Monthly: will be stored as a string of the any day of the month where anything < 10 will be padded with a zero (e.g. 7 -> "07")
+          This is to allow both weekly and monthly to coexist without overlap (since weekly is < 10 with no padding!)
+      */
       const resetValue = (resetType === "weekly") ? weekday : (resetType === "monthly") ? dayOfMonth : resetType;
 
       await createGoal(title, description, resetValue, ownerId, startDate, goalEndDate);
@@ -144,7 +151,8 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
           <option value="monthly">Monthly</option>
         </select>
         <br />
-        {/* Only display end date input if useEndDate is set to true (allows goals without end dates to exist */}
+
+        {/* Only display weekday dropdown if the reset type is "weekly" OR day of month number input if "monthly"*/}
         {resetType == "weekly" && (
           <>
             <label className='form-label'>Day of Week: </label>
@@ -157,6 +165,19 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
               <option value="5">Friday</option>
               <option value="6">Saturday</option>
             </select>
+            <br />
+          </>
+        ) || resetType == "monthly" && (
+          <>
+            <label className='form-label'>Day of Month: </label>
+            <input
+              type="number"
+              className='form-input'
+              min={1}
+              max={31}
+              defaultValue={new Date().getUTCDate()}
+              onChange={(e) => setDayOfMonth(e.target.value.padStart(2, '0'))}  // Automatically formats the inputted number to match queries
+            />
             <br />
           </>
         )}
