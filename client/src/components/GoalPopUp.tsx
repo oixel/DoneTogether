@@ -15,12 +15,12 @@ interface GoalPopUpPropTypes {
   setNeedRefresh: CallableFunction;
 }
 
-// 
+// Reformat the current day of the week into a string
 function getDayOfWeek(): string {
   return new Date().getUTCDay().toString();
 }
 
-// 
+// Reformat the current day of the month into a padded string
 function getDayOfMonth(): string {
   return new Date().getUTCDate().toString().padStart(2, '0');
 }
