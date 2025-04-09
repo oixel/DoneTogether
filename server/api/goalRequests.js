@@ -7,6 +7,7 @@ async function createGoal(app, database) {
             const goal = {
                 name: req.body.name,
                 description: req.body.description,
+                resetType: req.body.resetType,
                 ownerId: req.body.ownerId,
                 startDate: new Date(req.body.startDate),
                 endDate: new Date(req.body.endDate),
@@ -34,6 +35,7 @@ async function updateGoal(app, database) {
                 "$set": {
                     name: req.body.name,
                     description: req.body.description,
+                    resetType: req.body.resetType,
                     startDate: new Date(req.body.startDate),
                     endDate: new Date(req.body.endDate)
                 }
