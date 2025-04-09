@@ -2,13 +2,15 @@ const express = require('express');
 const { clerkMiddleware, clerkClient } = require('@clerk/express');
 const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
+const fs = require('fs');
 
 // Import .env file
 require('dotenv').config();
 
 // Import HTTP request functionality from external scripts
 const { getUserByName, getUserById } = require('./api/userRequests.js');
-const { createGoal, updateGoal, getGoals, updateUsersList, deleteGoal, updateUserInGoal } = require('./api/goalRequests.cjs');
+const { createGoal, updateGoal, getGoals, updateUsersList, deleteGoal, updateUserInGoal, resetCompletion } = require('./api/goalRequests.js');
+const { initializeCompletionReset, handleCompletionReset } = require('./api/completionReset.js');
 
 // Create express app an ensure it utilizes JSON, CORS, and the Clerk middleware
 const app = express();
@@ -43,6 +45,9 @@ function connectRouters() {
   deleteGoal(app, database);
 }
 
+// Calls handleCompletionReset every five seconds
+setInterval(async function () { handleCompletionReset(database) }, 5000);
+
 // If a port is specified in the .env file, use it; otherwise, default to port 3001
 const PORT = process.env.PORT || 3001;
 
@@ -50,6 +55,9 @@ const PORT = process.env.PORT || 3001;
 async function startServer() {
   // Connect to MongoDB database on start up
   await connectToMongo();
+
+  // 
+  await initializeCompletionReset();
 
   // Connect to all the HTTP routers from the external API scripts (userRequests.cjs and goalRequests.cjs)
   connectRouters();

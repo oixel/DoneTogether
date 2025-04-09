@@ -15,9 +15,23 @@ interface GoalPopUpPropTypes {
   setNeedRefresh: CallableFunction;
 }
 
+// Reformat the current day of the week into a string
+function getDayOfWeek(): string {
+  return new Date().getUTCDay().toString();
+}
+
+// Reformat the current day of the month into a padded string
+function getDayOfMonth(): string {
+  return new Date().getUTCDate().toString().padStart(2, '0');
+}
+
 function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpPropTypes) {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+
+  const [resetType, setResetType] = useState<string>('daily');
+  const [weekday, setWeekday] = useState<string>(getDayOfWeek());
+  const [dayOfMonth, setDayOfMonth] = useState<string>(getDayOfMonth());
 
   const today = new Date();
   const [startDate, setStartDate] = useState<Date>(today);
@@ -49,7 +63,18 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
     try {
       // Send an axios request with the goal's data and the user's id (to add the owner to the goal!)
       const goalEndDate = useEndDate ? endDate : undefined;
-      await createGoal(title, description, ownerId, startDate, goalEndDate);
+
+      // Determines the value that will be stored as the goal's "resetType" based on the different inputs
+      /*
+        Never: will be stored as "never"
+        Daily: will be stored as "daily"
+        Weekly: will be a string of a number representing the day of the week (0 = Sunday, 6 = Saturday)
+        Monthly: will be stored as a string of the any day of the month where anything < 10 will be padded with a zero (e.g. 7 -> "07")
+          This is to allow both weekly and monthly to coexist without overlap (since weekly is < 10 with no padding!)
+      */
+      const resetValue = (resetType === "weekly") ? weekday : (resetType === "monthly") ? dayOfMonth : resetType;
+
+      await createGoal(title, description, resetValue, ownerId, startDate, goalEndDate);
 
       // Refresh goals list
       setNeedRefresh(true);
@@ -117,6 +142,45 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
           style={{ height: '6vw' }}
           placeholder="Describe your goal"
         /><br />
+
+        <label className='form-label'>Reset: </label>
+        <select className="form-dropdown" defaultValue="daily" onChange={(e) => setResetType(e.target.value)}>
+          <option value="never">Never</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+        <br />
+
+        {/* Only display weekday dropdown if the reset type is "weekly" OR day of month number input if "monthly"*/}
+        {resetType == "weekly" && (
+          <>
+            <label className='form-label'>Day of Week: </label>
+            <select className="form-dropdown" defaultValue={getDayOfWeek()} onChange={(e) => setWeekday(e.target.value)}>
+              <option value="0">Sunday</option>
+              <option value="1">Monday</option>
+              <option value="2">Tuesday</option>
+              <option value="3">Wednesday</option>
+              <option value="4">Thursday</option>
+              <option value="5">Friday</option>
+              <option value="6">Saturday</option>
+            </select>
+            <br />
+          </>
+        ) || resetType == "monthly" && (
+          <>
+            <label className='form-label'>Day of Month: </label>
+            <input
+              type="number"
+              className='form-input'
+              min={1}
+              max={31}
+              defaultValue={new Date().getUTCDate()}
+              onChange={(e) => setDayOfMonth(e.target.value.padStart(2, '0'))}  // Automatically formats the inputted number to match queries
+            />
+            <br />
+          </>
+        )}
 
         <label className='form-label'>Start Date: </label>
         <input

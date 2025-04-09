@@ -1,16 +1,16 @@
 .overlay {
-  position: fixed; 
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; 
-  min-height: 100vh; 
-  background-color: rgba(0, 0, 0, 0.5); 
-  z-index: 1; 
-  display: none; 
+  width: 100vw;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  display: none;
 }
 
 .overlay.active {
-  display: block; 
+  display: block;
 }
 
 .pop-up {
@@ -19,7 +19,8 @@
   height: 35vw;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Centers it vertically and horizontally */
+  transform: translate(-50%, -50%);
+  /* Centers it vertically and horizontally */
   z-index: 2;
   border-radius: 20px;
   /*border: 2px solid red;*/
@@ -33,13 +34,14 @@
 .form-container {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap; /* Ensures labels and inputs do not overflow */
+  flex-wrap: wrap;
+  /* Ensures labels and inputs do not overflow */
   overflow: hidden;
   display: flex;
   /*border: 2px solid blue;*/
 }
 
-.form-label{
+.form-label {
   color: #000;
   margin-left: 1vw;
   margin-right: 1vw;
@@ -48,13 +50,14 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  flex-shrink: 1; 
+  flex-shrink: 1;
   width: 100%;
 }
 
-.form-input{
+.form-input,
+.form-dropdown {
   padding: 0.5vw;
-  padding-top: 0.3vw; 
+  padding-top: 0.3vw;
   margin-top: 0.5vw;
   margin-left: 1vw;
   margin-right: 1vw;
@@ -64,7 +67,7 @@
   background: #D9D9D9;
   border: 0px solid;
   resize: none;
-  flex-shrink: 1; 
+  flex-shrink: 1;
 }
 
 .create-goal-title {
@@ -89,64 +92,68 @@
   font-size: 1vw;
   font-family: 'Adamina';
   font-weight: 400;
-  
+
   display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   cursor: pointer;
   overflow: hidden;
-  margin: 1vw auto; /* Centers button inside the form */
+  margin: 1vw auto;
+  /* Centers button inside the form */
 }
 
 .exit-icon {
-position: absolute;
-top: 2%;
-right: 3%;
-font-size: 2vw;
-cursor: pointer;
+  position: absolute;
+  top: 2%;
+  right: 3%;
+  font-size: 2vw;
+  cursor: pointer;
 
 }
 
-.swirly-doodle-left{
-position: absolute;
-width: 7vw;
-height: 4vw;
-top: 2%;
-right: 80%;
+.swirly-doodle-left {
+  position: absolute;
+  width: 7vw;
+  height: 4vw;
+  top: 2%;
+  right: 80%;
 }
 
-.swirly-doodle-right{
-position: absolute;
-width: 7vw;
-height: 4vw;
-top: 2%;
-left: 81%;
+.swirly-doodle-right {
+  position: absolute;
+  width: 7vw;
+  height: 4vw;
+  top: 2%;
+  left: 81%;
 }
 
 .form-container .arrows-container {
-position: absolute; /* Position the container relative to its parent (pop-up) */
-bottom: 1%; /* Adjust this value to move it closer or further from the bottom */
-left: 50%;
-justify-content: space-between;
-transform: translateX(-50%); /* Centers it horizontally */
-display: flex;
-align-items: center;
-width: 80%;
-/* border: 2px solid green; */
+  position: absolute;
+  /* Position the container relative to its parent (pop-up) */
+  bottom: 1%;
+  /* Adjust this value to move it closer or further from the bottom */
+  left: 50%;
+  justify-content: space-between;
+  transform: translateX(-50%);
+  /* Centers it horizontally */
+  display: flex;
+  align-items: center;
+  width: 80%;
+  /* border: 2px solid green; */
 }
 
-.three-arrows-left{
-width: 7vw;
-height: 7vw;
-top: 78%;
-left: 10%;
+.three-arrows-left {
+  width: 7vw;
+  height: 7vw;
+  top: 78%;
+  left: 10%;
 
 }
 
-.three-arrows-right{
-transform: scaleX(-1);
-width: 7vw;
-height: 7vw;
-top: 78%;
-right: 10%;
+.three-arrows-right {
+  transform: scaleX(-1);
+  width: 7vw;
+  height: 7vw;
+  top: 78%;
+  right: 10%;
 }
