@@ -32,8 +32,8 @@ function EditPopUp({ goal, setEditGoalState, setNeedRefresh }: EditPopUpPropType
   const [description, setDescription] = useState(goal.description);
 
   const [resetType, setResetType] = useState<string>(getResetType());
-  const [weekday, setWeekday] = useState<string>(getDayOfWeek());
-  const [dayOfMonth, setDayOfMonth] = useState<string>(getDayOfMonth());
+  const [weekday, setWeekday] = useState<string>((getResetType() == "weekly") ? goal.resetType : getDayOfWeek());
+  const [dayOfMonth, setDayOfMonth] = useState<string>((getResetType() == "monthly") ? goal.resetType : getDayOfMonth());
 
   const today = new Date();
   const [startDate, setStartDate] = useState<Date>(new Date(goal.startDate));
