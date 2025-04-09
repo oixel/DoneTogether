@@ -15,9 +15,23 @@ interface GoalPopUpPropTypes {
   setNeedRefresh: CallableFunction;
 }
 
+// 
+function getDayOfWeek(): string {
+  return new Date().getUTCDay().toString();
+}
+
+// 
+function getDayOfMonth(): string {
+
+}
+
 function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpPropTypes) {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+
+  const [resetType, setResetType] = useState<string>('daily');
+  const [weekday, setWeekday] = useState<string>(getDayOfWeek());
+  const [dayOfMonth, setDayOfMonth] = useState<string>(getDayOfMonth());
 
   const today = new Date();
   const [startDate, setStartDate] = useState<Date>(today);
@@ -49,7 +63,11 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
     try {
       // Send an axios request with the goal's data and the user's id (to add the owner to the goal!)
       const goalEndDate = useEndDate ? endDate : undefined;
-      await createGoal(title, description, "daily", ownerId, startDate, goalEndDate);
+
+      // 
+      const resetValue = (resetType === "weekly") ? weekday : (resetType === "monthly") ? dayOfMonth : resetType;
+
+      await createGoal(title, description, resetValue, ownerId, startDate, goalEndDate);
 
       // Refresh goals list
       setNeedRefresh(true);
@@ -117,6 +135,31 @@ function GoalPopUp({ ownerId, setGoalPopUpState, setNeedRefresh }: GoalPopUpProp
           style={{ height: '6vw' }}
           placeholder="Describe your goal"
         /><br />
+
+        <label className='form-label'>Reset: </label>
+        <select className="form-dropdown" defaultValue="daily" onChange={(e) => setResetType(e.target.value)}>
+          <option value="never">Never</option>
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+        <br />
+        {/* Only display end date input if useEndDate is set to true (allows goals without end dates to exist */}
+        {resetType == "weekly" && (
+          <>
+            <label className='form-label'>Day of Week: </label>
+            <select className="form-dropdown" defaultValue={getDayOfWeek()} onChange={(e) => setWeekday(e.target.value)}>
+              <option value="0">Sunday</option>
+              <option value="1">Monday</option>
+              <option value="2">Tuesday</option>
+              <option value="3">Wednesday</option>
+              <option value="4">Thursday</option>
+              <option value="5">Friday</option>
+              <option value="6">Saturday</option>
+            </select>
+            <br />
+          </>
+        )}
 
         <label className='form-label'>Start Date: </label>
         <input
