@@ -16,30 +16,26 @@
 .pop-up {
   position: absolute;
   width: 30vw;
-  height: 35vw;
+  min-height: 35vw;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   /* Centers it vertically and horizontally */
   z-index: 2;
-  border-radius: 20px;
-  /*border: 2px solid red;*/
+  border-radius: 1.5vw;
   background: #FFF;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .form-container {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  /* Ensures labels and inputs do not overflow */
-  overflow: hidden;
-  display: flex;
-  /*border: 2px solid blue;*/
 }
+
 
 .form-label {
   color: #000;
@@ -82,24 +78,18 @@
 }
 
 .create-button {
-  flex-shrink: 1;
-  width: 45%;
-  height: 60%;
+  width: 10vw;
+  height: 2vw;
   background: #636B2F;
-  border-radius: 10px;
+  border-radius: 1vw;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   color: white;
   font-size: 1vw;
   font-family: 'Adamina';
   font-weight: 400;
 
-  display: flex;
   justify-content: center;
-  align-items: center;
   cursor: pointer;
-  overflow: hidden;
-  margin: 1vw auto;
-  /* Centers button inside the form */
 }
 
 .exit-icon {
@@ -128,32 +118,19 @@
 }
 
 .form-container .arrows-container {
-  position: absolute;
   /* Position the container relative to its parent (pop-up) */
-  bottom: 1%;
-  /* Adjust this value to move it closer or further from the bottom */
-  left: 50%;
   justify-content: space-between;
-  transform: translateX(-50%);
-  /* Centers it horizontally */
   display: flex;
   align-items: center;
-  width: 80%;
-  /* border: 2px solid green; */
 }
 
 .three-arrows-left {
   width: 7vw;
   height: 7vw;
-  top: 78%;
-  left: 10%;
-
 }
 
 .three-arrows-right {
   transform: scaleX(-1);
   width: 7vw;
   height: 7vw;
-  top: 78%;
-  right: 10%;
 }
