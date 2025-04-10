@@ -126,12 +126,13 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
 
         <h2 className='goal-title'>{goal.name}</h2>
         <div className="users-container">
-          {users.map((user) => (
+          {users.map((user, index) => (
             <User
               key={user.userId}
               goalId={goal._id}
               userData={user}
               isReadOnly={user.userId != currentUserId}  // Prevents user from updating other users' completion status
+              isOwner={index === 0}
             />
           ))}
         </div>
