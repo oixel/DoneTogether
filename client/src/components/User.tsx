@@ -7,13 +7,16 @@ import { updateUserInGoal } from '../api/goalRequests.ts';
 // Import interface for UserData object
 import { UserData } from '../types/userData';
 
+import { FaCrown } from 'react-icons/fa';
+
 interface UserBarPropTypes {
     goalId: string;
     userData: UserData;
     isReadOnly: boolean;
+    isOwner?: boolean;
 }
 
-function UserBar({ goalId, userData, isReadOnly }: UserBarPropTypes) {
+function UserBar({ goalId, userData, isReadOnly, isOwner }: UserBarPropTypes) {
     // Initialize completed state to what is currently stored in the database
     const [completed, setCompleted] = useState(userData.completed);
 
@@ -50,6 +53,7 @@ function UserBar({ goalId, userData, isReadOnly }: UserBarPropTypes) {
                     width={35}
                 />
                 <p>{userData.username}</p>
+                { isOwner &&<FaCrown className="crown-icon" style={{ marginLeft: '0.5vw' }} /> }
             </div>
             {/* Show user's checkbox OR "Pending" texting depending on whether the collaborator has accepted the invite */}
             {userData.joined && (
