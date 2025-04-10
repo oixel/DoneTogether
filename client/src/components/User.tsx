@@ -40,7 +40,8 @@ function UserBar({ goalId, userData, isReadOnly }: UserBarPropTypes) {
     }, [userData])
 
     return (
-        <div className="userContainer">
+        <div className={`userContainer ${(userData.joined) ? "joinedUser" : "pendingUser"
+            } `}>
             <div className="userInfo">
                 <img
                     src={userData.imageUrl}
@@ -50,7 +51,17 @@ function UserBar({ goalId, userData, isReadOnly }: UserBarPropTypes) {
                 />
                 <p>{userData.username}</p>
             </div>
-            <input className="checkBox" type="checkbox" checked={completed} onChange={(e) => updateCompletion(e.target.checked)} />
+            {/* Show user's checkbox OR "Pending" texting depending on whether the collaborator has accepted the invite */}
+            {userData.joined && (
+                <input
+                    className="checkBox"
+                    type="checkbox"
+                    checked={completed}
+                    onChange={(e) => updateCompletion(e.target.checked)}
+                />
+            ) || !userData.joined && (
+                <p className="pendingText"><strong>Pending...</strong></p>
+            )}
         </div>
     );
 }

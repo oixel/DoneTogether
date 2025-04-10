@@ -158,49 +158,49 @@ const Dashboard: React.FC = () => {
         <img src={beigeLogo} alt="Beige Logo" className="navbar-logo" style={{ cursor: 'pointer' }} onClick={handleLogoClick} />
         <p className='username-text'> Welcome back, {user?.username}.</p>
         {/* Envelope icon for invites */}
-        <FaInbox className="envelope-icon" onClick={handleInviteClick}/>
+        <FaInbox className="envelope-icon" onClick={handleInviteClick} />
 
         {invitePopUp && (
           <div className="invite-popup">
             <h3 style={{ fontFamily: "'Rubik Doodle Shadow', sans-serif" }}>Your Invites</h3>
             <div className='invite-box'>
-            {invitations.length === 0 ? (
-              <p>You have no pending invitations.</p>
-            ) : (
-              <>
-                
-                {/* <p>You have {invitations.length} pending invitation(s):</p> */}
-                {invitations.map((invitation) => (
-                  <div key={invitation._id} className="invite-row">
-                    <span className="invite-goal-name">{invitation.name}</span>
-                    <div className="invite-buttons">
-                      <button className="accept-button" 
-                        onClick={() => handleInviteResponse(invitation._id, true)}
-                      >
-                        O
-                      </button>
-                      <button className="decline-button" 
-                        onClick={() => handleInviteResponse(invitation._id, false)}
-                      >
-                        X
-                      </button>
+              {invitations.length === 0 ? (
+                <p>You have no pending invitations.</p>
+              ) : (
+                <>
+
+                  {/* <p>You have {invitations.length} pending invitation(s):</p> */}
+                  {invitations.map((invitation) => (
+                    <div key={invitation._id} className="invite-row">
+                      <span className="invite-goal-name">Invited to <strong>{invitation.name}</strong></span>
+                      <div className="invite-buttons">
+                        <button className="accept-button"
+                          onClick={() => handleInviteResponse(invitation._id, true)}
+                        >
+                          Accept
+                        </button>
+                        <button className="decline-button"
+                          onClick={() => handleInviteResponse(invitation._id, false)}
+                        >
+                          X
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                
-              
-              </>
-            )}
+                  ))}
+
+
+                </>
+              )}
 
             </div>
             <div className="invite-popup-footer">
-            <button
-              className="close-popup-button"
-              onClick={() => setInvitePopUp(false)}
-            >
-              Close
-            </button>
-          </div>
+              <button
+                className="close-popup-button"
+                onClick={() => setInvitePopUp(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         )}
         <UserButton appearance={customAppearance} />
@@ -237,7 +237,7 @@ const Dashboard: React.FC = () => {
                 className="refresh-button"
                 onClick={() => setNeedRefresh(true)}
               >
-                 ⟳ 
+                ⟳
               </button>
             </div>
           </>
