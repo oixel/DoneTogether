@@ -164,45 +164,48 @@ const Dashboard: React.FC = () => {
           <div className="invite-popup">
             <h3 style={{ fontFamily: "'Rubik Doodle Shadow', sans-serif" }}>Your Invites</h3>
             <div className='invite-box'>
-              {invitations.length === 0 ? (
-                <p>You have no pending invitations.</p>
-              ) : (
-                <>
-
-                  {/* <p>You have {invitations.length} pending invitation(s):</p> */}
-                  {invitations.map((invitation) => (
-                    <div key={invitation._id} className="invite-row">
-                      <span className="invite-goal-name">Invited to <strong>{invitation.name}</strong></span>
-                      <div className="invite-buttons">
-                        <button className="accept-button"
-                          onClick={() => handleInviteResponse(invitation._id, true)}
-                        >
-                          Accept
-                        </button>
-                        <button className="decline-button"
-                          onClick={() => handleInviteResponse(invitation._id, false)}
-                        >
-                          X
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-
-
-                </>
-              )}
+            {invitations.length === 0 ? (
+              <p>You have no pending invitations.</p>
+            ) : (
+              <>
+            <div className="invite-list">
+              {invitations.map((invitation) => (
+                
+                <div key={invitation._id} className="invite-row">
+                  <span className="invite-goal-name">{invitation.name}</span>
+                 
+                  <div className="invite-buttons">
+                    <button
+                      className="accept-button"
+                      onClick={() => handleInviteResponse(invitation._id, true)}
+                    >
+                      O
+                    </button>
+                    <button
+                      className="decline-button"
+                      onClick={() => handleInviteResponse(invitation._id, false)}
+                    >
+                      X
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+            )}
 
             </div>
             <div className="invite-popup-footer">
-              <button
-                className="close-popup-button"
-                onClick={() => setInvitePopUp(false)}
-              >
-                Close
-              </button>
-            </div>
+            <button
+              className="close-popup-button"
+              onClick={() => setInvitePopUp(false)}
+            >
+              Close
+            </button>
+          </div>
           </div>
         )}
+
         <UserButton appearance={customAppearance} />
       </div>
 
