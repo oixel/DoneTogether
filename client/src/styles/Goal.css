@@ -1,0 +1,43 @@
+/* Streak leader display styling */
+.streak-leader {
+    position: absolute;
+    top: 4.5vw;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    background-color: #f8f5e4;
+    padding: 0.3vw 0.8vw;
+    border-radius: 1vw;
+    font-size: 0.8vw;
+    font-family: 'Adamina', serif;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    border: 1px solid rgba(99, 107, 47, 0.3);
+  }
+  
+  .trophy-icon {
+    color: #ffc107;
+    margin-right: 0.5vw;
+    font-size: 1vw;
+  }
+  
+  /* Animation for legendary streaks */
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(99, 107, 47, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 0.7vw rgba(99, 107, 47, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(99, 107, 47, 0);
+    }
+  }
+  
+  /* Apply this class to streak-leader when streak is above 30 */
+  .streak-legendary-goal {
+    animation: pulse 2s infinite;
+    background-color: #f5f0d4;
+    border: 1px solid #636B2F;
+  }

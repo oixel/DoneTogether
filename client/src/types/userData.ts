@@ -5,4 +5,5 @@ export interface UserData {
     imageUrl: string;
     joined?: boolean;
     completed?: boolean;
+    streak?: number;   
 }
