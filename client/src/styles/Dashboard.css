@@ -326,36 +326,9 @@
   /* Adjust this value to move it more or less */
 }
 
-
 .envelope-button:active .envelope-icon {
   opacity: 0.7;
   /* Reduces the opacity to 70% when clicked */
-}
-
-
-
-.invite-popup {
-  background: #F0F2DC;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  text-align: center;
-}
-
-.invite-popup button {
-  background-color: #636B2F;
-  opacity: 57%;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 1.2vw;
-  /* You can adjust the font size */
 }
 
 .invite-popup h3 {
@@ -366,33 +339,20 @@
 }
 
 .invite-popup {
+  background: #F0F2DC;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
   position: fixed;
-  /* Fixed position to keep it above the page content */
   top: 4vw;
-  /* Adjust this value to position it lower or higher */
   left: 78vw;
   transform: translateX(-50%);
-  /* Center it horizontally */
   padding: 20px;
-  background: #F1F0E8;
-  border-radius: 15px;
   width: 30vw;
-  /* Adjust width as needed */
   height: 50vh;
-  /* Adjust height as needed */
-
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  /* Ensure it is above other content */
-}
-
-.users-co {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-x: auto;
-  overflow-y: hidden;
-  width: 100%;
 }
 
 .invite-box {
@@ -417,17 +377,14 @@
 }
 
 .invite-row {
-  width: 100%; /* Make rows fill the width of invite-list */
-  box-sizing: border-box; /* Include padding/border in width calculation */
-
-  /* Keep your existing styles for layout within the row */
+  width: 100%; 
+  box-sizing: border-box; 
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1vw;
   padding-bottom: 1vw;
   border-bottom: 0.25vw solid rgb(207, 207, 207);
-  /* height: auto; /* Rows determine their own height based on content */
 }
 
 .invite-goal-name {
@@ -435,12 +392,6 @@
   margin-right: 10px; 
   font-family: Adamina; 
   font-size: 1.1vw;
-}
-
-.goal-title {
-  font-size: 1.5vw;
-  font-weight: bold;
-  margin-bottom: 1vw;
 }
 
 .invite-popup-footer {
@@ -457,30 +408,6 @@
   border-radius: 5px;
   font-size: 1.2vw;
   cursor: pointer;
-}
-
-.collaborator-image {
-  width: 3vw;
-  height: 3vw;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 10px;
-}
-
-.invite-row {
-  display: flex; 
-  justify-content: space-between;
-  align-items: center; 
-  margin-bottom: 1vw;
-  padding-bottom: 1vw;
-  border-bottom: 0.25vw solid rgb(207, 207, 207); 
-}
-
-.goal-title {
-  font-size: 1.5vw;
-  font-weight: bold;
-  margin-bottom: 0; 
-  flex-grow: 1; 
 }
 
 .invite-buttons {

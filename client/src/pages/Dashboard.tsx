@@ -15,6 +15,7 @@ import "../styles/Dashboard.css";
 import "../styles/popUp.css";
 
 import { getGoals, updateUserInGoal, updateUsersList } from '../api/goalRequests';
+import { getUserById } from '../api/userRequests';
 
 
 // Import interface for GoalData object
@@ -28,15 +29,31 @@ const Dashboard: React.FC = () => {
   // Invitations stores the goals the user has NOT joined.
   const [goals, setGoals] = useState<GoalData[]>([]);
   const [invitations, setInvitations] = useState<GoalData[]>([]);
+  const [usernames, setUsernames] = useState<{ [userId: string]: string }>({}); // <-- New state to store usernames
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const { user } = useUser();
 
+   // Function to fetch username by userId
+   const fetchUsername = useCallback(async (userId: string) => {
+    if (usernames[userId]) return; // Don't refetch if already fetched
+    try {
+      const user = await getUserById(userId); // Assume this returns { username: string }
+      if (user) {
+        setUsernames(prev => ({ ...prev, [userId]: user.username }));
+      }
+    } catch (error) {
+      console.error(`Failed to fetch username for user ${userId}:`, error);
+    }
+  }, [usernames]);
+
   // Refreshes goals list when set to true (in useEffect)
   const [needRefresh, setNeedRefresh] = useState(false);
   const [invitePopUp, setInvitePopUp] = useState<boolean>(false);
+
+  
 
   const handleInviteClick = (): void => {
     setInvitePopUp(!invitePopUp);
@@ -151,6 +168,12 @@ const Dashboard: React.FC = () => {
     }
   }, [needRefresh, getGoalsAndInvitations]);
 
+  useEffect(() => {
+    invitations.forEach(invite => {
+      fetchUsername(invite._id); // or invite.userId depending on your data
+    });
+  }, [invitations, fetchUsername]);
+
   return (
     <div className="container">
       <div className="navbar">
@@ -171,7 +194,16 @@ const Dashboard: React.FC = () => {
             <div className="invite-list">
               {invitations.map((invitation) => (
                 
+                
+                
                 <div key={invitation._id} className="invite-row">
+                   <div key={invitation._id}>
+                    {usernames[invitation._id] ? (
+                      <p>{usernames[invitation._id]}</p>
+                    ) : (
+                      <p>Loading...</p>
+                    )}
+                  </div>
                   <span className="invite-goal-name">{invitation.name}</span>
                  
                   <div className="invite-buttons">
