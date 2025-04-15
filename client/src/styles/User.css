@@ -16,7 +16,7 @@
 }
 
 .userInfo {
-    font-family: Adamina;
+    font-family: Adamina, serif;
     font-size: 1vw;
     display: flex;
     flex-direction: row;
@@ -58,7 +58,7 @@
 }
 
 .userInfo {
-    font-family: Adamina;
+    font-family: Adamina, serif;
     font-size: 1vw;
     display: flex;
     flex-direction: row;

@@ -115,7 +115,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
       // Get the user with the highest streak
       const userWithLongestStreak = newUsers.reduce((prev, current) => {
         return (prev.streak || 0) > (current.streak || 0) ? prev : current;
-      });
+      }, newUsers[0]); // Add the initial value here
       
       if (userWithLongestStreak && (userWithLongestStreak.streak || 0) > 0) {
         setLongestStreak({
