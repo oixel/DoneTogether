@@ -97,4 +97,5 @@ async function resetCompletion(database) {
     }
 }
 
-module.exports = { initializeCompletionReset, handleCompletionReset }
+// Export all functions - now including resetCompletion
+module.exports = { initializeCompletionReset, handleCompletionReset, resetCompletion }

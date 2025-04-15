@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const { resetCompletion } = require('./completionReset');
 
 // Creates goal with the passed in request
 async function createGoal(app, database) {
@@ -199,49 +200,7 @@ function deleteGoal(app, database) {
     });
 };
 
-// Modified reset completion to handle streaks
-async function resetCompletion(database) {
-    try {
-        // Convert the current day into their properly formatted string for querying
-        const dayOfWeek = new Date().getUTCDay().toString();
-        const dayOfMonth = new Date().getUTCDate().toString().padStart(2, '0');
-
-        // Any goal satisfying any expression in the or statement will have all their user's completion statuses reset!
-        const filter = {
-            $or: [
-                { resetType: "daily" },
-                { resetType: dayOfWeek },
-                { resetType: dayOfMonth }
-            ]
-        };
-
-        // Find all goals that need to be reset
-        const goals = await database.collection('goals').find(filter).toArray();
-        
-        for (const goal of goals) {
-            // For each goal, update users based on their completion status
-            const updatedUsers = goal.users.map(user => {
-                // If the user completed the goal, keep their streak
-                // If they didn't, reset streak to 0
-                if (!user.completed) {
-                    return { ...user, completed: false, streak: 0 };
-                }
-                // Reset completed status but maintain streak for next round
-                return { ...user, completed: false };
-            });
-            
-            // Update the goal with the new user data
-            await database.collection('goals').updateOne(
-                { _id: goal._id },
-                { $set: { users: updatedUsers } }
-            );
-        }
-    }
-    catch (error) {  // If any error arises, output it to the server's console
-        console.error(`Ran into error while resetting goal completion: ${error}...`);
-    }
-}
-
+// Removed duplicate resetCompletion function - now imported from completionReset.js
 
 // Export all HTTP router functions
 module.exports = { createGoal, updateGoal, getGoals, updateUsersList, updateUserInGoal, deleteGoal, resetCompletion };
