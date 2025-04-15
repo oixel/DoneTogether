@@ -42,6 +42,7 @@ async function handleCompletionReset(database) {
 
         // Update the previous reset date to be today!     
         await fs.writeFileSync(serverInfoPath, JSON.stringify({ "previousResetDate": currentDate }));
+        previousResetDate = currentDate;
     }
 }
 
@@ -55,9 +56,8 @@ async function resetCompletion(database) {
           This is to allow both weekly and monthly to coexist without overlap (since weekly is < 10 with no padding!)
     */
 
-    // Try to update the completion statuses of all the goals in the database that should be reset today
     try {
-        // Conver the current day into their properly formatted string for querying
+        // Convert the current day into their properly formatted string for querying
         const dayOfWeek = new Date().getUTCDay().toString();
         const dayOfMonth = new Date().getUTCDate().toString().padStart(2, '0');
 
@@ -68,18 +68,34 @@ async function resetCompletion(database) {
                 { resetType: dayOfWeek },
                 { resetType: dayOfMonth }
             ]
-
         };
 
-        // Resets the completion status of all users in a goal to false
-        var update = { $set: { "users.$[].completed": false } };
-
-        // Update as many goals that match the filter
-        await database.collection('goals').updateMany(filter, update);
+        // Find all goals that need to be reset
+        const goals = await database.collection('goals').find(filter).toArray();
+        
+        for (const goal of goals) {
+            // For each goal, we need to update the users' streaks based on their completion status
+            const updatedUsers = goal.users.map(user => {
+                // If user didn't complete the goal before reset, their streak is reset to 0
+                // Otherwise, we just reset 'completed' but preserve the streak
+                if (!user.completed) {
+                    return { ...user, completed: false, streak: 0 };
+                }
+                // User completed, so reset completed status but maintain streak
+                return { ...user, completed: false };
+            });
+            
+            // Update the goal with the new user data
+            await database.collection('goals').updateOne(
+                { _id: goal._id },
+                { $set: { users: updatedUsers } }
+            );
+        }
     }
     catch (error) {  // If any error arises, output it to the server's console
         console.error(`Ran into error while resetting goal completion: ${error}...`);
     }
 }
 
-module.exports = { initializeCompletionReset, handleCompletionReset }
+// Export all functions - now including resetCompletion
+module.exports = { initializeCompletionReset, handleCompletionReset, resetCompletion }

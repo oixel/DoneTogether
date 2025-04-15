@@ -1,9 +1,16 @@
 const { ObjectId } = require('mongodb');
+const { resetCompletion } = require('./completionReset');
 
 // Creates goal with the passed in request
 async function createGoal(app, database) {
     app.post('/goal', async (req, res) => {
         try {
+            // Initialize users with streak of 0
+            const users = req.body.users.map(user => ({
+                ...user,
+                streak: 0 // Initialize streak to 0 for each user
+            }));
+
             const goal = {
                 name: req.body.name,
                 description: req.body.description,
@@ -11,7 +18,7 @@ async function createGoal(app, database) {
                 ownerId: req.body.ownerId,
                 startDate: new Date(req.body.startDate),
                 endDate: new Date(req.body.endDate),
-                users: req.body.users
+                users: users
             };
 
             const result = await database.collection('goals').insertOne(goal);
@@ -43,7 +50,6 @@ async function updateGoal(app, database) {
 
             // Update goal with matching ID to reflect changed information
             const result = await database.collection('goals').updateOne(filter, newInfo);
-
 
             // Return a success message with the updated result back
             res.status(200).send(result);
@@ -92,7 +98,12 @@ function updateUsersList(app, database) {
 
             // If a new user is being added, push it to the end of the users array
             if (req.params.type === 'add') {
-                update = { $push: { users: req.body.userObject } };
+                // Initialize userObject with streak of 0
+                const userObject = {
+                    ...req.body.userObject,
+                    streak: 0 // Initialize streak to 0 for new users
+                };
+                update = { $push: { users: userObject } };
             } else {  // Otherwise (when removing), remove the user from the array of users by their userId
                 update = { $pull: { users: { userId: req.body.userObject.userId } } }
             }
@@ -119,8 +130,48 @@ function updateUserInGoal(app, database) {
             // Specifies the user that needs to be patched by using the userId
             const options = { arrayFilters: [{ 'user.userId': req.body.userId }] }
 
-            // Passed as parameters in the PATCH request, updates the data under the specified key
-            var update = { $set: { [req.body.updateKey]: req.body.updateValue } };
+            // Get the goal and user data to calculate streak
+            const goal = await database.collection('goals').findOne(filter);
+            const userIndex = goal.users.findIndex(user => user.userId === req.body.userId);
+            
+            if (userIndex === -1) {
+                return res.status(404).send("User not found in goal");
+            }
+
+            let update;
+            
+            // Special handling for completion status updates
+            if (req.body.updateKey === 'users.$[user].completed') {
+                const currentCompleted = goal.users[userIndex].completed;
+                const newCompleted = req.body.updateValue;
+                const currentStreak = goal.users[userIndex].streak || 0;
+                
+                // If changing from incomplete to complete, increment streak
+                if (!currentCompleted && newCompleted) {
+                    update = { 
+                        $set: { 
+                            "users.$[user].completed": newCompleted,
+                            "users.$[user].streak": currentStreak + 1 
+                        } 
+                    };
+                } 
+                // If unchecking completion, reset streak to 0
+                else if (currentCompleted && !newCompleted) {
+                    update = { 
+                        $set: { 
+                            "users.$[user].completed": newCompleted,
+                            "users.$[user].streak": 0 
+                        } 
+                    };
+                }
+                // Otherwise, just update the completed status normally
+                else {
+                    update = { $set: { [req.body.updateKey]: req.body.updateValue } };
+                }
+            } else {
+                // For non-completion updates, use the standard update method
+                update = { $set: { [req.body.updateKey]: req.body.updateValue } };
+            }
 
             // Send PATCH update to MongoDB!
             const result = await database.collection('goals').updateOne(filter, update, options);
@@ -128,7 +179,7 @@ function updateUserInGoal(app, database) {
             // Send successful status and the data of the result back to request
             res.status(200).send(result);
         } catch (error) {
-            res.status(500).send(`Ran into error ${error} while updating goal completion.`);
+            res.status(500).send(`Ran into error ${error} while updating goal.`);
         }
     });
 }
@@ -149,6 +200,7 @@ function deleteGoal(app, database) {
     });
 };
 
+// Removed duplicate resetCompletion function - now imported from completionReset.js
 
 // Export all HTTP router functions
-module.exports = { createGoal, updateGoal, getGoals, updateUsersList, updateUserInGoal, deleteGoal };
+module.exports = { createGoal, updateGoal, getGoals, updateUsersList, updateUserInGoal, deleteGoal, resetCompletion };

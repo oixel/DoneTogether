@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { SignedIn, SignedOut, useUser, UserButton } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
-
 
 // Changed from ReactComponent import to regular import
 import beigeLogo from '../assets/icons/logo-beige.svg';
@@ -168,8 +166,6 @@ const Dashboard: React.FC = () => {
                 <p>You have no pending invitations.</p>
               ) : (
                 <>
-
-                  {/* <p>You have {invitations.length} pending invitation(s):</p> */}
                   {invitations.map((invitation) => (
                     <div key={invitation._id} className="invite-row">
                       <span className="invite-goal-name">Invited to <strong>{invitation.name}</strong></span>
@@ -187,11 +183,8 @@ const Dashboard: React.FC = () => {
                       </div>
                     </div>
                   ))}
-
-
                 </>
               )}
-
             </div>
             <div className="invite-popup-footer">
               <button
