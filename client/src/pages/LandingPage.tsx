@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { SignedOut, SignInButton, SignUpButton, SignedIn, SignOutButton } from '@clerk/clerk-react';
 /* npm install framer */
@@ -28,13 +27,6 @@ import "../styles/globalStyles.css";
 
 
 const LandingPage: React.FC = () => {
-  const [animate, setAnimate] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setAnimate(true), 100); 
-    return () => clearTimeout(timer);
-  }, []);
-
   const fadeInVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 1, ease: 'easeOut' } },
@@ -52,7 +44,7 @@ const LandingPage: React.FC = () => {
   );
 
   
-const Jiggle = ({ src, className, animate }: { src: string; className?: string; animate?: object }) => (
+const Jiggle = ({ src, className}: { src: string; className?: string; animate?: object }) => (
   <motion.img
     src={src} // Now src is dynamic!
     alt="Flower Petal"

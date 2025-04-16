@@ -340,19 +340,17 @@
 
 .invite-popup {
   background: #F0F2DC;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 1.5vw;
+  border-radius: 1vw;
+  box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.2);
   text-align: center;
   position: fixed;
   top: 4vw;
   left: 78vw;
   transform: translateX(-50%);
-  padding: 20px;
   width: 30vw;
   height: 50vh;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 1;
 }
 
 .invite-box {
@@ -390,7 +388,7 @@
 .invite-goal-name {
   flex-grow: 1;
   margin-right: 10px; 
-  font-family: Adamina; 
+  font-family: Adamina, sans-serif; 
   font-size: 1.1vw;
 }
 
