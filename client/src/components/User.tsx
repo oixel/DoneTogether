@@ -71,6 +71,7 @@ function UserBar({ goalId, userData, isReadOnly, isOwner }: UserBarPropTypes) {
                     width={35}
                 />
                 <p>{userData.username}</p>
+                { isOwner &&<FaCrown className="crown-icon" style={{ marginLeft: '0.5vw' }} /> }
                 {renderStreakBadge()}
             </div>
             {/* Show user's checkbox OR "Pending" texting depending on whether the collaborator has accepted the invite */}

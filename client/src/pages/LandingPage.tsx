@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { SignedOut, SignInButton, SignUpButton, SignedIn, SignOutButton } from '@clerk/clerk-react';
+/* npm install framer */
+import { motion } from 'framer-motion';
 
 import homeArrow from "../assets/icons/arrowHomePage.svg";
 import leftPetal from "../assets/icons/leftPetalsDoodle.svg";
@@ -24,16 +26,65 @@ import greenLogo from "../assets/icons/logo-dark-green.svg";
 import "../styles/LandingPage.css";
 import "../styles/globalStyles.css";
 
+
 const LandingPage: React.FC = () => {
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimate(true), 100); 
+    return () => clearTimeout(timer);
+  }, []);
+
+  const fadeInVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1, ease: 'easeOut' } },
+  };
+
+  const FadeInSection = ({ children }: { children: React.ReactNode }) => (
+    <motion.div
+      variants={fadeInVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.5 }}
+    >
+      {children}
+    </motion.div>
+  );
+
+  
+const Jiggle = ({ src, className, animate }: { src: string; className?: string; animate?: object }) => (
+  <motion.img
+    src={src} // Now src is dynamic!
+    alt="Flower Petal"
+    className={className}
+    animate={{ rotate: [0, 2, -2, 0] }}
+    transition={{
+      repeat: Infinity,
+      repeatType: "mirror",
+      duration: 2,
+      ease: "easeInOut",
+    }}
+    style={{ transformOrigin: "bottom center" }}
+  />
+);
+
+  
+
   return (
     <div>
       <div className="welcome-container">
         <h1 className="done-together">DoneTogether</h1>
         <img src={homeArrow} alt="Home Arrow" className="home-page-arrow" />
+
+        <Jiggle src={leftPetal} className="left-petal" />
         <img src={leftPetal} alt="Flower Petal" className="left-petal" />
+
+        <Jiggle src={rightPetal} className="right-petal" animate={{ rotate: [-3, 0, 0, -3] }} />
         <img src={rightPetal} alt="Flower Petal" className="right-petal" />
-        <img src={leftBranch} alt="Branch Left" className="left-branch" />
-        <img src={rightBranch} alt="Branch Right" className="right-branch" />
+
+        <Jiggle src={leftBranch} className="left-branch" />
+        <Jiggle src={rightBranch} className="right-branch" animate={{ rotate: [-3, 0, 0, -3] }} />
+       
         <img src={twoUnderline} alt="Two Underline" className="two-underline" />
         <img src={circle} alt="Circle" className="circle" />
         <SignedOut>
@@ -73,7 +124,7 @@ const LandingPage: React.FC = () => {
         <div className="success-text">Success is better together.</div>
       </div>
       <div className="blurbs-container">
-        <div className="goals">Goals.</div>
+       
         <img src={crossHatch} alt="Cross Hatch" className="cross-hatch" />
         <img src={threeArrow} alt="Three Arrow" className="three-arrow" />
         <img src={swirl} alt="Swirl" className="swirl" />
@@ -84,9 +135,33 @@ const LandingPage: React.FC = () => {
         <img src={spark} alt="Spark" className="spark-two" />
         <img src={spark} alt="Spark" className="spark-three" />
         <img src={spark} alt="Spark" className="spark-four" />
-        <div className="compete">Compete.</div>
-        <div className="collaborate">Collaborate.</div>
-        <div className="section-text goals-text">Set a clear goal with a description, start date, and end date to stay on track. Keep it direct and focused to be successful.</div>
+
+        <div className="goals">
+          <FadeInSection>
+          Goals.
+          </FadeInSection>
+        </div>
+
+        <div className="compete">
+          <FadeInSection>
+          Compete.
+          </FadeInSection>
+        </div>
+          
+
+         {/* Animated Collaborate Section */}
+         <div className="collaborate">
+            <FadeInSection>
+              Collaborate.
+            </FadeInSection>
+          </div>
+
+        <div className="section-text goals-text">
+          {/* <FadeInSection> */}
+            Set a clear goal with a description, start date, and end date to stay on track. Keep it direct and focused to be successful.
+          {/* </FadeInSection> */}
+        </div>
+
         <div className="section-text collaborate-text">Add a friend to your goal to work on it together. Share tasks and support each other to stay on track.</div>
         <div className="section-text compete-text">Build the longest streak by consistently achieving your goals. Compete with friends to see who can maintain the highest streak.</div>
       </div>
