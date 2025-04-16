@@ -165,7 +165,7 @@ const Dashboard: React.FC = () => {
         if (!updatedUsernames[ownerId]) {
           try {
             const user = await getUserById(ownerId);
-            updatedUsernames[ownerId] = user?.username || "Unknown User"; 
+            updatedUsernames[ownerId] = user?.username ?? "Unknown User"; 
           } catch (err) {
             console.error(`Failed to fetch user with ID ${ownerId}`, err);
             updatedUsernames[ownerId] = 'Unknown User';
@@ -203,7 +203,7 @@ const Dashboard: React.FC = () => {
 
                   {/* Get Username from ownerID */}
                    <div key={invitation.ownerId}>
-                    <p>{usernames[invitation.ownerId] || 'Loading...'}</p>
+                    <p>{usernames[invitation.ownerId]}</p>
                   </div>
                   <span className="invite-goal-name">{invitation.name}</span>
                  

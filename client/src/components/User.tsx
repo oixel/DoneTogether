@@ -2,12 +2,11 @@ import '../styles/User.css';
 
 import { useState, useEffect } from "react";
 import { updateUserInGoal } from '../api/goalRequests.ts';
-import { FaFire } from 'react-icons/fa'; // Import fire icon for streaks
+import { FaFire, FaCrown } from 'react-icons/fa'; // Import fire icon for streaks
 
 // Import interface for UserData object
 import { UserData } from '../types/userData';
 
-import { FaCrown } from 'react-icons/fa';
 
 interface UserBarPropTypes {
     goalId: string;
