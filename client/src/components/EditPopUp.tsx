@@ -110,13 +110,13 @@ function EditPopUp({ goal, setEditGoalState, setNeedRefresh }: EditPopUpPropType
           required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className='form-input' /><br />
+          className='form-input' />
 
         <label className='form-label'>Description:</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className='form-input' style={{ height: '6vw' }} /><br />
+          className='form-input' style={{ height: '6vw' }} />
 
         <label className='form-label'>Reset: </label>
         <select className="form-dropdown" defaultValue={resetType} onChange={(e) => setResetType(e.target.value)}>

@@ -13,7 +13,7 @@ import "../styles/Dashboard.css";
 import "../styles/popUp.css";
 
 import { getGoals, updateUserInGoal, updateUsersList } from '../api/goalRequests';
-
+import { getUserById } from '../api/userRequests';
 
 // Import interface for GoalData object
 import { GoalData } from '../types/goalData';
@@ -26,6 +26,10 @@ const Dashboard: React.FC = () => {
   // Invitations stores the goals the user has NOT joined.
   const [goals, setGoals] = useState<GoalData[]>([]);
   const [invitations, setInvitations] = useState<GoalData[]>([]);
+
+  // make a dictionary of ownerID as a key and username as value
+  const [usernames, setUsernames] = useState<Record<string, string>>({});
+
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -149,6 +153,33 @@ const Dashboard: React.FC = () => {
     }
   }, [needRefresh, getGoalsAndInvitations]);
 
+  // populate usernames with dictionary of ownerID and usernames (key, value)
+  // this refreshes when invitations list changes
+  useEffect(() => {
+    const fetchUsernames = async () => {
+      const updatedUsernames = { ...usernames };
+  
+      for (const invitation of invitations) {
+        const ownerId = invitation.ownerId;
+  
+        if (!updatedUsernames[ownerId]) {
+          try {
+            const user = await getUserById(ownerId);
+            updatedUsernames[ownerId] = user?.username ?? "Unknown User"; 
+          } catch (err) {
+            console.error(`Failed to fetch user with ID ${ownerId}`, err);
+            updatedUsernames[ownerId] = 'Unknown User';
+          }
+        }
+      }
+      setUsernames(updatedUsernames);
+    };
+  
+    if (invitations.length > 0) {
+      fetchUsernames();
+    }
+  }, [invitations]);
+
   return (
     <div className="container">
       <div className="navbar">
@@ -162,38 +193,49 @@ const Dashboard: React.FC = () => {
           <div className="invite-popup">
             <h3 style={{ fontFamily: "'Rubik Doodle Shadow', sans-serif" }}>Your Invites</h3>
             <div className='invite-box'>
-              {invitations.length === 0 ? (
-                <p>You have no pending invitations.</p>
-              ) : (
-                <>
-                  {invitations.map((invitation) => (
-                    <div key={invitation._id} className="invite-row">
-                      <span className="invite-goal-name">Invited to <strong>{invitation.name}</strong></span>
-                      <div className="invite-buttons">
-                        <button className="accept-button"
-                          onClick={() => handleInviteResponse(invitation._id, true)}
-                        >
-                          Accept
-                        </button>
-                        <button className="decline-button"
-                          onClick={() => handleInviteResponse(invitation._id, false)}
-                        >
-                          X
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </>
-              )}
+            {invitations.length === 0 ? (
+              <p>You have no pending invitations.</p>
+            ) : (
+              <>
+            <div className="invite-list">
+              {invitations.map((invitation) => (
+                <div key={invitation.ownerId} className="invite-row">
+
+                  {/* Get Username from ownerID */}
+                   <div key={invitation.ownerId}>
+                    <p>{usernames[invitation.ownerId]}</p>
+                  </div>
+                  <span className="invite-goal-name">{invitation.name}</span>
+                 
+                  <div className="invite-buttons">
+                    <button
+                      className="accept-button"
+                      onClick={() => handleInviteResponse(invitation._id, true)}
+                    >
+                      O
+                    </button>
+                    <button
+                      className="decline-button"
+                      onClick={() => handleInviteResponse(invitation._id, false)}
+                    >
+                      X
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+            )}
+
             </div>
             <div className="invite-popup-footer">
-              <button
-                className="close-popup-button"
-                onClick={() => setInvitePopUp(false)}
-              >
-                Close
-              </button>
-            </div>
+            <button
+              className="close-popup-button"
+              onClick={() => setInvitePopUp(false)}
+            >
+              Close
+            </button>
+          </div>
           </div>
         )}
         <UserButton appearance={customAppearance} />
