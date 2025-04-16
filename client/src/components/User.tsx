@@ -1,8 +1,8 @@
-
 import '../styles/User.css';
 
 import { useState, useEffect } from "react";
 import { updateUserInGoal } from '../api/goalRequests.ts';
+import { FaFire } from 'react-icons/fa'; // Import fire icon for streaks
 
 // Import interface for UserData object
 import { UserData } from '../types/userData';
@@ -42,9 +42,27 @@ function UserBar({ goalId, userData, isReadOnly, isOwner }: UserBarPropTypes) {
         setCompleted(userData.completed);
     }, [userData])
 
+    // Function to render streak badge with different colors based on streak count
+    const renderStreakBadge = () => {
+        if (!userData.streak || userData.streak < 1) return null;
+        
+        // Determine the color of the streak badge based on streak count
+        let streakClass = "streak-badge";
+        if (userData.streak >= 30) streakClass += " streak-legendary";
+        else if (userData.streak >= 21) streakClass += " streak-epic";
+        else if (userData.streak >= 14) streakClass += " streak-impressive";
+        else if (userData.streak >= 7) streakClass += " streak-notable";
+        
+        return (
+            <div className={streakClass}>
+                <FaFire className="streak-icon" />
+                <span className="streak-count">{userData.streak}</span>
+            </div>
+        );
+    };
+
     return (
-        <div className={`userContainer ${(userData.joined) ? "joinedUser" : "pendingUser"
-            } `}>
+        <div className={`userContainer ${(userData.joined) ? "joinedUser" : "pendingUser"}`}>
             <div className="userInfo">
                 <img
                     src={userData.imageUrl}
@@ -53,7 +71,7 @@ function UserBar({ goalId, userData, isReadOnly, isOwner }: UserBarPropTypes) {
                     width={35}
                 />
                 <p>{userData.username}</p>
-                { isOwner &&<FaCrown className="crown-icon" style={{ marginLeft: '0.5vw' }} /> }
+                {renderStreakBadge()}
             </div>
             {/* Show user's checkbox OR "Pending" texting depending on whether the collaborator has accepted the invite */}
             {userData.joined && (

@@ -16,7 +16,7 @@
 }
 
 .userInfo {
-    font-family: Adamina;
+    font-family: Adamina, serif;
     font-size: 1vw;
     display: flex;
     flex-direction: row;
@@ -39,4 +39,99 @@
     font-size: 1vw;
     position: absolute;
     margin-left: 18vw;
+}
+.userContainer {
+    flex-shrink: 0;
+    display: flex;
+    width: 25vw;
+    height: 4vw;
+    align-items: center;
+    border-bottom: 0.25vw solid rgb(207, 207, 207);
+}
+
+.profilePicture {
+    width: 2.5vw;
+    height: 2.5vw;
+    border-radius: 50%;
+    margin-left: 2vw;
+    margin-right: 0.5vw;
+}
+
+.userInfo {
+    font-family: Adamina, serif;
+    font-size: 1vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80%; /* Give more space for the user info */
+}
+
+.checkBox {
+    position: absolute;
+    margin-left: 21vw;
+    width: 1.15vw;
+    height: 1.15vw;
+}
+
+.pendingUser {
+    background-color: rgba(176, 176, 176, 0.651);
+    opacity: 75%;
+}
+
+.pendingText {
+    font-size: 1vw;
+    position: absolute;
+    margin-left: 18vw;
+}
+
+/* Streak styles */
+.streak-badge {
+    display: flex;
+    align-items: center;
+    margin-left: 0.7vw;
+    border-radius: 1vw;
+    padding: 0.2vw 0.4vw;
+    font-size: 0.8vw;
+    background-color: #f0db4f; /* Default color */
+    color: #333;
+}
+
+.streak-icon {
+    font-size: 0.8vw;
+    margin-right: 0.3vw;
+    color: #f57c00;
+}
+
+.streak-count {
+    font-weight: bold;
+}
+
+/* Different streak levels */
+.streak-notable {
+    background-color: #a5d6a7; /* Green for one week */
+}
+
+.streak-impressive {
+    background-color: #81c784; /* Darker green for two weeks */
+    color: white;
+}
+
+.streak-epic {
+    background-color: #5c6bc0; /* Blue for three weeks */
+    color: white;
+}
+
+.streak-legendary {
+    background-color: #9575cd; /* Purple for a month or more */
+    color: white;
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px rgba(149, 117, 205, 0.5);
+    }
+    to {
+        box-shadow: 0 0 10px rgba(149, 117, 205, 0.8);
+    }
 }

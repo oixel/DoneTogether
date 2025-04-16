@@ -1,12 +1,14 @@
 // each individual Goal Box should be its own component
 import { useState, useEffect, useCallback } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
+import { FaFire, FaTrophy } from 'react-icons/fa';
 
 import EditPopUp from './EditPopUp';
 import AddUserComponent from './AddUser';
 import User from './User';
 
 import "../styles/popUp.css";
+import "../styles/Goal.css"; // We'll add a new CSS file for streak-specific styles
 
 import { getUserById } from '../api/userRequests.ts';
 import { updateUsersList, deleteGoal } from '../api/goalRequests.ts';
@@ -28,12 +30,12 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
   const [editGoalPopUpState, setEditGoalState] = useState<boolean>(false); // edit goal popup
 
   const [users, setUsers] = useState<UserData[]>([]);
+  const [longestStreak, setLongestStreak] = useState<{username: string, streak: number} | null>(null);
 
   const handleMenuClick = () => {
     setIsMenuOpen((prev) => !prev);
   };
 
-  // 
   const handleEditMenuClick = (goal: GoalData) => {
     setIsMenuOpen(false);
     setEditGoalState(true);
@@ -65,7 +67,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
       const timeDiff = new Date(goal.endDate).getTime() - new Date().getTime();
 
       let daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
-      daysLeft = (daysLeft > 0) ? daysLeft : 0; // Ensure we don’t show negative days
+      daysLeft = (daysLeft > 0) ? daysLeft : 0; // Ensure we don't show negative days
 
       // Return number of days left
       return `${daysLeft} Days Left`;
@@ -76,7 +78,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
   };
 
   // Loops through all user objects and grabs their profile information from Clerk database and combines it with their respective statuses from MongoDB
-  // Using Callback to prevent unnecessarry re-renders from the useEffect call
+  // Using Callback to prevent unnecessary re-renders from the useEffect call
   const getUsers = useCallback(async () => {
     // Initialize empty array to append all user data for this goal into
     const newUsers: Array<UserData> = [];
@@ -96,6 +98,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
             // Append the user's statuses for this goal to the user's object
             newUser.joined = userData.joined;
             newUser.completed = userData.completed;
+            newUser.streak = userData.streak || 0;
 
             // 
             newUsers.push(newUser);
@@ -106,6 +109,25 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
 
     // Update the users list to reflect the new users
     setUsers(newUsers);
+
+    // Find the user with the longest streak
+    if (newUsers.length > 0) {
+      // Get the user with the highest streak
+      const userWithLongestStreak = newUsers.reduce((prev, current) => {
+        return (prev.streak || 0) > (current.streak || 0) ? prev : current;
+      }, newUsers[0]); // Add the initial value here
+      
+      if (userWithLongestStreak && (userWithLongestStreak.streak || 0) > 0) {
+        setLongestStreak({
+          username: userWithLongestStreak.username,
+          streak: userWithLongestStreak.streak || 0
+        });
+      } else {
+        setLongestStreak(null);
+      }
+    } else {
+      setLongestStreak(null);
+    }
   }, [goal.users]);
 
   // Update the user data whenever there is a change in this goal's user's array in MongoDB
@@ -125,6 +147,15 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
         )}
 
         <h2 className='goal-title'>{goal.name}</h2>
+        
+        {/* Display the streak leader if one exists */}
+        {longestStreak && longestStreak.streak > 0 && (
+          <div className="streak-leader">
+            <FaTrophy className="trophy-icon" />
+            {/*<span>{longestStreak.username}: {longestStreak.streak} day streak</span>*/}
+          </div>
+        )}
+        
         <div className="users-container">
           {users.map((user, index) => (
             <User
@@ -161,4 +192,3 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
 };
 
 export default Goal;
-
