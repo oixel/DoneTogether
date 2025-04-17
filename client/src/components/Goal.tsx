@@ -1,7 +1,7 @@
 // each individual Goal Box should be its own component
 import { useState, useEffect, useCallback } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
-import { FaFire, FaTrophy } from 'react-icons/fa';
+import { FaTrophy } from 'react-icons/fa';
 
 import EditPopUp from './EditPopUp';
 import AddUserComponent from './AddUser';
@@ -148,13 +148,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
 
         <h2 className='goal-title'>{goal.name}</h2>
         
-        {/* Display the streak leader if one exists */}
-        {longestStreak && longestStreak.streak > 0 && (
-          <div className="streak-leader">
-            <FaTrophy className="trophy-icon" />
-            {/*<span>{longestStreak.username}: {longestStreak.streak} day streak</span>*/}
-          </div>
-        )}
+        
         
         <div className="users-container">
           {users.map((user, index) => (
@@ -164,6 +158,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
               userData={user}
               isReadOnly={user.userId != currentUserId}  // Prevents user from updating other users' completion status
               isOwner={index === 0}
+              streakLeader={longestStreak}
             />
           ))}
         </div>
