@@ -13,7 +13,7 @@ interface UserBarPropTypes {
     userData: UserData;
     isReadOnly: boolean;
     isOwner?: boolean;
-    streakLeader?: { username: string; streak: number } | null;
+    streakLeader?: { username: string; streak: number; goalId: string } | null;
 }
 
 function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader }: UserBarPropTypes) {
@@ -70,7 +70,7 @@ function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader }: UserBa
                     className="profilePicture"
                     width={35}
                 />
-                {streakLeader && userData.username === streakLeader.username && (
+                {streakLeader && userData.username === streakLeader.username && goalId === streakLeader.goalId && (
                     <div className='streak-leader'>
                         <FaTrophy className="trophy-icon" />
                         {/*<span>{longestStreak.username}: {longestStreak.streak} day streak</span>*/}
