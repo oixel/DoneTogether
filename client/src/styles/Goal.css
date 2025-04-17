@@ -1,24 +1,18 @@
 /* Streak leader display styling */
 .streak-leader {
-    position: absolute;
-    top: 4.5vw;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     align-items: center;
     background-color: #f8f5e4;
     padding: 0.3vw 0.8vw;
     border-radius: 1vw;
     font-size: 0.8vw;
-    font-family: 'Adamina', serif;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1;
     border: 1px solid rgba(99, 107, 47, 0.3);
+    margin-right: 0.5vw;
   }
   
   .trophy-icon {
     color: #ffc107;
-    margin-right: 0.5vw;
     font-size: 1vw;
   }
   

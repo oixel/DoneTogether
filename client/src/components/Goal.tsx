@@ -1,7 +1,6 @@
 // each individual Goal Box should be its own component
 import { useState, useEffect, useCallback } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
-import { FaFire, FaTrophy } from 'react-icons/fa';
 
 import EditPopUp from './EditPopUp';
 import AddUserComponent from './AddUser';
@@ -30,7 +29,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
   const [editGoalPopUpState, setEditGoalState] = useState<boolean>(false); // edit goal popup
 
   const [users, setUsers] = useState<UserData[]>([]);
-  const [longestStreak, setLongestStreak] = useState<{username: string, streak: number} | null>(null);
+  const [longestStreak, setLongestStreak] = useState<{username: string, streak: number, goalId: string} | null>(null);
 
   const handleMenuClick = () => {
     setIsMenuOpen((prev) => !prev);
@@ -120,7 +119,8 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
       if (userWithLongestStreak && (userWithLongestStreak.streak || 0) > 0) {
         setLongestStreak({
           username: userWithLongestStreak.username,
-          streak: userWithLongestStreak.streak || 0
+          streak: userWithLongestStreak.streak || 0,
+          goalId: goal._id
         });
       } else {
         setLongestStreak(null);
@@ -148,13 +148,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
 
         <h2 className='goal-title'>{goal.name}</h2>
         
-        {/* Display the streak leader if one exists */}
-        {longestStreak && longestStreak.streak > 0 && (
-          <div className="streak-leader">
-            <FaTrophy className="trophy-icon" />
-            {/*<span>{longestStreak.username}: {longestStreak.streak} day streak</span>*/}
-          </div>
-        )}
+        
         
         <div className="users-container">
           {users.map((user, index) => (
@@ -164,6 +158,7 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
               userData={user}
               isReadOnly={user.userId != currentUserId}  // Prevents user from updating other users' completion status
               isOwner={index === 0}
+              streakLeader={longestStreak}
             />
           ))}
         </div>
