@@ -32,6 +32,7 @@ const GoalList = ({ goals, currentUserId, setNeedRefresh, isLoading, error }: Go
 
   return (
     <div>
+      {/* cycle through goals and create a Goal component for each */}
       <div className="goal-list">
         {goals.map((goal) => (
           <Goal

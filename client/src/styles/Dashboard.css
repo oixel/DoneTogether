@@ -10,8 +10,6 @@
   height: 100%;
   flex-direction: column;
   background: rgba(99, 107, 47, 0.57);
-
-  /* Provides sufficient space for overlay buttons to not cover middle bottom goal */
   padding-bottom: 10vh;
 }
 
@@ -44,10 +42,10 @@
 }
 
 /* Media query for screens smaller than 500px */
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .goal-list {
-    flex-direction: column; /* Change to vertical orientation */
-    align-items: center; /* Center items horizontally in the column layout */
+    flex-direction: column; 
+    align-items: center; 
   }
   .goal-box{
      margin-left: 1vw;
@@ -87,24 +85,16 @@
 
 .profile-image {
   width: 100%;
-  /* Ensure image fills the frame */
   height: 100%;
-  /* Maintain aspect ratio */
   object-fit: cover;
   border-radius: 50%;
 
   width: 2.8vw;
-  /* Adjust to desired size */
   height: 2.8vw;
-  /* Same as width to maintain the circle */
   border-radius: 50%;
-  /* This makes the image circular */
   object-fit: cover;
-  /* Ensures the image doesn't stretch or distort */
   margin-right: 10px;
-  /* Space between image and text */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  /* Optional shadow effect */
   object-fit: cover;
   cursor: pointer;
 }
@@ -154,7 +144,6 @@
 .create-goal-button:active,
 .refresh-button:active {
   background: #ececec
-    /* Change outline on hover */
 }
 
 .users-container {
@@ -193,24 +182,16 @@
   padding: 5px 5px;
 
   overflow: visible;
-  /* Allow overflow within the box */
   word-wrap: break-word;
-  /* Ensure text content doesn't overflow the box */
 }
 
 .collaborator-image {
   width: 2.5vw;
-  /* Adjust to desired size */
   height: 2.5vw;
-  /* Same as width to maintain the circle */
   border-radius: 50%;
-  /* This makes the image circular */
   object-fit: cover;
-  /* Ensures the image doesn't stretch or distort */
   margin-right: 10px;
-  /* Space between image and text */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  /* Optional shadow effect */
   object-fit: cover;
 }
 
@@ -305,7 +286,6 @@
 /*envelope stuff*/
 .envelope-icon {
   width: 2vw;
-  /* Adjust size as needed */
   height: 2vw;
   cursor: pointer;
   margin-right: 1vw;
@@ -323,19 +303,17 @@
   align-items: center;
   cursor: pointer;
   margin-right: 6vw;
-  /* Adjust this value to move it more or less */
 }
 
 .envelope-button:active .envelope-icon {
   opacity: 0.7;
-  /* Reduces the opacity to 70% when clicked */
 }
 
 .invite-popup h3 {
   font-family: 'Rubik Doodle Shadow', sans-serif;
   color: #636B2F;
-  font-size: 2.5vw; /* or 28px if you want a fixed size */
-  margin-bottom: 1vw; /* optional: adds space below */
+  font-size: 2.5vw; 
+  margin-bottom: 1vw; 
 }
 
 .invite-popup {
@@ -375,19 +353,30 @@
 }
 
 .invite-row {
-  width: 100%; 
   box-sizing: border-box; 
   display: flex;
+  flex-direction: row;
+  font-family: Adamina;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1vw;
-  padding-bottom: 1vw;
-  border-bottom: 0.25vw solid rgb(207, 207, 207);
+  margin: 0.5vw;
+  padding: 0.5vw;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5vw; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+  background-color: white; 
 }
 
 .invite-goal-name {
   flex-grow: 1;
   margin-right: 10px; 
+  font-family: Adamina, sans-serif; 
+  font-size: 1.1vw;
+}
+
+.invite-username {
+  flex-grow: 1;
+  margin-right: 0.5vw; 
   font-family: Adamina, sans-serif; 
   font-size: 1.1vw;
 }
