@@ -356,7 +356,7 @@
   box-sizing: border-box; 
   display: flex;
   flex-direction: row;
-  font-family: Adamina;
+  font-family: Adamina, sans-serif;
   justify-content: space-between;
   align-items: center;
   margin: 0.5vw;
