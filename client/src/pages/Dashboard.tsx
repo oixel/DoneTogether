@@ -203,7 +203,7 @@ const Dashboard: React.FC = () => {
 
                   {/* Get Username from ownerID */}
                    <div key={invitation.ownerId}>
-                    <p>{usernames[invitation.ownerId]}</p>
+                    <p className = "invite-username">{usernames[invitation.ownerId]}</p>
                   </div>
                   <span className="invite-goal-name">{invitation.name}</span>
                  

@@ -20,7 +20,6 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* Centers it vertically and horizontally */
   z-index: 2;
   border-radius: 1.5vw;
   background: #FFF;
@@ -118,7 +117,6 @@
 }
 
 .form-container .arrows-container {
-  /* Position the container relative to its parent (pop-up) */
   justify-content: space-between;
   display: flex;
   align-items: center;

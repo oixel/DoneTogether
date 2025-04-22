@@ -11,9 +11,6 @@
   overflow-x: hidden;
 }
 
-  /* FIGMA TO REACT FROM HERE: The inherent Figma Code did not work, 
-  I had to change some things with positioning 
-  and with other consolidation of components */
 
 .welcome-container {
   width: 100vw;
