@@ -30,14 +30,23 @@ Change the directory one more time into the root DoneTogether folder and run:
 npm run dev
 ```
 Finally, open a browser and access DoneTogether with the local URL of localhost:5173. 🎉
-## 🔎 Using DoneTogether
 ## 💻 Technologies Used
 ### Frontend
+- React.js & React-Router
+- TypeScript & JavaScript
+- Figma Prototyping,
+- Framer Animations
+- Clerk API (User Management UI components)
 
 ### Backend
+- Node.js
+- Express.js
+- MongoDB
+- Axios
+- Clerk API (Authentication & Secure User Database)
 
 ## 📑 Contributers
-Name: ... LinkedIn: \
-Name: ... LinkedIn: \
-Name: ... LinkedIn:  \
-Name: ... LinkedIn: 
+Oixel Romero: https://www.linkedin.com/in/oixel/ \
+Carson Fulmer: https://www.linkedin.com/in/carsonfulmer/ \
+Kriti Shah: https://www.linkedin.com/in/kriti-shah989/ \
+Krithika Kondapalli: www.linkedin.com/in/krithika-kondapalli
