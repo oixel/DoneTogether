@@ -2,7 +2,7 @@ import '../styles/User.css';
 
 import { useState, useEffect } from "react";
 import { updateUserInGoal } from '../api/goalRequests.ts';
-import { FaFire, FaCrown } from 'react-icons/fa'; // Import fire icon for streaks
+import { FaFire, FaCrown, FaTrophy } from 'react-icons/fa'; // Import fire icon for streaks
 
 // Import interface for UserData object
 import { UserData } from '../types/userData';
@@ -13,9 +13,10 @@ interface UserBarPropTypes {
     userData: UserData;
     isReadOnly: boolean;
     isOwner?: boolean;
+    streakLeader?: { username: string; streak: number; goalId: string } | null;
 }
 
-function UserBar({ goalId, userData, isReadOnly, isOwner }: UserBarPropTypes) {
+function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader }: UserBarPropTypes) {
     // Initialize completed state to what is currently stored in the database
     const [completed, setCompleted] = useState(userData.completed);
 
@@ -69,8 +70,16 @@ function UserBar({ goalId, userData, isReadOnly, isOwner }: UserBarPropTypes) {
                     className="profilePicture"
                     width={35}
                 />
+                {streakLeader && userData.username === streakLeader.username && goalId === streakLeader.goalId && (
+                    <div className='streak-leader'>
+                        <FaTrophy className="trophy-icon" />
+                        {/*<span>{longestStreak.username}: {longestStreak.streak} day streak</span>*/}
+                    </div>  
+                )}
+
                 <p>{userData.username}</p>
                 { isOwner &&<FaCrown className="crown-icon" style={{ marginLeft: '0.5vw' }} /> }
+                
                 {renderStreakBadge()}
             </div>
             {/* Show user's checkbox OR "Pending" texting depending on whether the collaborator has accepted the invite */}
