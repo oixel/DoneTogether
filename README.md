@@ -2,7 +2,7 @@
 
 ## 👋 About DoneTogether
 **DoneTogether** is a goal platform that harnesses collaboration and friendly competition to drive success with **social accountability**.
-Create personal or shared goals, invite collaborators, and build momentum by maintaining daily streaks — all designed to help you stay motivated and *actually finish what you start*.
+Create personal or shared goals, invite collaborators, and build momentum by maintaining daily streaks — all designed to help you stay motivated and *actually* finish what you start.
 
 ## 🚀 Installation Instructions
 First, open a terminal and change the directory into the desired output folder. Then, run the following to clone into the DoneTogether repository:
@@ -34,7 +34,7 @@ Finally, open a browser and access DoneTogether with the local URL of localhost:
 ### Frontend
 - React.js & React-Router
 - TypeScript & JavaScript
-- Figma Prototyping,
+- Figma Prototyping
 - Framer Animations
 - Clerk API (User Management UI components)
 
