@@ -14,9 +14,10 @@ interface UserBarPropTypes {
     isReadOnly: boolean;
     isOwner?: boolean;
     streakLeader?: { username: string; streak: number; goalId: string } | null;
+    setNeedRefresh: CallableFunction;
 }
 
-function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader }: UserBarPropTypes) {
+function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader, setNeedRefresh }: UserBarPropTypes) {
     // Initialize completed state to what is currently stored in the database
     const [completed, setCompleted] = useState(userData.completed);
 
@@ -34,6 +35,8 @@ function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader }: UserBa
                 updateKey: 'users.$[user].completed',
                 updateValue: newCompletion
             });
+
+            setNeedRefresh(true);
         }
     }
 
@@ -45,14 +48,14 @@ function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader }: UserBa
     // Function to render streak badge with different colors based on streak count
     const renderStreakBadge = () => {
         if (!userData.streak || userData.streak < 1) return null;
-        
+
         // Determine the color of the streak badge based on streak count
         let streakClass = "streak-badge";
         if (userData.streak >= 30) streakClass += " streak-legendary";
         else if (userData.streak >= 21) streakClass += " streak-epic";
         else if (userData.streak >= 14) streakClass += " streak-impressive";
         else if (userData.streak >= 7) streakClass += " streak-notable";
-        
+
         return (
             <div className={streakClass}>
                 <FaFire className="streak-icon" />
@@ -74,12 +77,12 @@ function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader }: UserBa
                     <div className='streak-leader'>
                         <FaTrophy className="trophy-icon" />
                         {/*<span>{longestStreak.username}: {longestStreak.streak} day streak</span>*/}
-                    </div>  
+                    </div>
                 )}
 
                 <p>{userData.username}</p>
-                { isOwner &&<FaCrown className="crown-icon" style={{ marginLeft: '0.5vw' }} /> }
-                
+                {isOwner && <FaCrown className="crown-icon" style={{ marginLeft: '0.5vw' }} />}
+
                 {renderStreakBadge()}
             </div>
             {/* Show user's checkbox OR "Pending" texting depending on whether the collaborator has accepted the invite */}
