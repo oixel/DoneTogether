@@ -133,35 +133,35 @@ function updateUserInGoal(app, database) {
             // Get the goal and user data to calculate streak
             const goal = await database.collection('goals').findOne(filter);
             const userIndex = goal.users.findIndex(user => user.userId === req.body.userId);
-            
+
             if (userIndex === -1) {
                 return res.status(404).send("User not found in goal");
             }
 
             let update;
-            
+
             // Special handling for completion status updates
             if (req.body.updateKey === 'users.$[user].completed') {
                 const currentCompleted = goal.users[userIndex].completed;
                 const newCompleted = req.body.updateValue;
                 const currentStreak = goal.users[userIndex].streak || 0;
-                
+
                 // If changing from incomplete to complete, increment streak
                 if (!currentCompleted && newCompleted) {
-                    update = { 
-                        $set: { 
+                    update = {
+                        $set: {
                             "users.$[user].completed": newCompleted,
-                            "users.$[user].streak": currentStreak + 1 
-                        } 
+                            "users.$[user].streak": currentStreak + 1
+                        }
                     };
-                } 
+                }
                 // If unchecking completion, reset streak to 0
                 else if (currentCompleted && !newCompleted) {
-                    update = { 
-                        $set: { 
+                    update = {
+                        $set: {
                             "users.$[user].completed": newCompleted,
-                            "users.$[user].streak": 0 
-                        } 
+                            "users.$[user].streak": currentStreak - 1
+                        }
                     };
                 }
                 // Otherwise, just update the completed status normally
