@@ -13,11 +13,11 @@ interface UserBarPropTypes {
     userData: UserData;
     isReadOnly: boolean;
     isOwner?: boolean;
-    streakLeader?: { username: string; streak: number; goalId: string } | null;
+    isStreakLeader?: boolean | null;
     setNeedRefresh: CallableFunction;
 }
 
-function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader, setNeedRefresh }: UserBarPropTypes) {
+function UserBar({ goalId, userData, isReadOnly, isOwner, isStreakLeader, setNeedRefresh }: UserBarPropTypes) {
     // Initialize completed state to what is currently stored in the database
     const [completed, setCompleted] = useState(userData.completed);
 
@@ -73,7 +73,7 @@ function UserBar({ goalId, userData, isReadOnly, isOwner, streakLeader, setNeedR
                     className="profilePicture"
                     width={35}
                 />
-                {streakLeader && userData.username === streakLeader.username && goalId === streakLeader.goalId && (
+                {isStreakLeader && (
                     <div className='streak-leader'>
                         <FaTrophy className="trophy-icon" />
                         {/*<span>{longestStreak.username}: {longestStreak.streak} day streak</span>*/}
