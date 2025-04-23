@@ -170,7 +170,10 @@ const Goal = ({ goal, currentUserId, setNeedRefresh }: GoalPropTypes) => {
 
         {/* Only show option to add user if you are the owner of this goal */}
         {currentUserId == goal.ownerId && (
-          <AddUserComponent goalId={goal._id} />
+          <AddUserComponent
+            goalId={goal._id}
+            setNeedRefresh={setNeedRefresh}
+          />
         )}
       </div>
 

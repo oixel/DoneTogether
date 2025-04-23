@@ -103,7 +103,7 @@ function updateUsersList(app, database) {
                     ...req.body.userObject,
                     streak: 0 // Initialize streak to 0 for new users
                 };
-                update = { $push: { users: userObject } };
+                update = { $addToSet: { users: userObject } };
             } else {  // Otherwise (when removing), remove the user from the array of users by their userId
                 update = { $pull: { users: { userId: req.body.userObject.userId } } }
             }
